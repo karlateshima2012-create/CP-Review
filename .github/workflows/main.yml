@@ -27,8 +27,10 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           source: "."
           target: ${{ secrets.PROD_PATH }}
+          strip_components: 0
+          overwrite: true
 
-      - name: Run Remote Commands (Migrate & Cache)
+      - name: Run Remote Commands (Migrate & Permissions)
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -37,8 +39,14 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd ${{ secrets.PROD_PATH }}
+            
+            # Garantir permissões de escrita
+            chmod -R 775 storage bootstrap/cache
+            
+            # Comandos Laravel
             php artisan migrate --force
             php artisan config:cache
             php artisan route:cache
             php artisan view:cache
-            php artisan storage:link
+            php artisan storage:link --force || true
+
