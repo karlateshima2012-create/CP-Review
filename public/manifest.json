@@ -1,0 +1,17 @@
+{
+    "name": "CP Review - Avaliações",
+    "short_name": "CP Review",
+    "description": "Plataforma de Gestão de Avaliações de Clientes",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#7c3aed",
+    "theme_color": "#7c3aed",
+    "icons": [
+        {
+            "src": "/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}
