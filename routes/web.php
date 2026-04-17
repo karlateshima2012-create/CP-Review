@@ -12,8 +12,8 @@ Route::get('/', [LandingController::class, 'index'])->name('landing');
 Route::post('/contratar', [LandingController::class, 'contratar']);
 
 // Avaliação (pública)
-Route::get('/avaliacao/{slug}', [AvaliacaoController::class, 'show'])->name('avaliacao.show');
-Route::post('/avaliacao/{slug}/salvar', [AvaliacaoController::class, 'salvar'])
+Route::get('/avaliar/{slug}', [AvaliacaoController::class, 'show'])->name('avaliacao.show');
+Route::post('/avaliar/{slug}/salvar', [AvaliacaoController::class, 'salvar'])
     ->middleware('throttle:avaliacoes');
 
 // Auth
