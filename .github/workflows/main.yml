@@ -19,7 +19,7 @@ jobs:
         run: composer install --no-dev --optimize-autoloader
 
       - name: Deploy to Server via SSH
-        uses: appleboy/scp-action@master
+        uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
@@ -27,8 +27,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           source: "."
           target: ${{ secrets.PROD_PATH }}
-          strip_components: 0
-          overwrite: true
+          rm: false
 
       - name: Run Remote Commands (Migrate & Permissions)
         uses: appleboy/ssh-action@master
