@@ -10,6 +10,34 @@
             <p class="text-xl opacity-90">Automatize suas avaliações e proteja sua reputação</p>
         </div>
 
+        <!-- 🚀 CONSOLE DE TESTE RÁPIDO (Temporário) -->
+        <div class="max-w-4xl mx-auto mb-12 rounded-2xl bg-white/10 backdrop-blur-md p-6 border border-white/20 shadow-2xl">
+            <h2 class="text-white text-lg font-bold mb-4 flex items-center justify-center gap-2">
+                🛠️ Painel de Testes
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <a href="{{ url('/admin/login') }}" target="_blank" class="flex flex-col items-center p-4 bg-white rounded-xl hover:bg-purple-100 transition-all transform hover:-translate-y-1 shadow-lg group">
+                    <span class="text-3xl mb-2 group-hover:scale-110 transition-transform">👤</span>
+                    <span class="font-bold text-gray-800">Admin</span>
+                    <span class="text-[10px] text-gray-500 uppercase font-semibold">Gerenciar SaaS</span>
+                </a>
+                <a href="{{ url('/login') }}" target="_blank" class="flex flex-col items-center p-4 bg-white rounded-xl hover:bg-purple-100 transition-all transform hover:-translate-y-1 shadow-lg group">
+                    <span class="text-3xl mb-2 group-hover:scale-110 transition-transform">🏪</span>
+                    <span class="font-bold text-gray-800">Lojista</span>
+                    <span class="text-[10px] text-gray-500 uppercase font-semibold">Painel da Loja</span>
+                </a>
+                <a href="{{ url('/avaliar/sabor-senior') }}" target="_blank" class="flex flex-col items-center p-4 bg-white rounded-xl hover:bg-purple-100 transition-all transform hover:-translate-y-1 shadow-lg group">
+                    <span class="text-3xl mb-2 group-hover:scale-110 transition-transform">📱</span>
+                    <span class="font-bold text-gray-800">Cliente</span>
+                    <span class="text-[10px] text-gray-500 uppercase font-semibold">Ver o Bot</span>
+                </a>
+            </div>
+            <div class="mt-4 flex flex-wrap justify-center gap-x-6 gap-y-2 text-white/80 text-xs">
+                <div>🔑 <b>Admin:</b> admin@cpreview.com / admin123</div>
+                <div>🔑 <b>Lojista:</b> loja@teste.com / loja123</div>
+            </div>
+        </div>
+
         <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             @php
                 $planos = [
