@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('slug')->nullable();
             $table->enum('pais', ['br', 'jp'])->default('br');
             $table->enum('canal', ['email', 'whatsapp', 'line'])->default('email');
-            $table->foreignId('cliente_id')->nullable()->constrained();
+            $table->foreignUuid('cliente_id')->nullable()->constrained('clientes');
             $table->enum('status', ['pendente', 'aprovado', 'rejeitado'])->default('pendente');
             $table->timestamps();
         });
