@@ -18,7 +18,19 @@ jobs:
       - name: Install Composer Dependencies
         run: composer install --no-dev --optimize-autoloader
 
-      - name: Deploy to Server via SSH
+      - name: Deploy to Server via SSH (Direct)
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            mkdir -p ${{ secrets.PROD_PATH }}
+            cd ${{ secrets.PROD_PATH }}
+            # O deploy agora será feito de forma mais direta no passo seguinte via SCP simplificado
+      
+      - name: SCP Transfer
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -28,6 +40,7 @@ jobs:
           source: "."
           target: ${{ secrets.PROD_PATH }}
           rm: false
+          strip_components: 0
 
       - name: Run Remote Commands (Migrate & Permissions)
         uses: appleboy/ssh-action@master
