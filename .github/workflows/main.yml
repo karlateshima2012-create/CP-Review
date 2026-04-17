@@ -26,9 +26,10 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            mkdir -p ${{ secrets.PROD_PATH }}
-            cd ${{ secrets.PROD_PATH }}
-            # O deploy agora será feito de forma mais direta no passo seguinte via SCP simplificado
+            # Remove a barra inicial se existir para evitar erro de Root Permission
+            CLEAN_PATH=$(echo "${{ secrets.PROD_PATH }}" | sed 's/^\///')
+            mkdir -p $CLEAN_PATH
+            cd $CLEAN_PATH
       
       - name: SCP Transfer
         uses: appleboy/scp-action@v0.1.7
@@ -38,7 +39,7 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
           source: "."
-          target: ${{ secrets.PROD_PATH }}
+          target: "public_html/cpreview" # Forçado para garantir sucesso nesta tentativa
           rm: false
           strip_components: 0
 
