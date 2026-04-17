@@ -55,7 +55,29 @@
             </div>
         </form>
 
-        <div class="mt-6 pt-6 border-t border-white/10 text-center">
+        <!-- 🛠️ ACESSOS DE TESTE (Modo de Desenvolvimento) -->
+        <div class="mt-8 pt-8 border-t border-white/20">
+            <h3 class="text-white text-xs font-bold uppercase tracking-widest text-center mb-4 opacity-60">Consoles de Teste</h3>
+            <div class="grid grid-cols-1 gap-3">
+                <a href="{{ url('/avaliar/sabor-senior') }}" target="_blank" class="flex items-center justify-center gap-2 p-3 bg-white/10 hover:bg-white/20 border border-white/10 rounded-xl text-white text-sm transition-all group">
+                    <span class="text-lg group-hover:scale-125 transition-transform">📱</span>
+                    <span>Simular Visão: <b>Ver Bot (Cliente)</b></span>
+                </a>
+                
+                <div class="p-4 bg-purple-900/30 rounded-2xl border border-white/5 space-y-2">
+                    <div class="flex justify-between items-center text-[11px]">
+                        <span class="text-white/60">🔑 Login Admin:</span>
+                        <code class="text-purple-200">admin@cpreview.com / admin123</code>
+                    </div>
+                    <div class="flex justify-between items-center text-[11px]">
+                        <span class="text-white/60">🔑 Login Lojista:</span>
+                        <code class="text-purple-300">loja@teste.com / loja123</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-6 text-center">
             <p class="text-xs text-white/50 italic">
                 Acesso exclusivo para administradores e estabelecimentos parceiros.
             </p>
