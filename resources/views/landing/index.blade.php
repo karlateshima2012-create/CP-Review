@@ -4,10 +4,22 @@
 
 @section('content')
 <div class="min-h-screen bg-gradient-to-br from-purple-600 to-blue-500">
+    <!-- Header / Navbar -->
+    <nav class="container mx-auto px-4 py-6 flex justify-between items-center relative z-10">
+        <div class="text-white text-2xl font-bold flex items-center gap-2">
+            <span class="text-3xl">⭐</span> CP Review Care
+        </div>
+        <div>
+            <a href="{{ url('/login') }}" class="bg-white/20 hover:bg-white/30 backdrop-blur-md text-white px-6 py-2 rounded-full font-semibold border border-white/30 transition-all">
+                Entrar
+            </a>
+        </div>
+    </nav>
+
     <div class="container mx-auto px-4 py-16">
         <div class="text-center text-white mb-12">
-            <h1 class="text-5xl font-bold mb-4">⭐ CP Review Care</h1>
-            <p class="text-xl opacity-90">Automatize suas avaliações e proteja sua reputação</p>
+            <h1 class="text-5xl font-bold mb-4">Seu feedback é o seu faturamento</h1>
+            <p class="text-xl opacity-90">Gestão inteligente de reputação para negócios de alto nível.</p>
         </div>
 
         <!-- 🚀 CONSOLE DE TESTE RÁPIDO (Temporário) -->
