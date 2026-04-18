@@ -251,7 +251,7 @@ body {
 .success-screen {
     position: absolute;
     inset: 0;
-    background: var(--bg);
+    background: var(--surface);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -259,16 +259,29 @@ body {
     z-index: 100;
     text-align: center;
     padding: 40px;
+    animation: fadeIn 0.3s ease-out forwards;
 }
 .success-icon {
-    width: 80px; height: 80px;
-    background: var(--green);
+    width: 90px; height: 90px;
+    background: var(--accent);
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-size: 40px;
-    margin-bottom: 20px;
-    box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
+    font-size: 45px;
+    margin-bottom: 25px;
+    box-shadow: 0 10px 25px var(--accent-transparent);
     color: #FFF;
+    animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.success-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 36px;
+    color: var(--accent);
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+@keyframes scaleIn {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
 }
 
 /* PHOTO UPLOAD */
@@ -678,9 +691,10 @@ async function showGoogleBtn(msg, isPos) {
 }
 
 window.handleGoogleClick = () => {
+    // If they click Google, they leave the PWA tab, so we can transition to success and auto-close quickly
     setTimeout(() => {
-        showSuccessScreen();
-    }, 1000);
+        showSuccessScreen(true);
+    }, 1500); 
 };
 
 let isSubmitting = false;
@@ -702,10 +716,18 @@ async function finishChat(isPos) {
         await addBotMsg(text);
         await wait(600);
     }
-    
-    setTimeout(() => {
-        showSuccessScreen();
-    }, 3000);
+
+    // Append a manual close button so they have time to click Google or just exit
+    const closeDiv = document.createElement('div');
+    closeDiv.style.textAlign = 'center';
+    closeDiv.style.marginTop = '20px';
+    closeDiv.innerHTML = `
+        <button onclick="showSuccessScreen()" style="background:var(--surface2); border:1px solid var(--border); border-radius:20px; color:var(--text-dim); font-size:13px; cursor:pointer; padding:8px 16px; font-weight:600">
+            ✕ Encerrar PWA
+        </button>
+    `;
+    chat.appendChild(closeDiv);
+    scrollChat();
 }
 
 async function submitEvaluation() {
@@ -742,23 +764,24 @@ async function submitEvaluation() {
     }
 }
 
-function showSuccessScreen() {
+function showSuccessScreen(fastClose = false) {
     const screen = document.createElement('div');
     screen.className = 'success-screen';
     screen.innerHTML = `
         <div class="success-icon">✓</div>
-        <h2 style="color:var(--text); margin-bottom:10px">${botConfig.lang.success}</h2>
-        <p style="color:var(--text-muted); font-size:14px">Obrigado por nos ajudar a crescer!</p>
+        <h2 class="success-title">MUITO OBRIGADO!</h2>
+        <p style="color:var(--text); font-size:16px; line-height:1.5">${botConfig.lang.success || "Sua avaliação nos ajuda a crescer e melhorar todos os dias."}</p>
     `;
     document.querySelector('.phone').appendChild(screen);
     
+    const delay = fastClose ? 1500 : botConfig.config.auto_close;
     setTimeout(() => {
         if (window.opener) {
             window.close();
         } else {
             location.reload();
         }
-    }, botConfig.config.auto_close);
+    }, delay);
 }
 
 // Service Worker Registration
