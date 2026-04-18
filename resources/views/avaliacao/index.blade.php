@@ -776,11 +776,19 @@ function showSuccessScreen(fastClose = false) {
     
     const delay = fastClose ? 1500 : botConfig.config.auto_close;
     setTimeout(() => {
-        if (window.opener) {
+        try {
             window.close();
-        } else {
-            location.reload();
-        }
+        } catch(e) {}
+        
+        // Se o navegador impedir o fechamento automático, adicionamos a instrução visual
+        const exitMsg = document.createElement('p');
+        exitMsg.style.color = 'var(--text-muted)';
+        exitMsg.style.fontSize = '14px';
+        exitMsg.style.marginTop = '20px';
+        exitMsg.style.animation = 'fadeIn 0.5s';
+        exitMsg.innerHTML = "Você já pode fechar ou minimizar o aplicativo.";
+        screen.appendChild(exitMsg);
+        
     }, delay);
 }
 
