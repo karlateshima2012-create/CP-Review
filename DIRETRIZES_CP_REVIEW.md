@@ -103,7 +103,7 @@ Usar **Shared Database com tenant_id** em todas as tabelas. É a abordagem corre
 - `issue_category`: VARCHAR NULL
 - `feedback_text`: TEXT NULL
 - `is_first_visit`: BOOLEAN NULL
-- `visit_period`: ENUM (lunch, dinner, other)
+- `visit_period`: ENUM (morning, afternoon, night)
 - `contact_email`: VARCHAR NULL (Encrypted)
 - `status`: ENUM (new, seen, resolved)
 - `created_at`: TIMESTAMP IDX
@@ -285,7 +285,7 @@ class AggregateDailyMetrics extends Command
 
     private function aggregateTenant(Tenant $tenant, Carbon $date): void
     {
-        // ... (agregação por períodos lunch/dinner/all)
+        // ... (agregação por períodos morning/afternoon/night/all)
         // Salva em daily_metrics_summary via upsert()
     }
 }

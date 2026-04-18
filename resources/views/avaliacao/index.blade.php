@@ -550,9 +550,9 @@ async function askPeriod(isPos) {
     const div = document.createElement('div');
     div.className = 'options-grid';
     div.innerHTML = `
-        <button class="qr-btn" onclick="handlePeriod('lunch', ${isPos})">${botConfig.lang.btn_morning}</button>
+        <button class="qr-btn" onclick="handlePeriod('morning', ${isPos})">${botConfig.lang.btn_morning}</button>
         <button class="qr-btn" onclick="handlePeriod('afternoon', ${isPos})">${botConfig.lang.btn_afternoon}</button>
-        <button class="qr-btn" onclick="handlePeriod('dinner', ${isPos})">${botConfig.lang.btn_night}</button>
+        <button class="qr-btn" onclick="handlePeriod('night', ${isPos})">${botConfig.lang.btn_night}</button>
     `;
     chat.appendChild(div);
     scrollChat();
@@ -561,7 +561,7 @@ async function askPeriod(isPos) {
 window.handlePeriod = async (p, isPos) => {
     state.period = p;
     event.target.closest('.options-grid').remove();
-    const labels = { lunch: botConfig.lang.btn_morning, afternoon: botConfig.lang.btn_afternoon, dinner: botConfig.lang.btn_night };
+    const labels = { morning: botConfig.lang.btn_morning, afternoon: botConfig.lang.btn_afternoon, night: botConfig.lang.btn_night };
     addUserMsg(labels[p]);
     await wait(300);
     
