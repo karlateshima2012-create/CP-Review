@@ -596,13 +596,17 @@ window.handleRecommend = async (rec) => {
     addUserMsg(map[rec]);
     await wait(400);
 
-    if (rec === 'yes') {
-        await showGoogleBtn(botConfig.lang.recommend_yes, true);
-    } else if (rec === 'maybe') {
-        await showGoogleBtn(botConfig.lang.recommend_maybe, true);
-    } else {
-        await showGoogleBtn(botConfig.lang.recommend_no, true);
+    let msg = botConfig.lang.recommend_yes;
+    if (rec === 'maybe') msg = botConfig.lang.recommend_maybe;
+    if (rec === 'no') msg = botConfig.lang.recommend_no;
+
+    const parts = msg.split('\n');
+    for (const part of parts) {
+        await addBotMsg(part);
+        await wait(500);
     }
+    
+    await finishChat(true);
 };
 
 // ==========================================
@@ -628,7 +632,7 @@ window.handleContactChoice = async (c) => {
     
     if (c === 'no') {
         state.contact = '';
-        await showGoogleBtn(botConfig.lang.contact_google, false);
+        await finishChat(false);
     } else {
         const div = document.createElement('div');
         div.className = 'input-container';
@@ -646,29 +650,36 @@ window.submitContact = async (c) => {
     document.querySelector('.input-container').remove();
     addUserMsg(state.contact || 'Ok');
     await wait(300);
-    await showGoogleBtn(botConfig.lang.contact_google, false);
+    await finishChat(false);
 };
 
 // ==========================================
 // GOOGLE & FINISH
 // ==========================================
 async function showGoogleBtn(msg, isPos) {
-    if (msg) await addBotMsg(msg);
+    if (msg) {
+        const parts = msg.split('\n');
+        for (const part of parts) {
+            await addBotMsg(part);
+            await wait(500);
+        }
+    }
     const gDiv = document.createElement('div');
     gDiv.style.padding = '5px 0';
     gDiv.innerHTML = `
-        <a href="${botConfig.tenant.google_link}" target="_blank" class="confirm-btn" style="background:#4285F4; text-decoration:none">
+        <a href="${botConfig.tenant.google_link}" target="_blank" onclick="handleGoogleClick()" class="confirm-btn" style="background:#4285F4; text-decoration:none">
             ${botConfig.lang.googleBtn}
         </a>
     `;
     chat.appendChild(gDiv);
     scrollChat();
-
-    // After showing google CTA, give them a short time and end.
-    setTimeout(() => {
-        finishChat(isPos);
-    }, 2000);
 }
+
+window.handleGoogleClick = () => {
+    setTimeout(() => {
+        showSuccessScreen();
+    }, 1000);
+};
 
 let isSubmitting = false;
 async function finishChat(isPos) {
@@ -684,9 +695,14 @@ async function finishChat(isPos) {
         await wait(600);
     }
     
-    setTimeout(() => {
-        showSuccessScreen();
-    }, 2000);
+    // IF positive (4-5 stars), we show Google Button as the VERY last thing
+    if (isPos) {
+        await showGoogleBtn(null, true);
+    } else {
+        setTimeout(() => {
+            showSuccessScreen();
+        }, 3000);
+    }
 }
 
 async function submitEvaluation() {
