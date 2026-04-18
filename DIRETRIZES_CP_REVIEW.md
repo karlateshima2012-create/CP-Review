@@ -392,5 +392,37 @@ Abaixo está o status atual do desenvolvimento do projeto:
 - [ ] **v2.0: Futuro (Mês 3+)** — Multi-idioma completo JP, portal self-service, Checkout Stripe/PIX e onboarding automatizado.
 
 ---
+
+## ══ 09 — DESIGN SYSTEM (VIBRANT LOGIC) ══
+
+### 1. Visão Geral
+Equilíbrio entre a robustez técnica SaaS e a fluidez conversacional. Prioridade em: **Legibilidade, Alto Contraste e Hierarquia Visual.**
+
+### 2. Paleta de Cores (Brand & Interface)
+- **Primária (Brand):** Escala `#F5F3FF` (50) até `#4C1D95` (900). 
+  - **Destaque (600):** `#7C3AED` (Roxo Vibrant)
+- **Feedback:** 
+  - Sucesso: `#10B981` | Aviso: `#F59E0B` | Erro: `#EF4444`
+- **Neutras:** 
+  - Fundo: `#F9FAFB` | Card: `#FFFFFF` | Texto: `#111827`
+
+### 3. Tipografia (Escala IBM Plex)
+- **Display:** `Bebas Neue` (Títulos de impacto e Hero).
+- **Sans-Serif:** `IBM Plex Sans` (Interface principal e corpo de texto).
+- **Monospaced:** `IBM Plex Mono` (Dados técnicos e metadados).
+
+| Escala | Tamanho | Peso |
+| :--- | :--- | :--- |
+| **Display H1** | 64px | 700 |
+| **Título 1** | 32px | 600 |
+| **Corpo G** | 16px | 400 |
+| **Corpo M** | 14px | 400 |
+
+### 4. Componentes e Acessibilidade
+- **Arredondamento:** Padrão 8px (`rounded-lg`).
+- **Sombras:** Elevada (`shadow-lg`) para modais, leve (`shadow-sm`) para cards.
+- **Contraste:** Ratio mínimo 4.5:1 (WCAG AA) em toda a interface.
+
+---
 **CP REVIEW SAAS — Documento Interno de Diretrizes**
-Versão 2.1 • Abril 2026 • Laravel 11 + Vanilla JS
+Versão 2.2 • Abril 2026 • Design System: Vibrant Logic
