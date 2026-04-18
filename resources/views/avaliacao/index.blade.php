@@ -106,7 +106,7 @@ body {
   flex-direction: column;
   gap: 14px;
   scroll-behavior: smooth;
-  padding-bottom: 100px;
+  padding-bottom: 220px;
 }
 .chat-area::-webkit-scrollbar { display: none; }
 
@@ -450,8 +450,8 @@ async function askFeedbackText() {
     div.innerHTML = `
         <textarea id="feedback-area" class="f-input" rows="2" placeholder="Sua opinião..."></textarea>
         <div style="display:flex; gap:10px; margin-top:10px">
-            <button class="confirm-btn" style="background:var(--surface2); color:var(--text)" onclick="handleFeedbackSubmit(false)">${botConfig.lang.btn_skip}</button>
-            <button class="confirm-btn" onclick="handleFeedbackSubmit(true)">${botConfig.lang.btn_yes}</button>
+            <button class="confirm-btn" style="background:var(--surface2); color:var(--text)" onclick="handleFeedbackSubmit(false)">${botConfig.lang.btn_feedback_no}</button>
+            <button class="confirm-btn" onclick="handleFeedbackSubmit(true)">${botConfig.lang.btn_feedback_send}</button>
         </div>
     `;
     document.querySelector('.phone').appendChild(div);
@@ -481,8 +481,8 @@ async function askPhoto() {
             <img id="photo-preview" class="photo-preview">
         </div>
         <div style="display:flex; gap:10px; margin-top:10px">
-            <button class="confirm-btn" style="background:var(--surface2); color:var(--text)" onclick="handlePhotoSubmit(false)">${botConfig.lang.btn_skip}</button>
-            <button class="confirm-btn" onclick="handlePhotoSubmit(true)">${botConfig.lang.btn_send}</button>
+            <button class="confirm-btn" style="background:var(--surface2); color:var(--text)" onclick="handlePhotoSubmit(false)">${botConfig.lang.btn_feedback_no}</button>
+            <button class="confirm-btn" onclick="handlePhotoSubmit(true)">${botConfig.lang.btn_feedback_send}</button>
         </div>
     `;
     document.querySelector('.phone').appendChild(div);

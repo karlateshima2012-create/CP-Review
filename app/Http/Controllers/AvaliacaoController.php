@@ -117,6 +117,8 @@ class AvaliacaoController extends Controller
                 'btn_skip' => "⏭️ Pular",
                 'btn_send' => "📷 Enviar",
                 'btn_send_txt' => "Enviar",
+                'btn_feedback_no' => "⏭️ Não",
+                'btn_feedback_send' => "👍 Enviar",
                 'optionsLow' => ['😕 Atendimento', '⚙️ Serviço', '🧼 Ambiente', '💸 Preço', '⏱️ Demora', '❗ Outro']
             ],
             'ja' => [
@@ -155,6 +157,8 @@ class AvaliacaoController extends Controller
                 'btn_skip' => "⏭️ スキップ",
                 'btn_send' => "📷 送信する",
                 'btn_send_txt' => "送信",
+                'btn_feedback_no' => "⏭️ いいえ",
+                'btn_feedback_send' => "👍 送信",
                 'optionsLow' => ['😕 接客', '⚙️ サービス', '🧼 環境', '💸 価格', '⏱️ 待ち時間', '❗ その他']
             ]
         ];
