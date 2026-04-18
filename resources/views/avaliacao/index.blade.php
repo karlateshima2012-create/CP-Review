@@ -376,70 +376,8 @@ async function init() {
 async function startConversation() {
     await addBotMsg(botConfig.lang.welcome);
     await wait(400);
-    await askName();
-}
-
-async function askName() {
-    await addBotMsg(botConfig.lang.q_name);
-    const div = document.createElement('div');
-    div.className = 'input-container';
-    div.style.position = 'relative';
-    div.innerHTML = `
-        <input type="text" id="name-input" class="f-input" placeholder="Seu nome..." autofocus>
-        <button class="confirm-btn" onclick="handleName()">Continuar ➔</button>
-    `;
-    chat.appendChild(div);
-    scrollChat();
-}
-
-window.handleName = async () => {
-    const input = document.getElementById('name-input');
-    if (!input.value.trim()) return;
-    state.nome_cliente = input.value.trim();
-    input.closest('.input-container').remove();
-    addUserMsg(state.nome_cliente);
-    await askFirstVisit();
-};
-
-async function askFirstVisit() {
-    await addBotMsg(botConfig.lang.q_first_visit);
-    const div = document.createElement('div');
-    div.className = 'qr-row';
-    div.innerHTML = `
-        <button class="qr-btn" onclick="handleFirstVisit(true)">${botConfig.lang.btn_yes}</button>
-        <button class="qr-btn" onclick="handleFirstVisit(false)">${botConfig.lang.btn_no}</button>
-    `;
-    chat.appendChild(div);
-    scrollChat();
-}
-
-window.handleFirstVisit = async (val) => {
-    state.first_visit = val;
-    event.target.closest('.qr-row').remove();
-    addUserMsg(val ? botConfig.lang.btn_yes : botConfig.lang.btn_no);
-    await askPeriod();
-};
-
-async function askPeriod() {
-    await addBotMsg(botConfig.lang.q_period);
-    const div = document.createElement('div');
-    div.className = 'options-grid';
-    div.innerHTML = `
-        <button class="qr-btn" onclick="handlePeriod('lunch')">${botConfig.lang.btn_lunch} <i>→</i></button>
-        <button class="qr-btn" onclick="handlePeriod('dinner')">${botConfig.lang.btn_dinner} <i>→</i></button>
-        <button class="qr-btn" onclick="handlePeriod('other')">${botConfig.lang.btn_other} <i>→</i></button>
-    `;
-    chat.appendChild(div);
-    scrollChat();
-}
-
-window.handlePeriod = async (p) => {
-    state.period = p;
-    event.target.closest('.options-grid').remove();
-    const labels = { lunch: botConfig.lang.btn_lunch, dinner: botConfig.lang.btn_dinner, other: botConfig.lang.btn_other };
-    addUserMsg(labels[p]);
     await askRating();
-};
+}
 
 async function askRating() {
     const txt = botConfig.lang.askRate.replace('{name}', state.nome_cliente);
@@ -463,27 +401,18 @@ window.handleRating = async (r) => {
     }
 };
 
+// ==========================================
+// FLUXO POSITIVO 
+// ==========================================
 async function handlePositiveFlow() {
     await addBotMsg(botConfig.lang.highRate);
     await wait(300);
-    await addBotMsg(botConfig.lang.highRateQ);
-    
-    const div = document.createElement('div');
-    div.className = 'options-grid';
-    div.innerHTML = botConfig.lang.optionsHigh.map(opt => `
-        <button class="qr-btn" onclick="handleAspect('${opt}')">${opt} <i>✨</i></button>
-    `).join('');
-    chat.appendChild(div);
-    scrollChat();
+    await askFirstVisit(true);
 }
 
-window.handleAspect = async (opt) => {
-    state.aspect = opt;
-    event.target.closest('.options-grid').remove();
-    addUserMsg(opt);
-    await askFeedback();
-};
-
+// ==========================================
+// FLUXO NEGATIVO 
+// ==========================================
 async function handleNegativeFlow() {
     await addBotMsg(botConfig.lang.lowRate);
     await wait(300);
@@ -502,30 +431,52 @@ window.handleProblem = async (opt) => {
     state.problem = opt;
     event.target.closest('.problems-grid').remove();
     addUserMsg(opt);
-    await askFeedback(true);
+    await addBotMsg("Entendi...");
+    await wait(300);
+    await askFeedbackText();
 };
 
-async function askFeedback(isLow = false) {
-    await addBotMsg(botConfig.lang.detalhes);
+async function askFeedbackText() {
+    await addBotMsg(botConfig.lang.q_optional_text);
     const div = document.createElement('div');
     div.className = 'input-container';
-    
-    let photoHtml = isLow ? `
-        <div class="photo-upload">
-            <input type="file" id="photo-input" hidden accept="image/*" onchange="previewPhoto(this)">
-            <label for="photo-input" class="upload-label">📸 Adicionar Foto (Opcional)</label>
-            <img id="photo-preview" class="photo-preview">
-        </div>
-    ` : '';
-
     div.innerHTML = `
         <textarea id="feedback-area" class="f-input" rows="2" placeholder="Sua opinião..."></textarea>
-        ${photoHtml}
-        <input type="text" id="contact-input" class="f-input" style="margin-top:10px" placeholder="${botConfig.lang.q_contact}">
-        <button class="confirm-btn" id="submit-btn" onclick="submitEvaluation()">
-            <span>${botConfig.lang.btnSend}</span>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-        </button>
+        <div style="display:flex; gap:10px; margin-top:10px">
+            <button class="confirm-btn" style="background:var(--surface2); color:var(--text)" onclick="handleFeedbackSubmit(false)">${botConfig.lang.btn_skip}</button>
+            <button class="confirm-btn" onclick="handleFeedbackSubmit(true)">${botConfig.lang.btn_yes}</button>
+        </div>
+    `;
+    document.querySelector('.phone').appendChild(div);
+    scrollChat();
+}
+
+window.handleFeedbackSubmit = async (hasValue) => {
+    if (hasValue) {
+        state.feedback = document.getElementById('feedback-area').value;
+        addUserMsg(state.feedback || "Enviado");
+    } else {
+        addUserMsg(botConfig.lang.btn_skip);
+    }
+    document.querySelector('.input-container').remove();
+    await wait(300);
+    await askPhoto();
+};
+
+async function askPhoto() {
+    await addBotMsg(botConfig.lang.q_optional_photo);
+    const div = document.createElement('div');
+    div.className = 'input-container';
+    div.innerHTML = `
+        <div class="photo-upload">
+            <input type="file" id="photo-input" hidden accept="image/*" onchange="previewPhoto(this)">
+            <label for="photo-input" class="upload-label">📸 Adicionar Foto</label>
+            <img id="photo-preview" class="photo-preview">
+        </div>
+        <div style="display:flex; gap:10px; margin-top:10px">
+            <button class="confirm-btn" style="background:var(--surface2); color:var(--text)" onclick="handlePhotoSubmit(false)">${botConfig.lang.btn_skip}</button>
+            <button class="confirm-btn" onclick="handlePhotoSubmit(true)">${botConfig.lang.btn_send}</button>
+        </div>
     `;
     document.querySelector('.phone').appendChild(div);
     scrollChat();
@@ -533,8 +484,7 @@ async function askFeedback(isLow = false) {
 
 window.previewPhoto = (input) => {
     if (input.files && input.files[0]) {
-        state.photo = input.files[0]; // Guarda o File original
-
+        state.photo = input.files[0];
         const reader = new FileReader();
         reader.onload = function(e) {
             const img = document.getElementById('photo-preview');
@@ -545,82 +495,223 @@ window.previewPhoto = (input) => {
     }
 }
 
-window.submitEvaluation = async () => {
-    const btn = document.getElementById('submit-btn');
-    const area = document.getElementById('feedback-area');
-    const contact = document.getElementById('contact-input');
+window.handlePhotoSubmit = async (hasValue) => {
+    if (hasValue && state.photo) {
+        addUserMsg(botConfig.lang.btn_send);
+    } else {
+        state.photo = null;
+        addUserMsg(botConfig.lang.btn_skip);
+    }
+    document.querySelector('.input-container').remove();
+    await wait(300);
+    await askFirstVisit(false);
+};
+
+// ==========================================
+// PERGUNTAS COMUNS (DIRECIONADAS)
+// ==========================================
+async function askFirstVisit(isPos) {
+    await addBotMsg(botConfig.lang.q_first_visit);
+    const div = document.createElement('div');
+    div.className = 'qr-row';
+    div.innerHTML = `
+        <button class="qr-btn" onclick="handleFirstVisit(true, ${isPos})">${botConfig.lang.btn_yes}</button>
+        <button class="qr-btn" onclick="handleFirstVisit(false, ${isPos})">${botConfig.lang.btn_no}</button>
+    `;
+    chat.appendChild(div);
+    scrollChat();
+}
+
+window.handleFirstVisit = async (val, isPos) => {
+    state.first_visit = val;
+    event.target.closest('.qr-row').remove();
+    addUserMsg(val ? botConfig.lang.btn_yes : botConfig.lang.btn_no);
+    await wait(300);
+    await addBotMsg(isPos ? botConfig.lang.first_visit_ack : botConfig.lang.first_visit_ack_low);
+    await wait(300);
+    await askPeriod(isPos);
+};
+
+async function askPeriod(isPos) {
+    await addBotMsg(botConfig.lang.q_period);
+    const div = document.createElement('div');
+    div.className = 'options-grid';
+    div.innerHTML = `
+        <button class="qr-btn" onclick="handlePeriod('lunch', ${isPos})">${botConfig.lang.btn_morning}</button>
+        <button class="qr-btn" onclick="handlePeriod('afternoon', ${isPos})">${botConfig.lang.btn_afternoon}</button>
+        <button class="qr-btn" onclick="handlePeriod('dinner', ${isPos})">${botConfig.lang.btn_night}</button>
+    `;
+    chat.appendChild(div);
+    scrollChat();
+}
+
+window.handlePeriod = async (p, isPos) => {
+    state.period = p;
+    event.target.closest('.options-grid').remove();
+    const labels = { lunch: botConfig.lang.btn_morning, afternoon: botConfig.lang.btn_afternoon, dinner: botConfig.lang.btn_night };
+    addUserMsg(labels[p]);
+    await wait(300);
     
-    state.feedback = area.value;
-    state.contact = contact.value;
-
-    btn.disabled = true;
-    btn.innerHTML = `<span>${botConfig.lang.sending}</span>`;
-
-    try {
-        const payload = {
-            nota: state.rating,
-            feedback: state.feedback,
-            problema: state.problem || state.aspect,
-            tipo_contato: state.contact ? 'whatsapp' : 'nao',
-            contato_valor: state.contact,
-            nome_cliente: state.nome_cliente,
-            primeira_visita: state.first_visit,
-            periodo_visita: state.period,
-        };
-
-        const res = await fetch(`/avaliar/${bizSlug}/salvar`, {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify(payload)
-        });
-
-        if (!res.ok) throw new Error("Fail");
-        
-        const data = await res.json();
-
-        // Se houver foto selecionada, envia ela usando PhotoUploader e data.token
-        if (state.photo && data.token) {
-            btn.innerHTML = `<span>Enviando foto...</span>`;
-            await PhotoUploader.upload({
-                file: state.photo,
-                reviewToken: data.token,
-                slug: bizSlug,
-                csrfToken: '{{ csrf_token() }}'
-            });
-        }
-
-        document.querySelector('.input-container').remove();
-        if (state.feedback) addUserMsg(state.feedback);
-
-        await addBotMsg(botConfig.lang.success);
-        await addBotMsg(botConfig.lang.finalMsg);
-
-        if (state.rating >= 4) {
-            await addBotMsg(botConfig.lang.googleCTA);
-            const gDiv = document.createElement('div');
-            gDiv.style.padding = '0 20px';
-            gDiv.innerHTML = `
-                <a href="${botConfig.tenant.google_link}" target="_blank" class="confirm-btn" style="background:#4285F4; text-decoration:none">
-                    ${botConfig.lang.googleBtn}
-                </a>
-            `;
-            chat.appendChild(gDiv);
-        } else {
-            await addBotMsg(botConfig.lang.nextVisit);
-        }
-
-        setTimeout(() => {
-            showSuccessScreen();
-        }, 3000);
-
-    } catch (e) {
-        btn.disabled = false;
-        btn.innerHTML = `<span>${botConfig.lang.retryBtn}</span>`;
+    if (isPos) {
+        await addBotMsg(botConfig.lang.period_ack);
+        await askRecommend();
+    } else {
+        await askContact();
     }
 };
+
+// ==========================================
+// FINALIZAÇÃO POSITIVA
+// ==========================================
+async function askRecommend() {
+    await addBotMsg(botConfig.lang.q_recommend);
+    const div = document.createElement('div');
+    div.className = 'options-grid';
+    div.innerHTML = `
+        <button class="qr-btn" onclick="handleRecommend('yes')">${botConfig.lang.btn_rec_yes}</button>
+        <button class="qr-btn" onclick="handleRecommend('maybe')">${botConfig.lang.btn_rec_maybe}</button>
+        <button class="qr-btn" onclick="handleRecommend('no')">${botConfig.lang.btn_rec_no}</button>
+    `;
+    chat.appendChild(div);
+    scrollChat();
+}
+
+window.handleRecommend = async (rec) => {
+    event.target.closest('.options-grid').remove();
+    const map = { yes: botConfig.lang.btn_rec_yes, maybe: botConfig.lang.btn_rec_maybe, no: botConfig.lang.btn_rec_no };
+    addUserMsg(map[rec]);
+    await wait(400);
+
+    if (rec === 'yes') {
+        const parts = botConfig.lang.recommend_yes.split('\n');
+        await addBotMsg(parts[0]);
+        await wait(300);
+        await showGoogleBtn(parts[1], true);
+    } else if (rec === 'maybe') {
+        await showGoogleBtn(botConfig.lang.recommend_maybe, true);
+    } else {
+        await addBotMsg(botConfig.lang.recommend_no);
+        await finishChat(true);
+    }
+};
+
+// ==========================================
+// FINALIZAÇÃO NEGATIVA
+// ==========================================
+async function askContact() {
+    await addBotMsg(botConfig.lang.q_contact);
+    const div = document.createElement('div');
+    div.className = 'options-grid';
+    div.innerHTML = `
+        <button class="qr-btn" onclick="handleContactChoice('whatsapp')">${botConfig.lang.btn_contact_wa}</button>
+        <button class="qr-btn" onclick="handleContactChoice('line')">${botConfig.lang.btn_contact_line}</button>
+        <button class="qr-btn" onclick="handleContactChoice('no')">${botConfig.lang.btn_contact_no}</button>
+    `;
+    chat.appendChild(div);
+    scrollChat();
+}
+
+window.handleContactChoice = async (c) => {
+    event.target.closest('.options-grid').remove();
+    const map = { whatsapp: botConfig.lang.btn_contact_wa, line: botConfig.lang.btn_contact_line, no: botConfig.lang.btn_contact_no };
+    addUserMsg(map[c]);
+    
+    if (c === 'no') {
+        state.contact = '';
+        await showGoogleBtn(botConfig.lang.contact_google, false);
+    } else {
+        const div = document.createElement('div');
+        div.className = 'input-container';
+        div.innerHTML = `
+            <input type="text" id="contact-val" class="f-input" placeholder="Seu número/ID...">
+            <button class="confirm-btn" onclick="submitContact('${c}')">Continuar ➔</button>
+        `;
+        document.querySelector('.phone').appendChild(div);
+        scrollChat();
+    }
+};
+
+window.submitContact = async (c) => {
+    state.contact = document.getElementById('contact-val').value;
+    document.querySelector('.input-container').remove();
+    addUserMsg(state.contact || 'Ok');
+    await wait(300);
+    await showGoogleBtn(botConfig.lang.contact_google, false);
+};
+
+// ==========================================
+// GOOGLE & FINISH
+// ==========================================
+async function showGoogleBtn(msg, isPos) {
+    if (msg) await addBotMsg(msg);
+    const gDiv = document.createElement('div');
+    gDiv.style.padding = '5px 0';
+    gDiv.innerHTML = `
+        <a href="${botConfig.tenant.google_link}" target="_blank" class="confirm-btn" style="background:#4285F4; text-decoration:none">
+            ${botConfig.lang.googleBtn}
+        </a>
+    `;
+    chat.appendChild(gDiv);
+    scrollChat();
+
+    // After showing google CTA, give them a short time and end.
+    setTimeout(() => {
+        finishChat(isPos);
+    }, 2000);
+}
+
+let isSubmitting = false;
+async function finishChat(isPos) {
+    if(isSubmitting) return;
+    isSubmitting = true;
+
+    // Send payload quietly in background
+    submitEvaluation().catch(e => console.error(e));
+
+    const finalTexts = (isPos ? botConfig.lang.highFinalMsg : botConfig.lang.lowFinalMsg).split('\n');
+    for (const text of finalTexts) {
+        await addBotMsg(text);
+        await wait(600);
+    }
+    
+    setTimeout(() => {
+        showSuccessScreen();
+    }, 2000);
+}
+
+async function submitEvaluation() {
+    const payload = {
+        nota: state.rating,
+        feedback: state.feedback,
+        problema: state.problem || state.aspect,
+        tipo_contato: state.contact ? 'whatsapp' : 'nao', // Simplificado
+        contato_valor: state.contact,
+        nome_cliente: state.nome_cliente || 'Anônimo',
+        primeira_visita: state.first_visit,
+        periodo_visita: state.period,
+    };
+
+    const res = await fetch(`/avaliar/${bizSlug}/salvar`, {
+        method: 'POST',
+        headers: { 
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) throw new Error("Fail");
+    const data = await res.json();
+
+    if (state.photo && data.token) {
+        await PhotoUploader.upload({
+            file: state.photo,
+            reviewToken: data.token,
+            slug: bizSlug,
+            csrfToken: '{{ csrf_token() }}'
+        });
+    }
+}
 
 function showSuccessScreen() {
     const screen = document.createElement('div');
