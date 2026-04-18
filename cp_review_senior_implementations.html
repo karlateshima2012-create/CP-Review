@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CP Review — Implementações Senior</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Sora:wght@300;400;600;700&display=swap');
+
+:root {
+  --bg: #0A0A0F;
+  --surface: #12121A;
+  --surface2: #1A1A26;
+  --surface3: #22222E;
+  --border: #2A2A3A;
+  --border2: #363650;
+
+  --text: #E8E8F0;
+  --muted: #7070A0;
+  --dim: #404060;
+
+  --green: #00D4A0;
+  --green-bg: rgba(0,212,160,.08);
+  --blue: #4A9EFF;
+  --blue-bg: rgba(74,158,255,.08);
+  --purple: #A855F7;
+  --purple-bg: rgba(168,85,247,.08);
+  --orange: #FF8C42;
+  --orange-bg: rgba(255,140,66,.08);
+  --red: #FF5B5B;
+  --red-bg: rgba(255,91,91,.08);
+  --yellow: #FFD166;
+
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Sora', sans-serif;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ── LAYOUT ── */
+.wrap { max-width: 1100px; margin: 0 auto; padding: 0 28px 120px; }
+
+/* ── HEADER ── */
+.hero {
+  padding: 56px 0 40px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0;
+}
+
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.hero-eyebrow::before { content:''; width:20px; height:1px; background:var(--green); }
+
+.hero h1 {
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 700;
+  line-height: 1.15;
+  margin-bottom: 12px;
+  letter-spacing: -.02em;
+}
+
+.hero h1 em { font-style: normal; color: var(--green); }
+
+.hero-sub {
+  font-size: 15px;
+  color: var(--muted);
+  max-width: 620px;
+  line-height: 1.65;
+  font-weight: 300;
+}
+
+/* ── IMPLEMENTATION BLOCKS ── */
+.impl {
+  margin-top: 52px;
+}
+
+.impl-header {
+  display: grid;
+  grid-template-columns: 48px 1fr auto;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.impl-letter {
+  width: 48px; height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 18px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.impl-letter.a { background: var(--green-bg);  color: var(--green);  border: 1px solid rgba(0,212,160,.2); }
+.impl-letter.b { background: var(--blue-bg);   color: var(--blue);   border: 1px solid rgba(74,158,255,.2); }
+.impl-letter.c { background: var(--purple-bg); color: var(--purple); border: 1px solid rgba(168,85,247,.2); }
+.impl-letter.d { background: var(--orange-bg); color: var(--orange); border: 1px solid rgba(255,140,66,.2); }
+
+.impl-title-block {}
+.impl-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+.impl-subtitle {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: .05em;
+}
+
+.impl-badge {
+  font-family: var(--mono);
+  font-size: 9px;
+  padding: 4px 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badge-a { background: var(--green-bg);  color: var(--green);  border: 1px solid rgba(0,212,160,.2); }
+.badge-b { background: var(--blue-bg);   color: var(--blue);   border: 1px solid rgba(74,158,255,.2); }
+.badge-c { background: var(--purple-bg); color: var(--purple); border: 1px solid rgba(168,85,247,.2); }
+.badge-d { background: var(--orange-bg); color: var(--orange); border: 1px solid rgba(255,140,66,.2); }
+
+/* ── CONTEXT BOX ── */
+.context-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+.context-box strong { color: var(--text); font-weight: 600; }
+.context-box.a { border-left-color: var(--green); }
+.context-box.b { border-left-color: var(--blue); }
+.context-box.c { border-left-color: var(--purple); }
+.context-box.d { border-left-color: var(--orange); }
+
+/* ── CODE TABS ── */
+.code-tabs {
+  margin-bottom: 24px;
+}
+
+.tab-bar {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0;
+  overflow-x: auto;
+}
+
+.tab-btn {
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 8px 16px;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  white-space: nowrap;
+  transition: all .15s;
+  letter-spacing: .03em;
+}
+
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--text); border-bottom-color: var(--green); }
+.tab-btn.active-b { color: var(--text); border-bottom-color: var(--blue); }
+.tab-btn.active-c { color: var(--text); border-bottom-color: var(--purple); }
+.tab-btn.active-d { color: var(--text); border-bottom-color: var(--orange); }
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* ── CODE BLOCK ── */
+.code-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: none;
+  position: relative;
+}
+
+.code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface2);
+}
+
+.code-file {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: .05em;
+}
+
+.code-lang {
+  font-family: var(--mono);
+  font-size: 9px;
+  padding: 2px 7px;
+  background: var(--surface3);
+  border-radius: 3px;
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+}
+
+pre {
+  padding: 20px;
+  overflow-x: auto;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.75;
+  color: #C8C8E8;
+  tab-size: 4;
+}
+
+pre::-webkit-scrollbar { height: 4px; }
+pre::-webkit-scrollbar-track { background: var(--surface); }
+pre::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+/* syntax highlight */
+.kw  { color: #C084FC; }   /* keyword */
+.cl  { color: #67E8F9; }   /* class/type */
+.fn  { color: #86EFAC; }   /* function */
+.st  { color: #FCA5A5; }   /* string */
+.cm  { color: #4A5568; font-style: italic; } /* comment */
+.nu  { color: #FDE68A; }   /* number */
+.dc  { color: #93C5FD; }   /* decorator/attribute */
+.op  { color: #A0A0C0; }   /* operator */
+.va  { color: #E8E8F0; }   /* variable */
+.ph  { color: #7C8DB0; }   /* placeholder */
+
+/* ── SEPARATOR ── */
+hr { border: none; border-top: 1px solid var(--border); margin: 48px 0; }
+
+/* ── FOOTER ── */
+.doc-footer {
+  margin-top: 80px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.doc-footer-brand {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--green);
+}
+.doc-footer-meta {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--dim);
+  letter-spacing: .08em;
+  text-align: right;
+  line-height: 1.8;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">CP Review SaaS — Implementações de Produção</div>
+  <h1>Quatro melhorias de <em>sênior</em><br>prontas para o seu projeto</h1>
+  <p class="hero-sub">Código real, comentado e pronto para copiar. TenantModel com proteção cross-tenant, evolução WhatsApp, pré-agregação de BI e retry de foto offline no PWA.</p>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     A — TENANTMODEL + CROSS-TENANT TESTS
+════════════════════════════════════════════════════════ -->
+<div class="impl">
+  <div class="impl-header">
+    <div class="impl-letter a">A</div>
+    <div class="impl-title-block">
+      <div class="impl-title">Proteção Cross-Tenant — TenantModel + Testes Automatizados</div>
+      <div class="impl-subtitle">app/Models/Concerns · tests/Feature/Security</div>
+    </div>
+    <span class="impl-badge badge-a">Laravel · PHPUnit</span>
+  </div>
+
+  <div class="context-box a">
+    <strong>Por que isso é crítico:</strong> Em um Shared Database, um único <code>Review::all()</code> sem filtro expõe dados de todos os tenants. A solução é uma classe base que injeta o <code>tenant_id</code> automaticamente em toda query, tornando o vazamento impossível por design — não por disciplina do desenvolvedor. Os testes de cross-tenant garantem que o isolamento funciona mesmo após refatorações futuras.
+  </div>
+
+  <div class="code-tabs" id="tabs-a">
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('a',0,this)">TenantModel.php</button>
+      <button class="tab-btn" onclick="switchTab('a',1,this)">HasTenant (Trait)</button>
+      <button class="tab-btn" onclick="switchTab('a',2,this)">TenantScope.php</button>
+      <button class="tab-btn" onclick="switchTab('a',3,this)">CrossTenantTest.php</button>
+      <button class="tab-btn" onclick="switchTab('a',4,this)">TenantMiddleware.php</button>
+    </div>
+
+    <!-- TenantModel -->
+    <div class="tab-content active">
+      <div class="code-wrap">
+        <div class="code-header">
+          <span class="code-file">app/Models/TenantModel.php</span>
+          <span class="code-lang">PHP</span>
+        </div>
+        <pre><span class="cm">&lt;?php</span>
+
+<span class="kw">namespace</span> <span class="cl">App\Models</span>;
+
+<span class="kw">use</span> <span class="cl">Illuminate\Database\Eloquent\Model</span>;
+<span class="kw">use</span> <span class="cl">App\Models\Concerns\HasTenant</span>;
+<span class="kw">use</span> <span class="cl">App\Models\Scopes\TenantScope</span>;
+
+<span class="cm">/**
+ * Classe base para todos os modelos que pertencem a um tenant.
+ * Herdar desta classe é OBRIGATÓRIO para qualquer model
+ * que tenha coluna tenant_id.
+ *
+ * Garante:
+ *  1. TenantScope aplicado em TODAS as queries (SELECT, UPDATE, DELETE)
+ *  2. tenant_id injetado automaticamente em CREATE
+ *  3. Impossibilidade de salvar/atualizar registro sem tenant_id válido
+ */</span>
+<span class="kw">abstract class</span> <span class="cl">TenantModel</span> <span class="kw">extends</span> <span class="cl">Model</span>
+{
+    <span class="kw">use</span> <span class="cl">HasTenant</span>;
+
+    <span class="cm">/**
+     * Boot: registra o TenantScope globalmente.
+     * Roda uma vez por request, não por query.
+     */</span>
+    <span class="kw">protected static function</span> <span class="fn">boot</span>(): <span class="cl">void</span>
+    {
+        <span class="kw">parent</span>::<span class="fn">boot</span>();
+
+        <span class="cm">// Aplica filtro de tenant em todas as queries SELECT/UPDATE/DELETE</span>
+        <span class="kw">static</span>::<span class="fn">addGlobalScope</span>(<span class="kw">new</span> <span class="cl">TenantScope</span>);
+
+        <span class="cm">// Injeta tenant_id automaticamente ao criar qualquer registro</span>
+        <span class="kw">static</span>::<span class="fn">creating</span>(<span class="kw">function</span> (<span class="cl">Model</span> <span class="va">$model</span>) {
+            <span class="kw">if</span> (<span class="kw">empty</span>(<span class="va">$model</span>->tenant_id)) {
+                <span class="va">$tenantId</span> = <span class="fn">app</span>(<span class="st">'current.tenant.id'</span>);
+
+                <span class="kw">if</span> (! <span class="va">$tenantId</span>) {
+                    <span class="kw">throw new</span> <span class="cl">\RuntimeException</span>(
+                        <span class="st">'Tentativa de criar registro sem tenant_id resolvido. '</span> .
+                        <span class="st">'Verifique se o TenantMiddleware está na rota.'</span>
+                    );
+                }
+
+                <span class="va">$model</span>->tenant_id = <span class="va">$tenantId</span>;
+            }
+        });
+    }
+
+    <span class="cm">/**
+     * Desabilita o TenantScope para queries administrativas.
+     * USO RESTRITO: apenas em Jobs de relatório e painel Super Admin.
+     * NUNCA use em rotas de lojista.
+     */</span>
+    <span class="kw">public static function</span> <span class="fn">withoutTenantScope</span>(): <span class="cl">Builder</span>
+    {
+        <span class="kw">return</span> <span class="kw">static</span>::<span class="fn">withoutGlobalScope</span>(<span class="cl">TenantScope</span>::class);
+    }
+}</pre>
+      </div>
+    </div>
+
+    <!-- HasTenant Trait -->
+    <div class="tab-content">
+      <div class="code-wrap">
+        <div class="code-header">
+          <span class="code-file">app/Models/Concerns/HasTenant.php</span>
+          <span class="code-lang">PHP</span>
+        </div>
+        <pre><span class="cm">&lt;?php</span>
+
+<span class="kw">namespace</span> <span class="cl">App\Models\Concerns</span>;
+
+<span class="kw">use</span> <span class="cl">App\Models\Tenant</span>;
+
+<span class="cm">/**
+ * Trait reutilizável para qualquer model que precise
+ * do relacionamento com Tenant sem herdar TenantModel.
+ * Ex: User tem tenant_id mas também é usado pelo Super Admin.
+ */</span>
+<span class="kw">trait</span> <span class="cl">HasTenant</span>
+{
+    <span class="cm">/**
+     * Relacionamento: cada model pertence a um Tenant.
+     */</span>
+    <span class="kw">public function</span> <span class="fn">tenant</span>(): <span class="cl">BelongsTo</span>
+    {
+        <span class="kw">return</span> <span class="va">$this</span>-><span class="fn">belongsTo</span>(<span class="cl">Tenant</span>::class, <span class="st">'tenant_id'</span>);
+    }
+
+    <span class="cm">/**
+     * Scope para forçar um tenant específico (uso em testes).
+     * Ex: Review::forTenant($uuid)->get()
+     */</span>
+    <span class="kw">public function</span> <span class="fn">scopeForTenant</span>(<span class="cl">Builder</span> <span class="va">$query</span>, <span class="cl">string</span> <span class="va">$tenantId</span>): <span class="cl">Builder</span>
+    {
+        <span class="kw">return</span> <span class="va">$query</span>-><span class="fn">where</span>(<span class="st">'tenant_id'</span>, <span class="va">$tenantId</span>);
+    }
+
+    <span class="cm">/**
+     * Verifica se o modelo pertence ao tenant atual.
+     * Use em Policies: $this->belongsToCurrentTenant()
+     */</span>
+    <span class="kw">public function</span> <span class="fn">belongsToCurrentTenant</span>(): <span class="cl">bool</span>
+    {
+        <span class="kw">return</span> <span class="va">$this</span>->tenant_id === <span class="fn">app</span>(<span class="st">'current.tenant.id'</span>);
+    }
+}</pre>
+      </div>
+    </div>
+
+    <!-- TenantScope -->
+    <div class="tab-content">
+      <div class="code-wrap">
+        <div class="code-header">
+          <span class="code-file">app/Models/Scopes/TenantScope.php</span>
+          <span class="code-lang">PHP</span>
+        </div>
+        <pre><span class="cm">&lt;?php</span>
+
+<span class="kw">namespace</span> <span class="cl">App\Models\Scopes</span>;
+
+<span class="kw">use</span> <span class="cl">Illuminate\Database\Eloquent\{Builder, Model, Scope}</span>;
+
+<span class="kw">class</span> <span class="cl">TenantScope</span> <span class="kw">implements</span> <span class="cl">Scope</span>
+{
+    <span class="cm">/**
+     * Injeta automaticamente WHERE tenant_id = :current
+     * em toda query que usa qualquer TenantModel.
+     *
+     * Laravel aplica isso em: SELECT, UPDATE, DELETE.
+     * Não se aplica em INSERT (tratado no boot do TenantModel).
+     */</span>
+    <span class="kw">public function</span> <span class="fn">apply</span>(<span class="cl">Builder</span> <span class="va">$builder</span>, <span class="cl">Model</span> <span class="va">$model</span>): <span class="cl">void</span>
+    {
+        <span class="va">$tenantId</span> = <span class="fn">app</span>(<span class="st">'current.tenant.id'</span>);
+
+        <span class="cm">// Se não houver tenant resolvido (ex: Jobs do Super Admin),
+        // não aplica o filtro. O Job deve chamar withoutTenantScope()
+        // explicitamente para deixar a intenção clara no código.</span>
+        <span class="kw">if</span> (<span class="va">$tenantId</span>) {
+            <span class="va">$builder</span>-><span class="fn">where</span>(
+                <span class="va">$model</span>-><span class="fn">getTable</span>() . <span class="st">'.tenant_id'</span>,
+                <span class="va">$tenantId</span>
+            );
+        }
+    }
+}</pre>
+      </div>
+    </div>
+
+    <!-- CrossTenantTest -->
+    <div class="tab-content">
+      <div class="code-wrap">
+        <div class="code-header">
+          <span class="code-file">tests/Feature/Security/CrossTenantAccessTest.php</span>
+          <span class="code-lang">PHP · PHPUnit</span>
+        </div>
+        <pre><span class="cm">&lt;?php</span>
+
+<span class="kw">namespace</span> <span class="cl">Tests\Feature\Security</span>;
+
+<span class="kw">use</span> <span class="cl">Tests\TestCase</span>;
+<span class="kw">use</span> <span class="cl">App\Models\{Tenant, User, Review}</span>;
+<span class="kw">use</span> <span class="cl">Illuminate\Foundation\Testing\RefreshDatabase</span>;
+
+<span class="cm">/**
+ * TESTES DE ISOLAMENTO CROSS-TENANT
+ *
+ * Estes testes tentam PROPOSITALMENTE acessar dados de outro tenant.
+ * Se qualquer um passar retornando dados indevidos, o isolamento quebrou.
+ *
+ * Rodar obrigatoriamente: antes de cada deploy em produção.
+ * php artisan test --filter CrossTenantAccessTest
+ */</span>
+<span class="kw">class</span> <span class="cl">CrossTenantAccessTest</span> <span class="kw">extends</span> <span class="cl">TestCase</span>
+{
+    <span class="kw">use</span> <span class="cl">RefreshDatabase</span>;
+
+    <span class="kw">private</span> <span class="cl">Tenant</span> <span class="va">$tenantA</span>;
+    <span class="kw">private</span> <span class="cl">Tenant</span> <span class="va">$tenantB</span>;
+    <span class="kw">private</span> <span class="cl">User</span>   <span class="va">$ownerA</span>;
+
+    <span class="kw">protected function</span> <span class="fn">setUp</span>(): <span class="cl">void</span>
+    {
+        <span class="kw">parent</span>::<span class="fn">setUp</span>();
+
+        <span class="cm">// Cria dois tenants independentes</span>
+        <span class="va">$this</span>->tenantA = <span class="cl">Tenant</span>::<span class="fn">factory</span>()-><span class="fn">create</span>();
+        <span class="va">$this</span>->tenantB = <span class="cl">Tenant</span>::<span class="fn">factory</span>()-><span class="fn">create</span>();
+
+        <span class="cm">// Cria avaliações para cada tenant</span>
+        <span class="cl">Review</span>::<span class="fn">factory</span>()-><span class="fn">count</span>(<span class="nu">5</span>)-><span class="fn">create</span>([<span class="st">'tenant_id'</span> => <span class="va">$this</span>->tenantA->id]);
+        <span class="cl">Review</span>::<span class="fn">factory</span>()-><span class="fn">count</span>(<span class="nu">3</span>)-><span class="fn">create</span>([<span class="st">'tenant_id'</span> => <span class="va">$this</span>->tenantB->id]);
+
+        <span class="cm">// Usuário (lojista) do Tenant A</span>
+        <span class="va">$this</span>->ownerA = <span class="cl">User</span>::<span class="fn">factory</span>()-><span class="fn">create</span>([
+            <span class="st">'tenant_id'</span> => <span class="va">$this</span>->tenantA->id,
+            <span class="st">'role'</span>      => <span class="st">'owner'</span>,
+        ]);
+    }
+
+    <span class="dc">/** @test */</span>
+    <span class="kw">public function</span> <span class="fn">lojista_nao_ve_avaliacoes_de_outro_tenant</span>(): <span class="cl">void</span>
+    {
+        <span class="cm">// Simula lojista A autenticado</span>
+        <span class="va">$this</span>-><span class="fn">actingAs</span>(<span class="va">$this</span>->ownerA);
+        <span class="fn">app</span>()-><span class="fn">instance</span>(<span class="st">'current.tenant.id'</span>, <span class="va">$this</span>->tenantA->id);
+
+        <span class="cm">// Tenta buscar TODAS as reviews sem filtro explícito</span>
+        <span class="va">$reviews</span> = <span class="cl">Review</span>::<span class="fn">all</span>();
+
+        <span class="cm">// Deve retornar APENAS as 5 reviews do tenant A</span>
+        <span class="va">$this</span>-><span class="fn">assertCount</span>(<span class="nu">5</span>, <span class="va">$reviews</span>);
+        <span class="va">$reviews</span>-><span class="fn">each</span>(<span class="kw">fn</span>(<span class="va">$r</span>) => <span class="va">$this</span>-><span class="fn">assertEquals</span>(<span class="va">$this</span>->tenantA->id, <span class="va">$r</span>->tenant_id));
+    }
+
+    <span class="dc">/** @test */</span>
+    <span class="kw">public function</span> <span class="fn">api_rejeita_review_com_slug_de_outro_tenant</span>(): <span class="cl">void</span>
+    {
+        <span class="cm">// Tenta POST com slug do tenant B enquanto autenticado como A</span>
+        <span class="va">$response</span> = <span class="va">$this</span>
+            -><span class="fn">actingAs</span>(<span class="va">$this</span>->ownerA, <span class="st">'sanctum'</span>)
+            -><span class="fn">postJson</span>(<span class="st">'/api/review'</span>, [
+                <span class="st">'slug'</span>   => <span class="va">$this</span>->tenantB->slug, <span class="cm">// slug de OUTRO tenant</span>
+                <span class="st">'rating'</span> => <span class="nu">5</span>,
+            ]);
+
+        <span class="cm">// API deve rejeitar — tenant não pertence ao usuário autenticado</span>
+        <span class="va">$response</span>-><span class="fn">assertStatus</span>(<span class="nu">404</span>); <span class="cm">// 404 e não 403 — não revelamos que existe</span>
+    }
+
+    <span class="dc">/** @test */</span>
+    <span class="kw">public function</span> <span class="fn">painel_retorna_404_para_review_de_outro_tenant</span>(): <span class="cl">void</span>
+    {
+        <span class="cm">// Pega ID de uma review do tenant B</span>
+        <span class="va">$reviewB</span> = <span class="cl">Review</span>::<span class="fn">withoutTenantScope</span>()
+            -><span class="fn">where</span>(<span class="st">'tenant_id'</span>, <span class="va">$this</span>->tenantB->id)
+            -><span class="fn">first</span>();
+
+        <span class="va">$this</span>-><span class="fn">actingAs</span>(<span class="va">$this</span>->ownerA);
+        <span class="fn">app</span>()-><span class="fn">instance</span>(<span class="st">'current.tenant.id'</span>, <span class="va">$this</span>->tenantA->id);
+
+        <span class="cm">// Tenta acessar diretamente a review do tenant B pela URL</span>
+        <span class="va">$response</span> = <span class="va">$this</span>-><span class="fn">getJson</span>(<span class="st">"/painel/avaliacoes/{$reviewB->id}"</span>);
+
+        <span class="cm">// Deve retornar 404 — TenantScope filtra e model não é encontrado</span>
+        <span class="va">$response</span>-><span class="fn">assertNotFound</span>();
+    }
+
+    <span class="dc">/** @test */</span>
+    <span class="kw">public function</span> <span class="fn">criar_review_injeta_tenant_id_automaticamente</span>(): <span class="cl">void</span>
+    {
+        <span class="fn">app</span>()-><span class="fn">instance</span>(<span class="st">'current.tenant.id'</span>, <span class="va">$this</span>->tenantA->id);
+
+        <span class="va">$review</span> = <span class="cl">Review</span>::<span class="fn">create</span>([
+            <span class="st">'rating'</span>       => <span class="nu">4</span>,
+            <span class="st">'session_token'</span> => <span class="fn">str</span>(<span class="nu">64</span>),
+            <span class="cm">// Propositalmente NÃO passamos tenant_id</span>
+        ]);
+
+        <span class="cm">// TenantModel deve ter injetado automaticamente</span>
+        <span class="va">$this</span>-><span class="fn">assertEquals</span>(<span class="va">$this</span>->tenantA->id, <span class="va">$review</span>->tenant_id);
+    }
+}</pre>
+      </div>
+    </div>
+
+    <!-- TenantMiddleware -->
+    <div class="tab-content">
+      <div class="code-wrap">
+        <div class="code-header">
+          <span class="code-file">app/Http/Middleware/ResolveTenant.php</span>
+          <span class="code-lang">PHP</span>
+        </div>
+        <pre><span class="cm">&lt;?php</span>
+
+<span class="kw">namespace</span> <span class="cl">App\Http\Middleware</span>;
+
+<span class="kw">use</span> <span class="cl">Closure</span>;
+<span class="kw">use</span> <span class="cl">App\Models\Tenant</span>;
+<span class="kw">use</span> <span class="cl">Illuminate\Http\Request</span>;
+
+<span class="cm">/**
+ * Resolve o tenant atual e registra no container.
+ *
+ * Para rotas de API pública (/api/review):
+ *   Resolve pelo ?slug= ou pelo {slug} na URL.
+ *
+ * Para rotas do painel do lojista (/painel/*):
+ *   Resolve pelo tenant_id do usuário autenticado.
+ *
+ * Para rotas do Super Admin (/admin/*):
+ *   Não resolve — super admin opera sem filtro de tenant.
+ */</span>
+<span class="kw">class</span> <span class="cl">ResolveTenant</span>
+{
+    <span class="kw">public function</span> <span class="fn">handle</span>(<span class="cl">Request</span> <span class="va">$request</span>, <span class="cl">Closure</span> <span class="va">$next</span>, <span class="cl">string</span> <span class="va">$source</span> = <span class="st">'auth'</span>)
+    {
+        <span class="va">$tenantId</span> = <span class="kw">match</span> (<span class="va">$source</span>) {
+            <span class="cm">// Painel do lojista: usa o tenant do usuário logado</span>
+            <span class="st">'auth'</span> => <span class="fn">auth</span>()-><span class="fn">user</span>()?->tenant_id,
+
+            <span class="cm">// API pública: resolve pelo slug na URL</span>
+            <span class="st">'slug'</span> => <span class="cl">Tenant</span>::<span class="fn">where</span>(<span class="st">'slug'</span>, <span class="va">$request</span>-><span class="fn">route</span>(<span class="st">'slug'</span>) ?? <span class="va">$request</span>-><span class="fn">input</span>(<span class="st">'slug'</span>))
+                          -><span class="fn">where</span>(<span class="st">'active'</span>, <span class="kw">true</span>)
+                          -><span class="fn">value</span>(<span class="st">'id'</span>),
+
+            <span class="kw">default</span> => <span class="kw">null</span>,
+        };
+
+        <span class="kw">if</span> (! <span class="va">$tenantId</span>) {
+            <span class="kw">return</span> <span class="fn">response</span>()-><span class="fn">json</span>([<span class="st">'error'</span> => <span class="st">'not_found'</span>], <span class="nu">404</span>);
+        }
+
+        <span class="cm">// Registra no container — acessível em qualquer lugar via app('current.tenant.id')</span>
+        <span class="fn">app</span>()-><span class="fn">instance</span>(<span class="st">'current.tenant.id'</span>, <span class="va">$tenantId</span>);
+
+        <span class="kw">return</span> <span class="va">$next</span>(<span class="va">$request</span>);
+    }
+}</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- ════════════════════════════════════════════════════════
+     B — WHATSAPP EVOLUTION PATH
+════════════════════════════════════════════════════════ -->
+<div class="impl">
+  <div class="impl-header">
+    <div class="impl-letter b">B</div>
+    <div class="impl-title-block">
+      <div class="impl-title">Evolução WhatsApp — Abstração com Fallback Triplo</div>
+      <div class="impl-subtitle">app/Services/Notification · Evolution API → Meta Cloud API</div>
+    </div>
+    <span class="impl-badge badge-b">Laravel · Queue · Jobs</span>
+  </div>
+
+  <div class="context-box b">
+    <strong>Estratégia de evolução:</strong> A interface <code>WhatsAppDriver</code> é o contrato. Você começa com <code>EvolutionDriver</code> (MVP, barato). Quando precisar escalar ou se a Evolution tiver instabilidade, troca por <code>MetaCloudDriver</code> em uma linha de config, sem tocar em nenhum outro código. O <code>NotificationService</code> também tem fallback automático para e-mail após 3 falhas.
+  </div>
+
+  <div class="code-tabs" id="tabs-b">
+    <div class="tab-bar">
+      <button class="tab-btn active-b active" onclick="switchTab('b',0,this)">WhatsAppDriver (Interface)</button>
+      <button class="tab-btn" onclick="switchTab('b',1,this)">EvolutionDriver.php</button>
+      <button class="tab-btn" onclick="switchTab('b',2,this)">MetaCloudDriver.php</button>
+      <button class="tab-btn" onclick="switchTab('b',3,this)">NotificationService.php</button>
+      <button class="tab-btn" onclick="switchTab('b',4,this)">NotifyLowRatingJob.php</button>
+    </div>
+
+    <div class="tab-content active">
+      <div class="code-wrap">
+        <div class="code-header">
+          <span class="code-file">app/Services/Notification/Contracts/WhatsAppDriver.php</span>
+          <span class="code-lang">PHP · Interface</span>
+        </div>
+        <pre><span class="cm">&lt;?php</span>
+
+<span class="kw">namespace</span> <span class="cl">App\Services\Notification\Contracts</span>;
+
+<span class="cm">/**
+ * Contrato para drivers de WhatsApp.
+ * Trocar de Evolution para Meta Cloud = mudar 1 linha no config.
+ * Todo o sistema continua funcionando sem alteração.
+ */</span>
+<span class="kw">interface</span> <span class="cl">WhatsAppDriver</span>
+{
+    <span class="cm">/**
+     * Envia mensagem de texto para um número.
+     *
+     * @param  string  $to      Número no formato internacional: +5511999999999
+     * @param  string  $message Texto da mensagem (sem formatação especial)
+     * @return bool    true se enviado, false se falhou
+     */</span>
+    <span class="kw">public function</span> <span class="fn">send</span>(<span class="cl">string</span> <span class="va">$to</span>, <span class="cl">string</span> <span class="va">$message</span>): <span class="cl">bool</span>;
+
+    <span class="cm">/**
+     * Verifica se o driver está operacional.
+     * Chamado pelo painel Admin antes de salvar configuração.
+     */</span>
+    <span class="kw">public function</span> <span class="fn">healthCheck</span>(): <span class="cl">bool</span>;
+
+    <span class="cm">/**
+     * Nome do driver para logs e painel.
+     */</span>
+    <span class="kw">public function</span> <span class="fn">driverName</span>(): <span class="cl">string</span>;
+}</pre>
+      </div>
+    </div>
+
+    <div class="tab-content">
+      <div class="code-wrap">
+        <div class="code-header">
+          <span class="code-file">app/Services/Notification/EvolutionDriver.php</span>
+          <span class="code-lang">PHP · MVP Driver</span>
+        </div>
+        <pre><span class="cm">&lt;?php</span>
+
+<span class="kw">namespace</span> <span class="cl">App\Services\Notification</span>;
+
+<span class="kw">use</span> <span class="cl">App\Services\Notification\Contracts\WhatsAppDriver</span>;
+<span class="kw">use</span> <span class="cl">Illuminate\Support\Facades\{Http, Log}</span>;
+
+<span class="cm">/**
+ * Driver Evolution API — para MVP e até ~200 tenants.
+ * Vantagem: barato, sem aprovação Meta.
+ * Risco: unofficial API, risco de banimento em alto volume.
+ * Migrar para MetaCloudDriver ao passar de 200 tenants ativos.
+ */</span>
+<span class="kw">class</span> <span class="cl">EvolutionDriver</span> <span class="kw">implements</span> <span class="cl">WhatsAppDriver</span>
+{
+    <span class="kw">public function</span> <span class="fn">__construct</span>(
+        <span class="kw">private readonly</span> <span class="cl">string</span> <span class="va">$baseUrl</span>,
+        <span class="kw">private readonly</span> <span class="cl">string</span> <span class="va">$apiKey</span>,
+        <span class="kw">private readonly</span> <span class="cl">string</span> <span class="va">$instance</span>,
+    ) {}
+
+    <span class="kw">public function</span> <span class="fn">send</span>(<span class="cl">string</span> <span class="va">$to</span>, <span class="cl">string</span> <span class="va">$message</span>): <span class="cl">bool</span>
+    {
+        <span class="kw">try</span> {
+            <span class="va">$response</span> = <span class="cl">Http</span>::<span class="fn">withHeaders</span>([
+                <span class="st">'apikey'</span>       => <span class="va">$this</span>->apiKey,
+                <span class="st">'Content-Type'</span> => <span class="st">'application/json'</span>,
+            ])
+            -><span class="fn">timeout</span>(<span class="nu">8</span>)
+            -><span class="fn">post</span>(<span class="st">"{$this->baseUrl}/message/sendText/{$this->instance}"</span>, [
+                <span class="st">'number'</span>  => <span class="fn">preg_replace</span>(<span class="st">'/\D/'</span>, <span class="st">''</span>, <span class="va">$to</span>), <span class="cm">// só dígitos</span>
+                <span class="st">'options'</span> => [<span class="st">'delay'</span> => <span class="nu">0</span>],
+                <span class="st">'textMessage'</span> => [<span class="st">'text'</span> => <span class="va">$message</span>],
+            ]);
+
+            <span class="kw">return</span> <span class="va">$response</span>-><span class="fn">successful</span>();
+
+        } <span class="kw">catch</span> (<span class="cl">\Throwable</span> <span class="va">$e</span>) {
+            <span class="cl">Log</span>::<span class="fn">error</span>(<span class="st">'[EvolutionDriver] Falha ao enviar'</span>, [
+                <span class="st">'to'</span>    => <span class="fn">substr</span>(<span class="va">$to</span>, <span class="nu">0</span>, <span class="nu">6</span>) . <span class="st">'****'</span>, <span class="cm">// não loga número completo</span>
+                <span class="st">'error'</span> => <span class="va">$e</span>-><span class="fn">getMessage</span>(),
+            ]);
+            <span class="kw">return false</span>;
+        }
+    }
+
+    <span class="kw">public function</span> <span class="fn">healthCheck</span>(): <span class="cl">bool</span>
+    {
+        <span class="kw">try</span> {
+            <span class="kw">return</span> <span class="cl">Http</span>::<span class="fn">withHeaders</span>([<span class="st">'apikey'</span> => <span class="va">$this</span>->apiKey])
+                -><span class="fn">timeout</span>(<span class="nu">5</span>)
+                -><span class="fn">get</span>(<span class="st">"{$this->baseUrl}/instance/connectionState/{$this->instance}"</span>)
+                -><span class="fn">json</span>(<span class="st">'state'</span>) === <span class="st">'open'</span>;
+        } <span class="kw">catch</span> (<span class="cl">\Throwable</span>) {
+            <span class="kw">return false</span>;
+        }
+    }
+
+    <span class="kw">public function</span> <span class="fn">driverName</span>(): <span class="cl">string</span> { <span class="kw">return</span> <span class="st">'evolution'</span>; }
+}</pre>
+      </div>
+    </div>
+
+    <div class="tab-content">
+      <div class="code-wrap">
+        <div class="code-header">
+          <span class="code-file">app/Services/Notification/MetaCloudDriver.php</span>
+          <span class="code-lang">PHP · Produção Escalável</span>
+        </div>
+        <pre><span class="cm">&lt;?php</span>
+
+<span class="kw">namespace</span> <span class="cl">App\Services\Notification</span>;
+
+<span class="kw">use</span> <span class="cl">App\Services\Notification\Contracts\WhatsAppDriver</span>;
+<span class="kw">use</span> <span class="cl">Illuminate\Support\Facades\{Http, Log}</span>;
+
+<span class="cm">/**
+ * Driver Meta Cloud API (oficial).
+ * Ativar quando: Evolution estiver causando banimentos
+ * ou ao passar de 200 tenants ativos.
+ *
+ * Para ativar: config/services.php → whatsapp.driver = 'meta'
+ * O resto do sistema não muda nada.
+ */</span>
+<span class="kw">class</span> <span class="cl">MetaCloudDriver</span> <span class="kw">implements</span> <span class="cl">WhatsAppDriver</span>
+{
+    <span class="kw">private const</span> <span class="va">API_URL</span> = <span class="st">'https://graph.facebook.com/v19.0'</span>;
+
+    <span class="kw">public function</span> <span class="fn">__construct</span>(
+        <span class="kw">private readonly</span> <span class="cl">string</span> <span class="va">$phoneNumberId</span>,
+        <span class="kw">private readonly</span> <span class="cl">string</span> <span class="va">$accessToken</span>,
+    ) {}
+
+    <span class="kw">public function</span> <span class="fn">send</span>(<span class="cl">string</span> <span class="va">$to</span>, <span class="cl">string</span> <span class="va">$message</span>): <span class="cl">bool</span>
+    {
+        <span class="kw">try</span> {
+            <span class="va">$response</span> = <span class="cl">Http</span>::<span class="fn">withToken</span>(<span class="va">$this</span>->accessToken)
+                -><span class="fn">timeout</span>(<span class="nu">10</span>)
+                -><span class="fn">post</span>(<span class="kw">self</span>::<span class="va">API_URL</span> . <span class="st">"/{$this->phoneNumberId}/messages"</span>, [
+                    <span class="st">'messaging_product'</span> => <span class="st">'whatsapp'</span>,
+                    <span class="st">'to'</span>                => <span class="fn">preg_replace</span>(<span class="st">'/\D/'</span>, <span class="st">''</span>, <span class="va">$to</span>),
+                    <span class="st">'type'</span>              => <span class="st">'text'</span>,
+                    <span class="st">'text'</span>              => [<span class="st">'body'</span> => <span class="va">$message</span>],
+                ]);
+
+            <span class="kw">return</span> <span class="va">$response</span>-><span class="fn">successful</span>();
+
+        } <span class="kw">catch</span> (<span class="cl">\Throwable</span> <span class="va">$e</span>) {
+            <span class="cl">Log</span>::<span class="fn">error</span>(<span class="st">'[MetaCloudDriver] Falha'</span>, [<span class="st">'error'</span> => <span class="va">$e</span>-><span class="fn">getMessage</span>()]);
+            <span class="kw">return false</span>;
+        }
+    }
+
+    <span class="kw">public function</span> <span class="fn">healthCheck</span>(): <span class="cl">bool</span>
+    {
+        <span class="kw">return</span> <span class="cl">Http</span>::<span class="fn">withToken</span>(<span class="va">$this</span>->accessToken)
+            -><span class="fn">get</span>(<span class="kw">self</span>::<span class="va">API_URL</span> . <span class="st">"/{$this->phoneNumberId}"</span>)
+            -><span class="fn">successful</span>();
+    }
+
+    <span class="kw">public function</span> <span class="fn">driverName</span>(): <span class="cl">string</span> { <span class="kw">return</span> <span class="st">'meta_cloud'</span>; }
+}</pre>
+      </div>
+    </div>
+
+    <div class="tab-content">
+      <div class="code-wrap">
+        <div class="code-header">
+          <span class="code-file">app/Services/NotificationService.php</span>
+          <span class="code-lang">PHP · Fallback Triplo</span>
+        </div>
+        <pre><span class="cm">&lt;?php</span>
+
+<span class="kw">namespace</span> <span class="cl">App\Services</span>;
+
+<span class="kw">use</span> <span class="cl">App\Models\{Review, NotificationLog, Tenant}</span>;
+<span class="kw">use</span> <span class="cl">App\Services\Notification\Contracts\WhatsAppDriver</span>;
+<span class="kw">use</span> <span class="cl">App\Services\Notification\LineDriver</span>;
+<span class="kw">use</span> <span class="cl">Illuminate\Support\Facades\Mail</span>;
+
+<span class="kw">class</span> <span class="cl">NotificationService</span>
+{
+    <span class="kw">public function</span> <span class="fn">__construct</span>(
+        <span class="kw">private readonly</span> <span class="cl">WhatsAppDriver</span> <span class="va">$whatsapp</span>,
+        <span class="kw">private readonly</span> <span class="cl">LineDriver</span>     <span class="va">$line</span>,
+    ) {}
+
+    <span class="cm">/**
+     * Notifica lojista sobre avaliação negativa.
+     *
+     * Ordem de tentativa:
+     *  1. Canal preferido do tenant (whatsapp | line)
+     *  2. Se falhar 3x → fallback e-mail
+     *  3. Log de todas as tentativas em notifications_log
+     */</span>
+    <span class="kw">public function</span> <span class="fn">notifyLowRating</span>(<span class="cl">Review</span> <span class="va">$review</span>): <span class="cl">void</span>
+    {
+        <span class="va">$tenant</span>  = <span class="va">$review</span>->tenant;
+        <span class="va">$message</span> = <span class="va">$this</span>-><span class="fn">buildMessage</span>(<span class="va">$review</span>, <span class="va">$tenant</span>);
+        <span class="va">$sent</span>    = <span class="kw">false</span>;
+        <span class="va">$attempt</span> = <span class="nu">0</span>;
+
+        <span class="kw">while</span> (! <span class="va">$sent</span> && <span class="va">$attempt</span> < <span class="nu">3</span>) {
+            <span class="va">$attempt</span>++;
+
+            <span class="va">$sent</span> = <span class="kw">match</span> (<span class="va">$tenant</span>->notify_channel) {
+                <span class="st">'whatsapp'</span> => <span class="va">$this</span>->whatsapp-><span class="fn">send</span>(<span class="va">$tenant</span>->notify_target, <span class="va">$message</span>),
+                <span class="st">'line'</span>     => <span class="va">$this</span>->line-><span class="fn">send</span>(<span class="va">$tenant</span>->notify_target, <span class="va">$message</span>),
+                <span class="kw">default</span>    => <span class="kw">false</span>,
+            };
+
+            <span class="va">$this</span>-><span class="fn">logAttempt</span>(<span class="va">$review</span>, <span class="va">$tenant</span>->notify_channel, <span class="va">$sent</span>, <span class="va">$attempt</span>);
+
+            <span class="kw">if</span> (! <span class="va">$sent</span>) <span class="fn">sleep</span>(<span class="nu">2</span>); <span class="cm">// backoff simples entre tentativas</span>
+        }
+
+        <span class="cm">// Fallback: após 3 falhas no canal principal, envia e-mail</span>
+        <span class="kw">if</span> (! <span class="va">$sent</span>) {
+            <span class="va">$this</span>-><span class="fn">fallbackEmail</span>(<span class="va">$review</span>, <span class="va">$tenant</span>);
+        }
+    }
+
+    <span class="kw">private function</span> <span class="fn">buildMessage</span>(<span class="cl">Review</span> <span class="va">$review</span>, <span class="cl">Tenant</span> <span class="va">$tenant</span>): <span class="cl">string</span>
+    {
+        <span class="va">$stars</span>    = <span class="fn">str_repeat</span>(<span class="st">'⭐'</span>, <span class="va">$review</span>->rating);
+        <span class="va">$category</span> = <span class="va">$review</span>->issue_category ?? <span class="st">'Não informado'</span>;
+        <span class="va">$link</span>     = <span class="fn">route</span>(<span class="st">'painel.reviews.show'</span>, <span class="va">$review</span>->id);
+
+        <span class="kw">return</span> <span class="va">$tenant</span>->locale === <span class="st">'ja'</span>
+            ? <span class="st">"【CP Review】低評価が届きました\n評価: {$stars}\nカテゴリ: {$category}\n詳細: {$link}"</span>
+            : <span class="st">"⚠️ Nova avaliação negativa!\nNota: {$stars}\nProblema: {$category}\nVer detalhes: {$link}"</span>;
+    }
+
+    <span class="kw">private function</span> <span class="fn">logAttempt</span>(<span class="cl">Review</span> <span class="va">$review</span>, <span class="cl">string</span> <span class="va">$channel</span>, <span class="cl">bool</span> <span class="va">$success</span>, <span class="cl">int</span> <span class="va">$attempt</span>): <span class="cl">void</span>
+    {
+        <span class="cl">NotificationLog</span>::<span class="fn">withoutTenantScope</span>()-><span class="fn">create</span>([
+            <span class="st">'review_id'</span> => <span class="va">$review</span>->id,
+            <span class="st">'tenant_id'</span> => <span class="va">$review</span>->tenant_id,
+            <span class="st">'channel'</span>   => <span class="va">$channel</span>,
+            <span class="st">'status'</span>    => <span class="va">$success</span> ? <span class="st">'sent'</span> : (<span class="va">$attempt</span> >= <span class="nu">3</span> ? <span class="st">'failed'</span> : <span class="st">'retry'</span>),
+            <span class="st">'attempts'</span>  => <span class="va">$attempt</span>,
+            <span class="st">'sent_at'</span>   => <span class="va">$success</span> ? <span class="fn">now</span>() : <span class="kw">null</span>,
+        ]);
+    }
+}</pre>
+      </div>
+    </div>
+
+    <div class="tab-content">
+      <div class="code-wrap">
+        <div class="code-header">
+          <span class="code-file">app/Jobs/NotifyLowRatingJob.php</span>
+          <span class="code-lang">PHP · Async Queue</span>
+        </div>
+        <pre><span class="cm">&lt;?php</span>
+
+<span class="kw">namespace</span> <span class="cl">App\Jobs</span>;
+
+<span class="kw">use</span> <span class="cl">App\Models\Review</span>;
+<span class="kw">use</span> <span class="cl">App\Services\NotificationService</span>;
+<span class="kw">use</span> <span class="cl">Illuminate\Bus\Queueable</span>;
+<span class="kw">use</span> <span class="cl">Illuminate\Contracts\Queue\ShouldQueue</span>;
+<span class="kw">use</span> <span class="cl">Illuminate\Queue\{InteractsWithQueue, SerializesModels}</span>;
+<span class="kw">use</span> <span class="cl">Illuminate\Queue\Middleware\RateLimited</span>;
+
+<span class="kw">class</span> <span class="cl">NotifyLowRatingJob</span> <span class="kw">implements</span> <span class="cl">ShouldQueue</span>
+{
+    <span class="kw">use</span> <span class="cl">Queueable, InteractsWithQueue, SerializesModels</span>;
+
+    <span class="cm">/**
+     * Tentativas máximas antes de descartar o job.
+     * Com backoff exponencial: 1s, 4s, 16s entre tentativas.
+     */</span>
+    <span class="kw">public</span> <span class="cl">int</span> <span class="va">$tries</span> = <span class="nu">3</span>;
+    <span class="kw">public</span> <span class="cl">int</span> <span class="va">$backoff</span> = <span class="nu">60</span>; <span class="cm">// segundos entre tentativas do worker</span>
+
+    <span class="kw">public function</span> <span class="fn">__construct</span>(<span class="kw">private readonly</span> <span class="cl">Review</span> <span class="va">$review</span>) {}
+
+    <span class="kw">public function</span> <span class="fn">handle</span>(<span class="cl">NotificationService</span> <span class="va">$service</span>): <span class="cl">void</span>
+    {
+        <span class="cm">// Verifica se o tenant ainda está ativo antes de notificar</span>
+        <span class="kw">if</span> (! <span class="va">$this</span>->review->tenant?->active) {
+            <span class="kw">return</span>; <span class="cm">// descarta silenciosamente</span>
+        }
+
+        <span class="va">$service</span>-><span class="fn">notifyLowRating</span>(<span class="va">$this</span>->review);
+    }
+
+    <span class="cm">// Rate limit: máx 30 notificações por minuto por tenant</span>
+    <span class="kw">public function</span> <span class="fn">middleware</span>(): <span class="cl">array</span>
+    {
+        <span class="kw">return</span> [<span class="kw">new</span> <span class="cl">RateLimited</span>(<span class="st">'notify:tenant:'</span> . <span class="va">$this</span>->review->tenant_id)];
+    }
+}</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- ════════════════════════════════════════════════════════
+     C — BI PRE-AGGREGATION
+════════════════════════════════════════════════════════ -->
+<div class="impl">
+  <div class="impl-header">
+    <div class="impl-letter c">C</div>
+    <div class="impl-title-block">
+      <div class="impl-title">Pré-Agregação de BI — daily_metrics_summary + Heatmap</div>
+      <div class="impl-subtitle">database/migrations · app/Console/Commands · app/Services/BiService</div>
+    </div>
+    <span class="impl-badge badge-c">MySQL · Laravel Scheduler</span>
+  </div>
+
+  <div class="context-box c">
+    <strong>O problema real:</strong> Com 500 tenants × 100 avaliações/dia = 50.000 registros/dia. Em 1 ano: 18 milhões de registros. Uma query de heatmap rodando GROUP BY created_at sobre essa tabela mata o banco em 2 segundos. A solução é um job que roda toda madrugada, consolida os dados do dia anterior numa tabela de métricas, e o dashboard lê dessa tabela pequena — não da tabela de avaliações.
+  </div>
+
+  <div class="code-tabs" id="tabs-c">
+    <div class="tab-bar">
+      <button class="tab-btn active-c active" onclick="switchTab('c',0,this)">Migration: daily_metrics</button>
+      <button class="tab-btn" onclick="switchTab('c',1,this)">AggregateDailyMetrics.php</button>
+      <button class="tab-btn" onclick="switchTab('c',2,this)">BiService.php</button>
+      <button class="tab-btn" onclick="switchTab('c',3,this)">Scheduler (Kernel.php)</button>
+    </div>
+
+    <div class="tab-content active">
+      <div class="code-wrap">
+        <div class="code-header">
+          <span class="code-file">database/migrations/create_daily_metrics_summary_table.php</span>
+          <span class="code-lang">PHP · Migration</span>
+        </div>
+        <pre><span class="cm">&lt;?php</span>
+
+<span class="kw">use</span> <span class="cl">Illuminate\Database\Migrations\Migration</span>;
+<span class="kw">use</span> <span class="cl">Illuminate\Database\Schema\Blueprint</span>;
+<span class="kw">use</span> <span class="cl">Illuminate\Support\Facades\Schema</span>;
+
+<span class="cm">/**
+ * Tabela de métricas pré-agregadas por tenant × dia × período.
+ *
+ * Tamanho esperado vs tabela reviews:
+ *  - reviews:              18.000.000 linhas/ano (500 tenants × 100/dia)
+ *  - daily_metrics_summary:    54.750 linhas/ano (500 tenants × 3 períodos × 365 dias)
+ *
+ * Redução: 99.7% menos linhas para queries de BI.
+ * Queries de dashboard: &lt;5ms vs 2000ms na tabela reviews.
+ */</span>
+<span class="kw">return new class extends</span> <span class="cl">Migration</span>
+{
+    <span class="kw">public function</span> <span class="fn">up</span>(): <span class="cl">void</span>
+    {
+        <span class="cl">Schema</span>::<span class="fn">create</span>(<span class="st">'daily_metrics_summary'</span>, <span class="kw">function</span> (<span class="cl">Blueprint</span> <span class="va">$table</span>) {
+
+            <span class="cm">// Chave composta: tenant + data + período</span>
+            <span class="va">$table</span>-><span class="fn">uuid</span>(<span class="st">'tenant_id'</span>);
+            <span class="va">$table</span>-><span class="fn">date</span>(<span class="st">'metric_date'</span>);
+            <span class="va">$table</span>-><span class="fn">enum</span>(<span class="st">'period'</span>, [<span class="st">'lunch'</span>, <span class="st">'dinner'</span>, <span class="st">'other'</span>, <span class="st">'all'</span>]);
+
+            <span class="cm">// Contagens por faixa de nota</span>
+            <span class="va">$table</span>-><span class="fn">unsignedSmallInteger</span>(<span class="st">'total_reviews'</span>)-><span class="fn">default</span>(<span class="nu">0</span>);
+            <span class="va">$table</span>-><span class="fn">unsignedSmallInteger</span>(<span class="st">'positive_count'</span>)-><span class="fn">default</span>(<span class="nu">0</span>); <span class="cm">// 4-5</span>
+            <span class="va">$table</span>-><span class="fn">unsignedSmallInteger</span>(<span class="st">'negative_count'</span>)-><span class="fn">default</span>(<span class="nu">0</span>); <span class="cm">// 1-3</span>
+            <span class="va">$table</span>-><span class="fn">unsignedSmallInteger</span>(<span class="st">'rating_1'</span>)-><span class="fn">default</span>(<span class="nu">0</span>);
+            <span class="va">$table</span>-><span class="fn">unsignedSmallInteger</span>(<span class="st">'rating_2'</span>)-><span class="fn">default</span>(<span class="nu">0</span>);
+            <span class="va">$table</span>-><span class="fn">unsignedSmallInteger</span>(<span class="st">'rating_3'</span>)-><span class="fn">default</span>(<span class="nu">0</span>);
+            <span class="va">$table</span>-><span class="fn">unsignedSmallInteger</span>(<span class="st">'rating_4'</span>)-><span class="fn">default</span>(<span class="nu">0</span>);
+            <span class="va">$table</span>-><span class="fn">unsignedSmallInteger</span>(<span class="st">'rating_5'</span>)-><span class="fn">default</span>(<span class="nu">0</span>);
+
+            <span class="cm">// Média pré-calculada (evita AVG() em runtime)</span>
+            <span class="va">$table</span>-><span class="fn">decimal</span>(<span class="st">'avg_rating'</span>, <span class="nu">3</span>, <span class="nu">2</span>)-><span class="fn">default</span>(<span class="nu">0</span>);
+
+            <span class="cm">// Contexto de clientes (para segmentação)</span>
+            <span class="va">$table</span>-><span class="fn">unsignedSmallInteger</span>(<span class="st">'first_visit_count'</span>)-><span class="fn">default</span>(<span class="nu">0</span>);
+            <span class="va">$table</span>-><span class="fn">unsignedSmallInteger</span>(<span class="st">'returning_count'</span>)-><span class="fn">default</span>(<span class="nu">0</span>);
+
+            <span class="cm">// Top issue do dia (JSON: {"category": "Atendimento", "count": 5})</span>
+            <span class="va">$table</span>-><span class="fn">json</span>(<span class="st">'top_issues'</span>)-><span class="fn">nullable</span>();
+
+            <span class="va">$table</span>-><span class="fn">timestamp</span>(<span class="st">'aggregated_at'</span>)-><span class="fn">useCurrent</span>();
+
+            <span class="cm">// Chave primária composta</span>
+            <span class="va">$table</span>-><span class="fn">primary</span>([<span class="st">'tenant_id'</span>, <span class="st">'metric_date'</span>, <span class="st">'period'</span>]);
+
+            <span class="cm">// Índice para queries de range de datas (heatmap 30 dias)</span>
+            <span class="va">$table</span>-><span class="fn">index</span>([<span class="st">'tenant_id'</span>, <span class="st">'metric_date'</span>], <span class="st">'idx_tenant_date'</span>);
+        });
+    }
+
+    <span class="kw">public function</span> <span class="fn">down</span>(): <span class="cl">void</span>
+    {
+        <span class="cl">Schema</span>::<span class="fn">dropIfExists</span>(<span class="st">'daily_metrics_summary'</span>);
+    }
+};</pre>
+      </div>
+    </div>
+
+    <div class="tab-content">
+      <div class="code-wrap">
+        <div class="code-header">
+          <span class="code-file">app/Console/Commands/AggregateDailyMetrics.php</span>
+          <span class="code-lang">PHP · Console Command</span>
+        </div>
+        <pre><span class="cm">&lt;?php</span>
+
+<span class="kw">namespace</span> <span class="cl">App\Console\Commands</span>;
+
+<span class="kw">use</span> <span class="cl">Illuminate\Console\Command</span>;
+<span class="kw">use</span> <span class="cl">App\Models\{Tenant, Review, DailyMetricsSummary}</span>;
+<span class="kw">use</span> <span class="cl">Illuminate\Support\Carbon</span>;
+
+<span class="kw">class</span> <span class="cl">AggregateDailyMetrics</span> <span class="kw">extends</span> <span class="cl">Command</span>
+{
+    <span class="kw">protected</span> <span class="va">$signature</span>   = <span class="st">'metrics:aggregate {--date= : Data no formato Y-m-d (padrão: ontem)}'</span>;
+    <span class="kw">protected</span> <span class="va">$description</span> = <span class="st">'Agrega métricas diárias de avaliações na tabela daily_metrics_summary'</span>;
+
+    <span class="kw">public function</span> <span class="fn">handle</span>(): <span class="cl">int</span>
+    {
+        <span class="va">$date</span> = <span class="va">$this</span>-><span class="fn">option</span>(<span class="st">'date'</span>)
+            ? <span class="cl">Carbon</span>::<span class="fn">parse</span>(<span class="va">$this</span>-><span class="fn">option</span>(<span class="st">'date'</span>))
+            : <span class="cl">Carbon</span>::<span class="fn">yesterday</span>();
+
+        <span class="va">$this</span>-><span class="fn">info</span>(<span class="st">"Agregando métricas para {$date->toDateString()}..."</span>);
+
+        <span class="cm">// Processa todos os tenants ativos</span>
+        <span class="cl">Tenant</span>::<span class="fn">where</span>(<span class="st">'active'</span>, <span class="kw">true</span>)
+            -><span class="fn">chunkById</span>(<span class="nu">50</span>, <span class="kw">function</span> (<span class="va">$tenants</span>) <span class="kw">use</span> (<span class="va">$date</span>) {
+                <span class="kw">foreach</span> (<span class="va">$tenants</span> <span class="kw">as</span> <span class="va">$tenant</span>) {
+                    <span class="va">$this</span>-><span class="fn">aggregateTenant</span>(<span class="va">$tenant</span>, <span class="va">$date</span>);
+                }
+            });
+
+        <span class="va">$this</span>-><span class="fn">info</span>(<span class="st">'Agregação concluída!'</span>);
+        <span class="kw">return</span> <span class="cl">Command</span>::<span class="va">SUCCESS</span>;
+    }
+
+    <span class="kw">private function</span> <span class="fn">aggregateTenant</span>(<span class="cl">Tenant</span> <span class="va">$tenant</span>, <span class="cl">Carbon</span> <span class="va">$date</span>): <span class="cl">void</span>
+    {
+        <span class="va">$periods</span> = [<span class="st">'lunch'</span>, <span class="st">'dinner'</span>, <span class="st">'other'</span>, <span class="st">'all'</span>];
+
+        <span class="kw">foreach</span> (<span class="va">$periods</span> <span class="kw">as</span> <span class="va">$period</span>) {
+            <span class="va">$query</span> = <span class="cl">Review</span>::<span class="fn">withoutTenantScope</span>()
+                -><span class="fn">where</span>(<span class="st">'tenant_id'</span>, <span class="va">$tenant</span>->id)
+                -><span class="fn">whereDate</span>(<span class="st">'created_at'</span>, <span class="va">$date</span>);
+
+            <span class="kw">if</span> (<span class="va">$period</span> !== <span class="st">'all'</span>) {
+                <span class="va">$query</span>-><span class="fn">where</span>(<span class="st">'visit_period'</span>, <span class="va">$period</span>);
+            }
+
+            <span class="va">$reviews</span> = <span class="va">$query</span>-><span class="fn">get</span>([
+                <span class="st">'rating'</span>, <span class="st">'is_first_visit'</span>, <span class="st">'issue_category'</span>
+            ]);
+
+            <span class="kw">if</span> (<span class="va">$reviews</span>-><span class="fn">isEmpty</span>()) <span class="kw">continue</span>;
+
+            <span class="cm">// Calcula top issues do dia</span>
+            <span class="va">$topIssues</span> = <span class="va">$reviews</span>
+                -><span class="fn">whereNotNull</span>(<span class="st">'issue_category'</span>)
+                -><span class="fn">groupBy</span>(<span class="st">'issue_category'</span>)
+                -><span class="fn">map</span>(<span class="kw">fn</span>(<span class="va">$g</span>) => [<span class="st">'category'</span> => <span class="va">$g</span>-><span class="fn">first</span>()->issue_category, <span class="st">'count'</span> => <span class="va">$g</span>-><span class="fn">count</span>()])
+                -><span class="fn">sortByDesc</span>(<span class="st">'count'</span>)
+                -><span class="fn">take</span>(<span class="nu">3</span>)
+                -><span class="fn">values</span>();
+
+            <span class="cm">// Upsert: recalcula se o job rodar duas vezes no mesmo dia</span>
+            <span class="cl">DailyMetricsSummary</span>::<span class="fn">upsert</span>([
+                <span class="st">'tenant_id'</span>        => <span class="va">$tenant</span>->id,
+                <span class="st">'metric_date'</span>      => <span class="va">$date</span>-><span class="fn">toDateString</span>(),
+                <span class="st">'period'</span>           => <span class="va">$period</span>,
+                <span class="st">'total_reviews'</span>    => <span class="va">$reviews</span>-><span class="fn">count</span>(),
+                <span class="st">'positive_count'</span>   => <span class="va">$reviews</span>-><span class="fn">where</span>(<span class="st">'rating'</span>, <span class="st">'>='</span>, <span class="nu">4</span>)-><span class="fn">count</span>(),
+                <span class="st">'negative_count'</span>   => <span class="va">$reviews</span>-><span class="fn">where</span>(<span class="st">'rating'</span>, <span class="st">'<='</span>, <span class="nu">3</span>)-><span class="fn">count</span>(),
+                <span class="st">'rating_1'</span>         => <span class="va">$reviews</span>-><span class="fn">where</span>(<span class="st">'rating'</span>, <span class="nu">1</span>)-><span class="fn">count</span>(),
+                <span class="st">'rating_2'</span>         => <span class="va">$reviews</span>-><span class="fn">where</span>(<span class="st">'rating'</span>, <span class="nu">2</span>)-><span class="fn">count</span>(),
+                <span class="st">'rating_3'</span>         => <span class="va">$reviews</span>-><span class="fn">where</span>(<span class="st">'rating'</span>, <span class="nu">3</span>)-><span class="fn">count</span>(),
+                <span class="st">'rating_4'</span>         => <span class="va">$reviews</span>-><span class="fn">where</span>(<span class="st">'rating'</span>, <span class="nu">4</span>)-><span class="fn">count</span>(),
+                <span class="st">'rating_5'</span>         => <span class="va">$reviews</span>-><span class="fn">where</span>(<span class="st">'rating'</span>, <span class="nu">5</span>)-><span class="fn">count</span>(),
+                <span class="st">'avg_rating'</span>       => <span class="fn">round</span>(<span class="va">$reviews</span>-><span class="fn">avg</span>(<span class="st">'rating'</span>), <span class="nu">2</span>),
+                <span class="st">'first_visit_count'</span>=> <span class="va">$reviews</span>-><span class="fn">where</span>(<span class="st">'is_first_visit'</span>, <span class="kw">true</span>)-><span class="fn">count</span>(),
+                <span class="st">'returning_count'</span>  => <span class="va">$reviews</span>-><span class="fn">where</span>(<span class="st">'is_first_visit'</span>, <span class="kw">false</span>)-><span class="fn">count</span>(),
+                <span class="st">'top_issues'</span>       => <span class="va">$topIssues</span>-><span class="fn">toJson</span>(),
+                <span class="st">'aggregated_at'</span>    => <span class="fn">now</span>(),
+            ], [<span class="st">'tenant_id'</span>, <span class="st">'metric_date'</span>, <span class="st">'period'</span>]);
+        }
+    }
+}</pre>
+      </div>
+    </div>
+
+    <div class="tab-content">
+      <div class="code-wrap">
+        <div class="code-header">
+          <span class="code-file">app/Services/BiService.php</span>
+          <span class="code-lang">PHP · Heatmap Query</span>
+        </div>
+        <pre><span class="cm">&lt;?php</span>
+
+<span class="kw">namespace</span> <span class="cl">App\Services</span>;
+
+<span class="kw">use</span> <span class="cl">App\Models\DailyMetricsSummary</span>;
+<span class="kw">use</span> <span class="cl">Illuminate\Support\Collection</span>;
+
+<span class="kw">class</span> <span class="cl">BiService</span>
+{
+    <span class="cm">/**
+     * Retorna dados para o Heatmap (dias × períodos).
+     *
+     * Query simples e rápida: lê da tabela pré-agregada.
+     * Nenhuma agregação em runtime. &lt;5ms mesmo com 500 tenants.
+     *
+     * Retorna array compatível com qualquer lib de heatmap (JS/Chart.js):
+     * [
+     *   ['date' => '2026-04-01', 'period' => 'lunch', 'avg' => 4.2, 'total' => 12],
+     *   ...
+     * ]
+     */</span>
+    <span class="kw">public function</span> <span class="fn">heatmapData</span>(<span class="cl">string</span> <span class="va">$tenantId</span>, <span class="cl">int</span> <span class="va">$days</span> = <span class="nu">30</span>): <span class="cl">Collection</span>
+    {
+        <span class="kw">return</span> <span class="cl">DailyMetricsSummary</span>::<span class="fn">where</span>(<span class="st">'tenant_id'</span>, <span class="va">$tenantId</span>)
+            -><span class="fn">where</span>(<span class="st">'metric_date'</span>, <span class="st">'>='</span>, <span class="fn">now</span>()-><span class="fn">subDays</span>(<span class="va">$days</span>))
+            -><span class="fn">where</span>(<span class="st">'period'</span>, <span class="st">'!='</span>, <span class="st">'all'</span>) <span class="cm">// heatmap usa períodos separados</span>
+            -><span class="fn">orderBy</span>(<span class="st">'metric_date'</span>)
+            -><span class="fn">get</span>([<span class="st">'metric_date'</span>, <span class="st">'period'</span>, <span class="st">'avg_rating'</span>, <span class="st">'negative_count'</span>, <span class="st">'total_reviews'</span>])
+            -><span class="fn">map</span>(<span class="kw">fn</span>(<span class="va">$m</span>) => [
+                <span class="st">'date'</span>     => <span class="va">$m</span>->metric_date,
+                <span class="st">'period'</span>   => <span class="va">$m</span>->period,
+                <span class="st">'avg'</span>      => (float) <span class="va">$m</span>->avg_rating,
+                <span class="st">'total'</span>    => <span class="va">$m</span>->total_reviews,
+                <span class="st">'negative'</span> => <span class="va">$m</span>->negative_count,
+                <span class="cm">// intensidade de 0-1 para o heatmap (0 = verde, 1 = vermelho)</span>
+                <span class="st">'intensity'</span> => <span class="va">$m</span>->total_reviews > <span class="nu">0</span>
+                    ? <span class="fn">round</span>(<span class="va">$m</span>->negative_count / <span class="va">$m</span>->total_reviews, <span class="nu">2</span>)
+                    : <span class="nu">0</span>,
+            ]);
+    }
+
+    <span class="cm">/**
+     * Resumo executivo do mês para o dashboard do lojista.
+     * Lê da tabela pré-agregada com period='all'.
+     */</span>
+    <span class="kw">public function</span> <span class="fn">monthlySummary</span>(<span class="cl">string</span> <span class="va">$tenantId</span>): <span class="cl">array</span>
+    {
+        <span class="va">$rows</span> = <span class="cl">DailyMetricsSummary</span>::<span class="fn">where</span>(<span class="st">'tenant_id'</span>, <span class="va">$tenantId</span>)
+            -><span class="fn">where</span>(<span class="st">'period'</span>, <span class="st">'all'</span>)
+            -><span class="fn">where</span>(<span class="st">'metric_date'</span>, <span class="st">'>='</span>, <span class="fn">now</span>()-><span class="fn">startOfMonth</span>())
+            -><span class="fn">get</span>();
+
+        <span class="kw">return</span> [
+            <span class="st">'total'</span>     => <span class="va">$rows</span>-><span class="fn">sum</span>(<span class="st">'total_reviews'</span>),
+            <span class="st">'positive'</span>  => <span class="va">$rows</span>-><span class="fn">sum</span>(<span class="st">'positive_count'</span>),
+            <span class="st">'negative'</span>  => <span class="va">$rows</span>-><span class="fn">sum</span>(<span class="st">'negative_count'</span>),
+            <span class="st">'avg_rating'</span> => $rows-><span class="fn">avg</span>(<span class="st">'avg_rating'</span>),
+            <span class="st">'new_clients'</span>=> <span class="va">$rows</span>-><span class="fn">sum</span>(<span class="st">'first_visit_count'</span>),
+        ];
+    }
+}</pre>
+      </div>
+    </div>
+
+    <div class="tab-content">
+      <div class="code-wrap">
+        <div class="code-header">
+          <span class="code-file">app/Console/Kernel.php (trecho)</span>
+          <span class="code-lang">PHP · Laravel Scheduler</span>
+        </div>
+        <pre><span class="cm">// Dentro do método schedule(Schedule $schedule):</span>
+
+<span class="cm">// Agrega métricas toda madrugada às 02:00
+// (após o movimento do jantar ter encerrado)</span>
+<span class="va">$schedule</span>
+    -><span class="fn">command</span>(<span class="st">'metrics:aggregate'</span>)
+    -><span class="fn">dailyAt</span>(<span class="st">'02:00'</span>)
+    -><span class="fn">withoutOverlapping</span>()   <span class="cm">// não roda duas vezes se demorar</span>
+    -><span class="fn">runInBackground</span>()      <span class="cm">// não bloqueia outros jobs do scheduler</span>
+    -><span class="fn">emailOutputOnFailure</span>(<span class="fn">env</span>(<span class="st">'ADMIN_EMAIL'</span>));
+
+<span class="cm">// Também acessível via CLI para reprocessar datas específicas:
+// php artisan metrics:aggregate --date=2026-04-01</span>
+
+<span class="cm">// Relatórios mensais: todo dia 1 às 08:00</span>
+<span class="va">$schedule</span>
+    -><span class="fn">command</span>(<span class="st">'reports:send-monthly'</span>)
+    -><span class="fn">monthlyOn</span>(<span class="nu">1</span>, <span class="st">'08:00'</span>)
+    -><span class="fn">withoutOverlapping</span>();</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- ════════════════════════════════════════════════════════
+     D — PWA PHOTO RETRY UI
+════════════════════════════════════════════════════════ -->
+<div class="impl">
+  <div class="impl-header">
+    <div class="impl-letter d">D</div>
+    <div class="impl-title-block">
+      <div class="impl-title">Retry UI para Foto Offline — PWA com Indicador de Sincronização</div>
+      <div class="impl-subtitle">public/pwa/offline-queue.js · integração no fluxo conversacional</div>
+    </div>
+    <span class="impl-badge badge-d">Vanilla JS · IndexedDB · Service Worker</span>
+  </div>
+
+  <div class="context-box d">
+    <strong>O problema:</strong> Em 3G instável, o upload da foto falha silenciosamente enquanto o texto do feedback é salvo. O cliente sai achando que enviou tudo. O lojista recebe a reclamação sem a foto. A solução: persistir a fila de uploads em IndexedDB, mostrar ao cliente o status de cada item, e permitir retry manual antes de fechar o chat.
+  </div>
+
+  <div class="code-tabs" id="tabs-d">
+    <div class="tab-bar">
+      <button class="tab-btn active-d active" onclick="switchTab('d',0,this)">offline-queue.js</button>
+      <button class="tab-btn" onclick="switchTab('d',1,this)">photo-upload.js</button>
+      <button class="tab-btn" onclick="switchTab('d',2,this)">Retry UI (integração)</button>
+      <button class="tab-btn" onclick="switchTab('d',3,this)">service-worker.js</button>
+    </div>
+
+    <div class="tab-content active">
+      <div class="code-wrap">
+        <div class="code-header">
+          <span class="code-file">public/pwa/offline-queue.js</span>
+          <span class="code-lang">JS · IndexedDB Queue</span>
+        </div>
+        <pre><span class="cm">/**
+ * OfflineQueue — fila persistente de uploads em IndexedDB.
+ *
+ * Por que IndexedDB e não localStorage?
+ *  - localStorage é síncrono e limitado a 5MB
+ *  - IndexedDB é assíncrono e suporta blobs (arquivos binários)
+ *  - Fotos podem ter até 5MB — localStorage quebraria
+ */</span>
+
+<span class="kw">const</span> <span class="va">OfflineQueue</span> = {
+  <span class="va">DB_NAME</span>: <span class="st">'cp_review_queue'</span>,
+  <span class="va">DB_VERSION</span>: <span class="nu">1</span>,
+  <span class="va">STORE</span>: <span class="st">'pending_uploads'</span>,
+  <span class="va">_db</span>: <span class="kw">null</span>,
+
+  <span class="cm">/** Abre (ou cria) o banco IndexedDB */</span>
+  <span class="kw">async</span> <span class="fn">open</span>() {
+    <span class="kw">if</span> (<span class="kw">this</span>.<span class="va">_db</span>) <span class="kw">return this</span>.<span class="va">_db</span>;
+
+    <span class="kw">return new</span> <span class="cl">Promise</span>((<span class="va">resolve</span>, <span class="va">reject</span>) => {
+      <span class="kw">const</span> <span class="va">req</span> = <span class="fn">indexedDB</span>.<span class="fn">open</span>(<span class="kw">this</span>.<span class="va">DB_NAME</span>, <span class="kw">this</span>.<span class="va">DB_VERSION</span>);
+
+      <span class="va">req</span>.<span class="fn">onupgradeneeded</span> = (<span class="va">e</span>) => {
+        <span class="kw">const</span> <span class="va">db</span> = <span class="va">e</span>.<span class="va">target</span>.<span class="va">result</span>;
+        <span class="kw">if</span> (!<span class="va">db</span>.<span class="fn">objectStoreNames</span>.<span class="fn">contains</span>(<span class="kw">this</span>.<span class="va">STORE</span>)) {
+          <span class="kw">const</span> <span class="va">store</span> = <span class="va">db</span>.<span class="fn">createObjectStore</span>(<span class="kw">this</span>.<span class="va">STORE</span>, { <span class="va">keyPath</span>: <span class="st">'id'</span>, <span class="va">autoIncrement</span>: <span class="kw">true</span> });
+          <span class="va">store</span>.<span class="fn">createIndex</span>(<span class="st">'status'</span>, <span class="st">'status'</span>, { <span class="va">unique</span>: <span class="kw">false</span> });
+        }
+      };
+
+      <span class="va">req</span>.<span class="fn">onsuccess</span>  = (<span class="va">e</span>) => { <span class="kw">this</span>.<span class="va">_db</span> = <span class="va">e</span>.<span class="va">target</span>.<span class="va">result</span>; <span class="va">resolve</span>(<span class="kw">this</span>.<span class="va">_db</span>); };
+      <span class="va">req</span>.<span class="fn">onerror</span>    = () => <span class="va">reject</span>(<span class="va">req</span>.<span class="va">error</span>);
+    });
+  },
+
+  <span class="cm">/** Adiciona item à fila. Retorna o ID gerado. */</span>
+  <span class="kw">async</span> <span class="fn">enqueue</span>({ <span class="va">reviewToken</span>, <span class="va">slug</span>, <span class="va">photoBlob</span>, <span class="va">photoName</span> }) {
+    <span class="kw">const</span> <span class="va">db</span> = <span class="kw">await this</span>.<span class="fn">open</span>();
+    <span class="kw">return new</span> <span class="cl">Promise</span>((<span class="va">resolve</span>, <span class="va">reject</span>) => {
+      <span class="kw">const</span> <span class="va">tx</span>  = <span class="va">db</span>.<span class="fn">transaction</span>(<span class="kw">this</span>.<span class="va">STORE</span>, <span class="st">'readwrite'</span>);
+      <span class="kw">const</span> <span class="va">req</span> = <span class="va">tx</span>.<span class="fn">objectStore</span>(<span class="kw">this</span>.<span class="va">STORE</span>).<span class="fn">add</span>({
+        <span class="va">reviewToken</span>, <span class="va">slug</span>, <span class="va">photoBlob</span>, <span class="va">photoName</span>,
+        <span class="va">status</span>:    <span class="st">'pending'</span>,  <span class="cm">// pending | uploading | done | failed</span>
+        <span class="va">attempts</span>:  <span class="nu">0</span>,
+        <span class="va">createdAt</span>: <span class="kw">new</span> <span class="cl">Date</span>().<span class="fn">toISOString</span>(),
+      });
+      <span class="va">req</span>.<span class="fn">onsuccess</span> = () => <span class="va">resolve</span>(<span class="va">req</span>.<span class="va">result</span>);
+      <span class="va">req</span>.<span class="fn">onerror</span>   = () => <span class="va">reject</span>(<span class="va">req</span>.<span class="va">error</span>);
+    });
+  },
+
+  <span class="cm">/** Atualiza o status de um item na fila */</span>
+  <span class="kw">async</span> <span class="fn">updateStatus</span>(<span class="va">id</span>, <span class="va">status</span>, <span class="va">extras</span> = {}) {
+    <span class="kw">const</span> <span class="va">db</span> = <span class="kw">await this</span>.<span class="fn">open</span>();
+    <span class="kw">return new</span> <span class="cl">Promise</span>((<span class="va">resolve</span>, <span class="va">reject</span>) => {
+      <span class="kw">const</span> <span class="va">tx</span>    = <span class="va">db</span>.<span class="fn">transaction</span>(<span class="kw">this</span>.<span class="va">STORE</span>, <span class="st">'readwrite'</span>);
+      <span class="kw">const</span> <span class="va">store</span> = <span class="va">tx</span>.<span class="fn">objectStore</span>(<span class="kw">this</span>.<span class="va">STORE</span>);
+      <span class="kw">const</span> <span class="va">getReq</span> = <span class="va">store</span>.<span class="fn">get</span>(<span class="va">id</span>);
+      <span class="va">getReq</span>.<span class="fn">onsuccess</span> = () => {
+        <span class="kw">const</span> <span class="va">item</span> = { ...<span class="va">getReq</span>.<span class="va">result</span>, <span class="va">status</span>, ...<span class="va">extras</span> };
+        <span class="kw">const</span> <span class="va">putReq</span> = <span class="va">store</span>.<span class="fn">put</span>(<span class="va">item</span>);
+        <span class="va">putReq</span>.<span class="fn">onsuccess</span> = () => <span class="va">resolve</span>(<span class="va">item</span>);
+        <span class="va">putReq</span>.<span class="fn">onerror</span>   = () => <span class="va">reject</span>(<span class="va">putReq</span>.<span class="va">error</span>);
+      };
+    });
+  },
+
+  <span class="cm">/** Busca todos os itens pendentes (para retry automático) */</span>
+  <span class="kw">async</span> <span class="fn">getPending</span>() {
+    <span class="kw">const</span> <span class="va">db</span> = <span class="kw">await this</span>.<span class="fn">open</span>();
+    <span class="kw">return new</span> <span class="cl">Promise</span>((<span class="va">resolve</span>) => {
+      <span class="kw">const</span> <span class="va">tx</span>    = <span class="va">db</span>.<span class="fn">transaction</span>(<span class="kw">this</span>.<span class="va">STORE</span>, <span class="st">'readonly'</span>);
+      <span class="kw">const</span> <span class="va">index</span> = <span class="va">tx</span>.<span class="fn">objectStore</span>(<span class="kw">this</span>.<span class="va">STORE</span>).<span class="fn">index</span>(<span class="st">'status'</span>);
+      <span class="kw">const</span> <span class="va">req</span>   = <span class="va">index</span>.<span class="fn">getAll</span>(<span class="cl">IDBKeyRange</span>.<span class="fn">only</span>(<span class="st">'pending'</span>));
+      <span class="va">req</span>.<span class="fn">onsuccess</span> = () => <span class="va">resolve</span>(<span class="va">req</span>.<span class="va">result</span>);
+    });
+  },
+};</pre>
+      </div>
+    </div>
+
+    <div class="tab-content">
+      <div class="code-wrap">
+        <div class="code-header">
+          <span class="code-file">public/pwa/photo-upload.js</span>
+          <span class="code-lang">JS · Upload com Queue</span>
+        </div>
+        <pre><span class="cm">/**
+ * PhotoUploader — gerencia o upload de fotos com:
+ *  - Compressão client-side (reduz 5MB para ~500KB antes de enviar)
+ *  - Persistência na fila IndexedDB
+ *  - Retry automático e manual
+ *  - Callbacks de progresso para atualizar a UI do chat
+ */</span>
+
+<span class="kw">const</span> <span class="va">PhotoUploader</span> = {
+
+  <span class="cm">/** Comprime imagem no cliente antes de enviar.
+   *  Mantém qualidade visual mas reduz tamanho ~80%. */</span>
+  <span class="kw">async</span> <span class="fn">compress</span>(<span class="va">file</span>, <span class="va">maxWidth</span> = <span class="nu">1200</span>, <span class="va">quality</span> = <span class="nu">0.8</span>) {
+    <span class="kw">return new</span> <span class="cl">Promise</span>((<span class="va">resolve</span>) => {
+      <span class="kw">const</span> <span class="va">img</span> = <span class="kw">new</span> <span class="cl">Image</span>();
+      <span class="va">img</span>.<span class="fn">onload</span> = () => {
+        <span class="kw">const</span> <span class="va">scale</span>  = <span class="cl">Math</span>.<span class="fn">min</span>(<span class="nu">1</span>, <span class="va">maxWidth</span> / <span class="va">img</span>.<span class="va">width</span>);
+        <span class="kw">const</span> <span class="va">canvas</span> = <span class="cl">Object</span>.<span class="fn">assign</span>(<span class="va">document</span>.<span class="fn">createElement</span>(<span class="st">'canvas'</span>), {
+          <span class="va">width</span>:  <span class="va">img</span>.<span class="va">width</span>  * <span class="va">scale</span>,
+          <span class="va">height</span>: <span class="va">img</span>.<span class="va">height</span> * <span class="va">scale</span>,
+        });
+        <span class="va">canvas</span>.<span class="fn">getContext</span>(<span class="st">'2d'</span>).<span class="fn">drawImage</span>(<span class="va">img</span>, <span class="nu">0</span>, <span class="nu">0</span>, <span class="va">canvas</span>.<span class="va">width</span>, <span class="va">canvas</span>.<span class="va">height</span>);
+        <span class="va">canvas</span>.<span class="fn">toBlob</span>(<span class="va">resolve</span>, <span class="st">'image/jpeg'</span>, <span class="va">quality</span>);
+      };
+      <span class="va">img</span>.<span class="va">src</span> = <span class="cl">URL</span>.<span class="fn">createObjectURL</span>(<span class="va">file</span>);
+    });
+  },
+
+  <span class="cm">/** Tenta enviar a foto. Persiste na fila se offline.
+   *  onProgress(status) é chamado para atualizar a UI. */</span>
+  <span class="kw">async</span> <span class="fn">upload</span>({ <span class="va">file</span>, <span class="va">reviewToken</span>, <span class="va">slug</span>, <span class="va">onProgress</span> }) {
+    <span class="cm">// 1. Comprimir antes de qualquer coisa</span>
+    <span class="kw">const</span> <span class="va">compressed</span> = <span class="kw">await this</span>.<span class="fn">compress</span>(<span class="va">file</span>);
+    <span class="kw">const</span> <span class="va">queueId</span>    = <span class="kw">await</span> <span class="va">OfflineQueue</span>.<span class="fn">enqueue</span>({
+      <span class="va">reviewToken</span>, <span class="va">slug</span>,
+      <span class="va">photoBlob</span>: <span class="va">compressed</span>,
+      <span class="va">photoName</span>: <span class="va">file</span>.<span class="va">name</span>,
+    });
+
+    <span class="va">onProgress</span>?.({ <span class="va">status</span>: <span class="st">'uploading'</span>, <span class="va">queueId</span> });
+
+    <span class="cm">// 2. Se offline, não tenta — espera o Service Worker sincronizar</span>
+    <span class="kw">if</span> (!<span class="va">navigator</span>.<span class="va">onLine</span>) {
+      <span class="kw">await</span> <span class="va">OfflineQueue</span>.<span class="fn">updateStatus</span>(<span class="va">queueId</span>, <span class="st">'pending'</span>);
+      <span class="va">onProgress</span>?.({ <span class="va">status</span>: <span class="st">'offline'</span>, <span class="va">queueId</span> });
+      <span class="kw">return</span> { <span class="va">success</span>: <span class="kw">false</span>, <span class="va">offline</span>: <span class="kw">true</span>, <span class="va">queueId</span> };
+    }
+
+    <span class="cm">// 3. Tenta enviar com timeout de 30s (3G lento)</span>
+    <span class="kw">try</span> {
+      <span class="kw">const</span> <span class="va">fd</span> = <span class="kw">new</span> <span class="cl">FormData</span>();
+      <span class="va">fd</span>.<span class="fn">append</span>(<span class="st">'photo'</span>, <span class="va">compressed</span>, `photo_${<span class="va">reviewToken</span>}.jpg`);
+      <span class="va">fd</span>.<span class="fn">append</span>(<span class="st">'review_token'</span>, <span class="va">reviewToken</span>);
+      <span class="va">fd</span>.<span class="fn">append</span>(<span class="st">'slug'</span>, <span class="va">slug</span>);
+
+      <span class="kw">const</span> <span class="va">ctrl</span> = <span class="kw">new</span> <span class="cl">AbortController</span>();
+      <span class="fn">setTimeout</span>(() => <span class="va">ctrl</span>.<span class="fn">abort</span>(), <span class="nu">30000</span>); <span class="cm">// 30s timeout</span>
+
+      <span class="kw">const</span> <span class="va">res</span> = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="st">'/api/media/upload'</span>, {
+        <span class="va">method</span>: <span class="st">'POST'</span>, <span class="va">body</span>: <span class="va">fd</span>, <span class="va">signal</span>: <span class="va">ctrl</span>.<span class="va">signal</span>
+      });
+
+      <span class="kw">if</span> (<span class="va">res</span>.<span class="va">ok</span>) {
+        <span class="kw">await</span> <span class="va">OfflineQueue</span>.<span class="fn">updateStatus</span>(<span class="va">queueId</span>, <span class="st">'done'</span>);
+        <span class="va">onProgress</span>?.({ <span class="va">status</span>: <span class="st">'done'</span>, <span class="va">queueId</span> });
+        <span class="kw">return</span> { <span class="va">success</span>: <span class="kw">true</span>, <span class="va">queueId</span> };
+      }
+
+      <span class="kw">throw new</span> <span class="cl">Error</span>(`HTTP ${<span class="va">res</span>.<span class="va">status</span>}`);
+
+    } <span class="kw">catch</span> (<span class="va">err</span>) {
+      <span class="kw">await</span> <span class="va">OfflineQueue</span>.<span class="fn">updateStatus</span>(<span class="va">queueId</span>, <span class="st">'failed'</span>, { <span class="va">error</span>: <span class="va">err</span>.<span class="va">message</span> });
+      <span class="va">onProgress</span>?.({ <span class="va">status</span>: <span class="st">'failed'</span>, <span class="va">queueId</span> });
+      <span class="kw">return</span> { <span class="va">success</span>: <span class="kw">false</span>, <span class="va">offline</span>: <span class="kw">false</span>, <span class="va">queueId</span> };
+    }
+  },
+};</pre>
+      </div>
+    </div>
+
+    <div class="tab-content">
+      <div class="code-wrap">
+        <div class="code-header">
+          <span class="code-file">Integração no fluxo do chat — função addPhotoWidget()</span>
+          <span class="code-lang">JS · UI Integration</span>
+        </div>
+        <pre><span class="cm">/**
+ * Widget de foto com retry UI — integra no fluxo conversacional.
+ * Mostra status visual: comprimindo → enviando → ✅ enviado / ⚠️ falhou
+ * Botão de retry aparece apenas se falhar. Sem poluir o fluxo feliz.
+ */</span>
+
+<span class="kw">async function</span> <span class="fn">addPhotoWidget</span>(<span class="va">reviewToken</span>, <span class="va">slug</span>) {
+  <span class="kw">const</span> <span class="va">widgetHtml</span> = `
+    &lt;<span class="kw">div</span> <span class="dc">class</span>=<span class="st">"photo-widget"</span> <span class="dc">id</span>=<span class="st">"photo-widget"</span>&gt;
+      &lt;<span class="kw">label</span> <span class="dc">class</span>=<span class="st">"photo-label"</span>&gt;
+        &lt;<span class="kw">span</span>&gt;📷&lt;/<span class="kw">span</span>&gt;
+        &lt;<span class="kw">span</span>&gt;Adicionar foto&lt;/<span class="kw">span</span>&gt;
+        &lt;<span class="kw">span</span> <span class="dc">class</span>=<span class="st">"photo-opt"</span>&gt;opcional&lt;/<span class="kw">span</span>&gt;
+        &lt;<span class="kw">input</span> <span class="dc">type</span>=<span class="st">"file"</span> <span class="dc">accept</span>=<span class="st">"image/*"</span> <span class="dc">id</span>=<span class="st">"photo-input"</span> <span class="dc">style</span>=<span class="st">"display:none"</span>&gt;
+      &lt;/<span class="kw">label</span>&gt;
+      &lt;<span class="kw">div</span> <span class="dc">class</span>=<span class="st">"photo-status"</span> <span class="dc">id</span>=<span class="st">"photo-status"</span> <span class="dc">style</span>=<span class="st">"display:none"</span>&gt;&lt;/<span class="kw">div</span>&gt;
+    &lt;/<span class="kw">div</span>&gt;
+  `;
+
+  <span class="kw">await</span> <span class="fn">addWidget</span>(<span class="va">widgetHtml</span>, <span class="nu">200</span>);
+
+  <span class="va">document</span>.<span class="fn">getElementById</span>(<span class="st">'photo-input'</span>)?.<span class="fn">addEventListener</span>(<span class="st">'change'</span>, <span class="kw">async</span> (<span class="va">e</span>) => {
+    <span class="kw">const</span> <span class="va">file</span>      = <span class="va">e</span>.<span class="va">target</span>.<span class="va">files</span>[<span class="nu">0</span>];
+    <span class="kw">if</span> (!<span class="va">file</span>) <span class="kw">return</span>;
+    <span class="kw">if</span> (<span class="va">file</span>.<span class="va">size</span> > <span class="nu">10</span> * <span class="nu">1024</span> * <span class="nu">1024</span>) { <span class="cm">// 10MB hard limit</span>
+      <span class="fn">setPhotoStatus</span>(<span class="st">'error'</span>, <span class="st">'Foto muito grande. Máximo: 10MB'</span>);
+      <span class="kw">return</span>;
+    }
+
+    <span class="fn">setPhotoStatus</span>(<span class="st">'uploading'</span>, <span class="st">'Comprimindo e enviando...'</span>);
+
+    <span class="kw">const</span> <span class="va">result</span> = <span class="kw">await</span> <span class="va">PhotoUploader</span>.<span class="fn">upload</span>({
+      <span class="va">file</span>, <span class="va">reviewToken</span>, <span class="va">slug</span>,
+      <span class="fn">onProgress</span>({ <span class="va">status</span> }) {
+        <span class="kw">if</span> (<span class="va">status</span> === <span class="st">'offline'</span>)
+          <span class="fn">setPhotoStatus</span>(<span class="st">'offline'</span>, <span class="st">'📡 Offline — foto será enviada quando houver sinal'</span>);
+        <span class="kw">if</span> (<span class="va">status</span> === <span class="st">'done'</span>)
+          <span class="fn">setPhotoStatus</span>(<span class="st">'done'</span>, <span class="st">'✅ Foto enviada com sucesso'</span>);
+        <span class="kw">if</span> (<span class="va">status</span> === <span class="st">'failed'</span>)
+          <span class="fn">setPhotoStatus</span>(<span class="st">'failed'</span>, <span class="st">'⚠️ Falha no envio'</span>, <span class="kw">true</span>); <span class="cm">// showRetry=true</span>
+      }
+    });
+  });
+}
+
+<span class="kw">function</span> <span class="fn">setPhotoStatus</span>(<span class="va">type</span>, <span class="va">msg</span>, <span class="va">showRetry</span> = <span class="kw">false</span>) {
+  <span class="kw">const</span> <span class="va">el</span> = <span class="va">document</span>.<span class="fn">getElementById</span>(<span class="st">'photo-status'</span>);
+  <span class="kw">if</span> (!<span class="va">el</span>) <span class="kw">return</span>;
+  <span class="va">el</span>.<span class="va">style</span>.<span class="va">display</span> = <span class="st">'block'</span>;
+  <span class="va">el</span>.<span class="fn">setAttribute</span>(<span class="st">'data-type'</span>, <span class="va">type</span>);
+  <span class="va">el</span>.<span class="va">innerHTML</span> = <span class="va">msg</span> + (<span class="va">showRetry</span>
+    ? <span class="st">' &lt;button onclick="retryPhotoUpload()" class="retry-btn"&gt;↺ Tentar novamente&lt;/button&gt;'</span>
+    : <span class="st">''</span>);
+}</pre>
+      </div>
+    </div>
+
+    <div class="tab-content">
+      <div class="code-wrap">
+        <div class="code-header">
+          <span class="code-file">public/pwa/service-worker.js (trecho Background Sync)</span>
+          <span class="code-lang">JS · Service Worker</span>
+        </div>
+        <pre><span class="cm">/**
+ * Background Sync: quando o dispositivo recupera conexão,
+ * o Service Worker processa automaticamente a fila de uploads pendentes.
+ * O usuário não precisa reabrir o app — acontece em segundo plano.
+ */</span>
+
+<span class="va">self</span>.<span class="fn">addEventListener</span>(<span class="st">'sync'</span>, (<span class="va">event</span>) => {
+  <span class="kw">if</span> (<span class="va">event</span>.<span class="va">tag</span> === <span class="st">'photo-upload-queue'</span>) {
+    <span class="va">event</span>.<span class="fn">waitUntil</span>(<span class="fn">processPhotoQueue</span>());
+  }
+});
+
+<span class="kw">async function</span> <span class="fn">processPhotoQueue</span>() {
+  <span class="kw">const</span> <span class="va">pending</span> = <span class="kw">await</span> <span class="va">OfflineQueue</span>.<span class="fn">getPending</span>();
+
+  <span class="kw">for</span> (<span class="kw">const</span> <span class="va">item</span> <span class="kw">of</span> <span class="va">pending</span>) {
+    <span class="kw">if</span> (<span class="va">item</span>.<span class="va">attempts</span> >= <span class="nu">3</span>) {
+      <span class="cm">// Desiste após 3 tentativas — notifica o usuário via Notification API</span>
+      <span class="kw">await</span> <span class="va">OfflineQueue</span>.<span class="fn">updateStatus</span>(<span class="va">item</span>.<span class="va">id</span>, <span class="st">'failed_final'</span>);
+      <span class="kw">await</span> <span class="fn">notifyUser</span>(<span class="st">'Foto não enviada'</span>, <span class="st">'Abra o app para reenviar manualmente.'</span>);
+      <span class="kw">continue</span>;
+    }
+
+    <span class="kw">try</span> {
+      <span class="kw">await</span> <span class="va">OfflineQueue</span>.<span class="fn">updateStatus</span>(<span class="va">item</span>.<span class="va">id</span>, <span class="st">'uploading'</span>, {
+        <span class="va">attempts</span>: <span class="va">item</span>.<span class="va">attempts</span> + <span class="nu">1</span>
+      });
+
+      <span class="kw">const</span> <span class="va">fd</span> = <span class="kw">new</span> <span class="cl">FormData</span>();
+      <span class="va">fd</span>.<span class="fn">append</span>(<span class="st">'photo'</span>,        <span class="va">item</span>.<span class="va">photoBlob</span>, <span class="va">item</span>.<span class="va">photoName</span>);
+      <span class="va">fd</span>.<span class="fn">append</span>(<span class="st">'review_token'</span>, <span class="va">item</span>.<span class="va">reviewToken</span>);
+      <span class="va">fd</span>.<span class="fn">append</span>(<span class="st">'slug'</span>,         <span class="va">item</span>.<span class="va">slug</span>);
+
+      <span class="kw">const</span> <span class="va">res</span> = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="st">'/api/media/upload'</span>, { <span class="va">method</span>: <span class="st">'POST'</span>, <span class="va">body</span>: <span class="va">fd</span> });
+
+      <span class="kw">await</span> <span class="va">OfflineQueue</span>.<span class="fn">updateStatus</span>(<span class="va">item</span>.<span class="va">id</span>, <span class="va">res</span>.<span class="va">ok</span> ? <span class="st">'done'</span> : <span class="st">'pending'</span>);
+
+    } <span class="kw">catch</span> {
+      <span class="kw">await</span> <span class="va">OfflineQueue</span>.<span class="fn">updateStatus</span>(<span class="va">item</span>.<span class="va">id</span>, <span class="st">'pending'</span>); <span class="cm">// tentará novamente</span>
+    }
+  }
+}
+
+<span class="cm">// Registrar o sync quando o usuário fica offline</span>
+<span class="va">self</span>.<span class="fn">addEventListener</span>(<span class="st">'online'</span>, () => {
+  <span class="va">navigator</span>.<span class="va">serviceWorker</span>.<span class="va">ready</span>
+    .<span class="fn">then</span>(<span class="va">reg</span> => <span class="va">reg</span>.<span class="fn">sync</span>?.<span class="fn">register</span>(<span class="st">'photo-upload-queue'</span>));
+});</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="doc-footer">
+  <div class="doc-footer-brand">CP Review SaaS — Production Code</div>
+  <div class="doc-footer-meta">
+    IMPLEMENTAÇÕES SENIOR · 4 MÓDULOS<br>
+    LARAVEL 11 + VANILLA JS · ABRIL 2026
+  </div>
+</div>
+
+</div>
+
+<script>
+function switchTab(group, idx, btn) {
+  const wrap = btn.closest('.code-tabs');
+  wrap.querySelectorAll('.tab-content').forEach((t, i) => t.classList.toggle('active', i === idx));
+  wrap.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.remove('active');
+    ['active-a','active-b','active-c','active-d'].forEach(c => b.classList.remove(c));
+  });
+  const cls = ['active-a','active-b','active-c','active-d'];
+  btn.classList.add('active', cls[['a','b','c','d'].indexOf(group)] || 'active');
+}
+</script>
+</body>
+</html>

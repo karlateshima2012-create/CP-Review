@@ -16,6 +16,8 @@ Route::get('/avaliar/{slug}', [AvaliacaoController::class, 'show'])->name('avali
 Route::post('/avaliar/{slug}/salvar', [AvaliacaoController::class, 'salvar'])
     ->name('avaliacao.salvar')
     ->middleware('throttle:avaliacoes');
+Route::get('/api/bot-script/{slug}', [AvaliacaoController::class, 'botScript'])->name('api.botScript');
+Route::post('/api/media/upload', [AvaliacaoController::class, 'uploadMedia'])->name('api.mediaUpload');
 
 // Auth
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');

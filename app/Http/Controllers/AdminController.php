@@ -21,7 +21,7 @@ class AdminController extends Controller
         $transacoesPendentes = Transacao::where('status', 'pendente')
             ->orderBy('created_at', 'desc')
             ->get();
-        $ultimasAvaliacoes = Avaliacao::with('cliente')
+        $ultimasAvaliacoes = Avaliacao::with('tenant')
             ->orderBy('created_at', 'desc')
             ->limit(20)
             ->get();
@@ -58,7 +58,7 @@ class AdminController extends Controller
 
         $transacao->update([
             'status' => 'aprovado',
-            'cliente_id' => $cliente->id
+            'tenant_id' => $cliente->id
         ]);
 
         // Enviar e-mail de boas-vindas

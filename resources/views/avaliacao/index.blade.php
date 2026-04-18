@@ -1,8 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Avaliar Experiência')
+@section('title', 'Como foi sua visita?')
 
 @section('content')
+<script src="/pwa/offline-queue.js"></script>
+<script src="/pwa/photo-upload.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap');
 
@@ -21,7 +23,6 @@
   --accent: #2563EB;
   --accent-glow: rgba(37,99,235,0.25);
   --green: #10B981;
-  --green-glow: rgba(16,185,129,0.2);
   --yellow: #F59E0B;
   --red: #EF4444;
   --radius-bubble: 20px;
@@ -32,9 +33,9 @@
 body {
   background: #080808;
   font-family: var(--font);
-  margin: 0;
-  padding: 0;
+  margin: 0; padding: 0;
   overflow: hidden;
+  overscroll-behavior: none;
 }
 
 .bot-container {
@@ -54,6 +55,7 @@ body {
   display: flex;
   flex-direction: column;
   box-shadow: 0 0 100px rgba(0,0,0,0.5);
+  overflow: hidden;
 }
 
 @media (min-width: 500px) {
@@ -67,50 +69,53 @@ body {
 /* HEADER */
 .header {
   flex-shrink: 0;
-  padding: 40px 20px 14px;
-  background: rgba(15,15,15,.92);
+  padding: 45px 20px 15px;
+  background: rgba(15,15,15,0.85);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
   gap: 12px;
-  z-index: 10;
+  z-index: 20;
 }
 
 .biz-avatar {
-  width: 40px; height: 40px;
+  width: 42px; height: 42px;
   border-radius: 12px;
   background: linear-gradient(135deg, #2563EB, #7C3AED);
   display: flex; align-items: center; justify-content: center;
-  font-size: 20px;
+  font-size: 22px;
+  box-shadow: 0 4px 12px rgba(37,99,235,0.3);
 }
 
-.biz-name { font-size: 15px; font-weight: 700; color: var(--text); }
-.biz-status { font-size: 11px; color: var(--green); display: flex; align-items: center; gap: 5px; }
+.biz-info { flex: 1; }
+.biz-name { font-size: 15px; font-weight: 800; color: var(--text); line-height: 1.2; }
+.biz-status { font-size: 11px; color: var(--green); display: flex; align-items: center; gap: 5px; font-weight: 600; }
 .biz-status::before { content:''; width:6px; height:6px; background:var(--green); border-radius:50%; animation: pulse 2s infinite; }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
-/* CHAT */
+/* CHAT AREA */
 .chat-area {
   flex: 1;
   overflow-y: auto;
   padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
+  scroll-behavior: smooth;
+  padding-bottom: 100px;
 }
 .chat-area::-webkit-scrollbar { display: none; }
 
-.msg { display: flex; animation: msgIn 0.3s ease-out both; }
+.msg { display: flex; opacity: 0; transform: translateY(10px); animation: msgIn 0.3s forwards; }
 .msg.bot { justify-content: flex-start; }
 .msg.user { justify-content: flex-end; }
-
-@keyframes msgIn { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
+@keyframes msgIn { to { opacity:1; transform: translateY(0); } }
 
 .bubble {
-  max-width: 80%;
-  padding: 12px 16px;
-  font-size: 14px;
+  max-width: 85%;
+  padding: 14px 18px;
+  font-size: 15px;
   line-height: 1.5;
   font-weight: 500;
 }
@@ -120,102 +125,211 @@ body {
   border: 1px solid var(--bubble-bot-border);
   border-radius: 18px 18px 18px 4px;
   color: var(--text);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
 .user-bubble {
   background: var(--bubble-user);
   border-radius: 18px 18px 4px 18px;
   color: white;
-  font-weight: 600;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(37,99,235,0.3);
 }
 
 /* TYPING */
-.typing { display: flex; gap: 4px; padding: 5px 0; }
-.typing span { width: 6px; height: 6px; background: #555; border-radius: 50%; animation: typeDot 1.2s infinite; }
+.typing { display: flex; gap: 4px; padding: 6px 0; }
+.typing span { width: 6px; height: 6px; background: #666; border-radius: 50%; animation: typeDot 1.2s infinite; }
 .typing span:nth-child(2) { animation-delay: 0.2s; }
 .typing span:nth-child(3) { animation-delay: 0.4s; }
 @keyframes typeDot { 0%,60%,100%{opacity:.3;transform:scale(1)} 30%{opacity:1;transform:scale(1.2)} }
 
-/* STAR BTN */
-.star-container { display: flex; gap: 8px; margin-top: 5px; }
-.star-btn {
-  width: 44px; height: 44px;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  font-size: 20px;
-  cursor: pointer;
-  transition: 0.2s;
+/* STAR RATING */
+.star-rating {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    width: 100%;
 }
-.star-btn:active { transform: scale(0.9); }
-.star-btn.active { border-color: var(--yellow); background: rgba(245,158,11,0.1); }
+.star-item {
+    font-size: 32px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    filter: grayscale(1) opacity(0.5);
+}
+.star-item.active {
+    filter: grayscale(0) opacity(1);
+    transform: scale(1.2);
+}
 
-/* WIDGETS */
-.qr-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 5px; }
+/* QUICK REPLIES / BUTTONS */
+.options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 5px;
+    width: 100%;
+}
 .qr-btn {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 600;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 14px;
+    border-radius: 16px;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: left;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.qr-btn:active { background: var(--border); transform: scale(0.98); }
+.qr-btn i { color: var(--accent); opacity: 0.5; }
+
+.qr-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 5px;
+}
+.qr-row .qr-btn {
+    flex: 1;
+    justify-content: center;
 }
 
-.input-box {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 12px;
-  color: white;
-  width: 100%;
-  font-family: inherit;
-  margin-top: 8px;
-  outline: none;
-}
-.send-btn {
-  background: var(--accent);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  padding: 10px 20px;
-  margin-top: 8px;
-  font-weight: 700;
-  width: 100%;
+/* GRID OF PROBLEMS */
+.problems-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 5px;
 }
 
-.bottom-bar { padding: 15px; text-align: center; font-size: 10px; color: var(--text-dim); border-top: 1px solid var(--border); }
+/* INPUTS */
+.input-container {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 15px;
+    position: absolute;
+    bottom: 0; width: 100%;
+    z-index: 30;
+}
+.f-input {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 12px 16px;
+    color: white;
+    width: 100%;
+    font-family: inherit;
+    outline: none;
+    font-size: 14px;
+    resize: none;
+}
+.confirm-btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 14px;
+    margin-top: 10px;
+    font-weight: 800;
+    width: 100%;
+    font-size: 15px;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+
+/* SUCCESS STATE */
+.success-screen {
+    position: absolute;
+    inset: 0;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    text-align: center;
+    padding: 40px;
+}
+.success-icon {
+    width: 80px; height: 80px;
+    background: var(--green);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px;
+    margin-bottom: 20px;
+}
+
+/* PHOTO UPLOAD */
+.photo-upload {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.photo-preview {
+    width: 100%;
+    height: 150px;
+    border-radius: 12px;
+    object-fit: cover;
+    display: none;
+    border: 2px solid var(--border);
+}
+.upload-label {
+    background: var(--surface2);
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-muted);
+    cursor: pointer;
+}
 </style>
 
 <div class="bot-container">
     <div class="phone">
-        <!-- Header -->
         <div class="header">
-            <div class="biz-avatar">💼</div>
+            <div class="biz-avatar">🏢</div>
             <div class="biz-info">
-                <div class="biz-name">{{ $cliente->nome_empresa }}</div>
-                <div class="biz-status">Online agora</div>
+                <div class="biz-name" id="header-biz-name">...</div>
+                <div class="biz-status">Online</div>
             </div>
-            <div style="margin-left: auto; font-size: 10px; color: var(--green); border: 1px solid var(--green); padding: 2px 6px; border-radius: 5px;">
-                🔒 PRIVADO
+            <div style="font-size: 10px; color: var(--green); border: 1px solid var(--green); padding: 2px 6px; border-radius: 5px; font-weight: bold;">
+                PWA
             </div>
         </div>
 
-        <!-- Chat Area -->
         <div class="chat-area" id="chat"></div>
 
-        <!-- Bottom Bar -->
-        <div class="bottom-bar">
-            🛡️ Seus dados estão seguros e são usados apenas para melhoria interna.
+        <div id="footer-note" style="padding: 15px; text-align: center; font-size: 10px; color: var(--text-dim);">
+            🛡️ Seus dados estão protegidos.
         </div>
     </div>
 </div>
 
 <script>
-const chat = document.getElementById('chat');
-let state = { nota: 0, motivo: '', feedback: '' };
+let botConfig = null;
+let state = {
+    nome_cliente: '',
+    first_visit: null,
+    period: null,
+    rating: 0,
+    aspect: null,
+    problem: null,
+    feedback: '',
+    photo: null,
+    contact: ''
+};
 
-function scroll() { chat.scrollTo({ top: chat.scrollHeight, behavior: 'smooth' }); }
+const chat = document.getElementById('chat');
+const bizSlug = "{{ $cliente->slug }}";
+
+function scrollChat() {
+    chat.scrollTo({ top: chat.scrollHeight, behavior: 'smooth' });
+}
+
+async function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 async function addTyping() {
     const div = document.createElement('div');
@@ -223,8 +337,8 @@ async function addTyping() {
     div.className = 'msg bot';
     div.innerHTML = `<div class="bubble bot-bubble"><div class="typing"><span></span><span></span><span></span></div></div>`;
     chat.appendChild(div);
-    scroll();
-    await new Promise(r => setTimeout(r, 1200));
+    scrollChat();
+    await wait(1000);
     div.remove();
 }
 
@@ -234,7 +348,7 @@ async function addBotMsg(text) {
     div.className = 'msg bot';
     div.innerHTML = `<div class="bubble bot-bubble">${text}</div>`;
     chat.appendChild(div);
-    scroll();
+    scrollChat();
 }
 
 function addUserMsg(text) {
@@ -242,99 +356,298 @@ function addUserMsg(text) {
     div.className = 'msg user';
     div.innerHTML = `<div class="bubble user-bubble">${text}</div>`;
     chat.appendChild(div);
-    scroll();
+    scrollChat();
 }
 
-async function start() {
-    await addBotMsg("Olá! 👋 Bem-vindo ao suporte de qualidade da <b>{{ $cliente->nome_empresa }}</b>.");
-    await addBotMsg("Como foi sua experiência conosco hoje? Sua nota ajuda muito nosso time! ✨");
-    
-    const stars = document.createElement('div');
-    stars.className = 'star-container';
-    stars.innerHTML = [1,2,3,4,5].map(i => `<button class="star-btn" onclick="setRating(${i})">⭐</button>`).join('');
-    chat.appendChild(stars);
-    scroll();
-}
-
-window.setRating = async (n) => {
-    state.nota = n;
-    document.querySelector('.star-container').remove();
-    addUserMsg(`${n} estrelas`);
-
-    if (n <= 3) {
-        await addBotMsg("Poxa, lamento que não tenha sido perfeito. 😔");
-        await addBotMsg("O que mais te incomodou hoje?");
-        const options = ['Atendimento 👤', 'Demora ⏰', 'Qualidade 🍽️', 'Limpeza 🧼'];
-        renderOptions(options);
-    } else {
-        await addBotMsg("Que notícia maravilhosa! 🤩");
-        await addBotMsg("O que você mais gostou na visita?");
-        const options = ['Sabor 😋', 'Equipe 🤝', 'Velocidade ⚡', 'Ambiente ✨'];
-        renderOptions(options);
+async function init() {
+    try {
+        const locale = navigator.language.split('-')[0];
+        const res = await fetch(`/api/bot-script/${bizSlug}?locale=${locale}`);
+        botConfig = await res.json();
+        document.getElementById('header-biz-name').innerText = botConfig.tenant.name;
+        
+        await startConversation();
+    } catch (e) {
+        console.error(e);
+        await addBotMsg("Erro ao carregar o chat.");
     }
-};
-
-function renderOptions(options) {
-    const wrap = document.createElement('div');
-    wrap.className = 'qr-wrap';
-    wrap.innerHTML = options.map(opt => `<button class="qr-btn" onclick="setOption('${opt}')">${opt}</button>`).join('');
-    chat.appendChild(wrap);
-    scroll();
 }
 
-window.setOption = async (opt) => {
-    state.motivo = opt;
-    document.querySelector('.qr-wrap').remove();
-    addUserMsg(opt);
+async function startConversation() {
+    await addBotMsg(botConfig.lang.welcome);
+    await wait(400);
+    await askName();
+}
 
-    await addBotMsg("Obrigado por nos contar! 🙏");
-    await addBotMsg("Quer deixar algum detalhe adicional ou sugestão?");
-    
-    const inputWrap = document.createElement('div');
-    inputWrap.innerHTML = `
-        <textarea id="f-area" class="input-box" placeholder="Escreva aqui..."></textarea>
-        <button class="send-btn" onclick="finish()">Enviar Avaliação</button>
+async function askName() {
+    await addBotMsg(botConfig.lang.q_name);
+    const div = document.createElement('div');
+    div.className = 'input-container';
+    div.style.position = 'relative';
+    div.innerHTML = `
+        <input type="text" id="name-input" class="f-input" placeholder="Seu nome..." autofocus>
+        <button class="confirm-btn" onclick="handleName()">Continuar ➔</button>
     `;
-    chat.appendChild(inputWrap);
-    scroll();
+    chat.appendChild(div);
+    scrollChat();
+}
+
+window.handleName = async () => {
+    const input = document.getElementById('name-input');
+    if (!input.value.trim()) return;
+    state.nome_cliente = input.value.trim();
+    input.closest('.input-container').remove();
+    addUserMsg(state.nome_cliente);
+    await askFirstVisit();
 };
 
-window.finish = async () => {
-    state.feedback = document.getElementById('f-area').value;
-    document.getElementById('f-area').parentElement.remove();
-    if(state.feedback) addUserMsg(state.feedback);
+async function askFirstVisit() {
+    await addBotMsg(botConfig.lang.q_first_visit);
+    const div = document.createElement('div');
+    div.className = 'qr-row';
+    div.innerHTML = `
+        <button class="qr-btn" onclick="handleFirstVisit(true)">${botConfig.lang.btn_yes}</button>
+        <button class="qr-btn" onclick="handleFirstVisit(false)">${botConfig.lang.btn_no}</button>
+    `;
+    chat.appendChild(div);
+    scrollChat();
+}
 
-    await addBotMsg("Recebido! 🚀");
-    await addBotMsg("Sua avaliação foi enviada diretamente para a nossa gerência.");
-    
-    // Server push
-    fetch("{{ route('avaliacao.salvar', $cliente->slug) }}", {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
-        body: JSON.stringify({
-            nota: state.nota,
-            problema: state.motivo,
-            feedback: state.feedback
-        })
-    });
+window.handleFirstVisit = async (val) => {
+    state.first_visit = val;
+    event.target.closest('.qr-row').remove();
+    addUserMsg(val ? botConfig.lang.btn_yes : botConfig.lang.btn_no);
+    await askPeriod();
+};
 
-    if (state.nota >= 4) {
-        await addBotMsg("Como você teve uma ótima experiência, poderia nos ajudar avaliando no Google também? ✨");
-        const gBtn = document.createElement('div');
-        gBtn.innerHTML = `
-            <a href="https://www.google.com/maps?q={{ urlencode($cliente->nome_empresa) }}" target="_blank" 
-               style="display:block; background:white; color:#4285F4; text-align:center; padding:15px; border-radius:15px; font-weight:bold; text-decoration:none; margin-top:10px; border:1px solid #ddd;">
-               🚀 Abrir Google Reviews
-            </a>
-        `;
-        chat.appendChild(gBtn);
+async function askPeriod() {
+    await addBotMsg(botConfig.lang.q_period);
+    const div = document.createElement('div');
+    div.className = 'options-grid';
+    div.innerHTML = `
+        <button class="qr-btn" onclick="handlePeriod('lunch')">${botConfig.lang.btn_lunch} <i>→</i></button>
+        <button class="qr-btn" onclick="handlePeriod('dinner')">${botConfig.lang.btn_dinner} <i>→</i></button>
+        <button class="qr-btn" onclick="handlePeriod('other')">${botConfig.lang.btn_other} <i>→</i></button>
+    `;
+    chat.appendChild(div);
+    scrollChat();
+}
+
+window.handlePeriod = async (p) => {
+    state.period = p;
+    event.target.closest('.options-grid').remove();
+    const labels = { lunch: botConfig.lang.btn_lunch, dinner: botConfig.lang.btn_dinner, other: botConfig.lang.btn_other };
+    addUserMsg(labels[p]);
+    await askRating();
+};
+
+async function askRating() {
+    const txt = botConfig.lang.askRate.replace('{name}', state.nome_cliente);
+    await addBotMsg(txt);
+    const div = document.createElement('div');
+    div.className = 'star-rating';
+    div.innerHTML = [1,2,3,4,5].map(i => `<span class="star-item" onclick="handleRating(${i})">⭐</span>`).join('');
+    chat.appendChild(div);
+    scrollChat();
+}
+
+window.handleRating = async (r) => {
+    state.rating = r;
+    event.target.closest('.star-rating').remove();
+    addUserMsg("⭐".repeat(r));
+
+    if (r >= 4) {
+        await handlePositiveFlow();
     } else {
-        await addBotMsg("Trabalharemos duro para que sua próxima visita seja 5 estrelas! 🍜");
+        await handleNegativeFlow();
     }
-    
-    scroll();
 };
 
-start();
+async function handlePositiveFlow() {
+    await addBotMsg(botConfig.lang.highRate);
+    await wait(300);
+    await addBotMsg(botConfig.lang.highRateQ);
+    
+    const div = document.createElement('div');
+    div.className = 'options-grid';
+    div.innerHTML = botConfig.lang.optionsHigh.map(opt => `
+        <button class="qr-btn" onclick="handleAspect('${opt}')">${opt} <i>✨</i></button>
+    `).join('');
+    chat.appendChild(div);
+    scrollChat();
+}
+
+window.handleAspect = async (opt) => {
+    state.aspect = opt;
+    event.target.closest('.options-grid').remove();
+    addUserMsg(opt);
+    await askFeedback();
+};
+
+async function handleNegativeFlow() {
+    await addBotMsg(botConfig.lang.lowRate);
+    await wait(300);
+    await addBotMsg(botConfig.lang.lowRateQ);
+
+    const div = document.createElement('div');
+    div.className = 'problems-grid';
+    div.innerHTML = botConfig.lang.optionsLow.map(opt => `
+        <button class="qr-btn" style="justify-content:center" onclick="handleProblem('${opt}')">${opt}</button>
+    `).join('');
+    chat.appendChild(div);
+    scrollChat();
+}
+
+window.handleProblem = async (opt) => {
+    state.problem = opt;
+    event.target.closest('.problems-grid').remove();
+    addUserMsg(opt);
+    await askFeedback(true);
+};
+
+async function askFeedback(isLow = false) {
+    await addBotMsg(botConfig.lang.detalhes);
+    const div = document.createElement('div');
+    div.className = 'input-container';
+    
+    let photoHtml = isLow ? `
+        <div class="photo-upload">
+            <input type="file" id="photo-input" hidden accept="image/*" onchange="previewPhoto(this)">
+            <label for="photo-input" class="upload-label">📸 Adicionar Foto (Opcional)</label>
+            <img id="photo-preview" class="photo-preview">
+        </div>
+    ` : '';
+
+    div.innerHTML = `
+        <textarea id="feedback-area" class="f-input" rows="2" placeholder="Sua opinião..."></textarea>
+        ${photoHtml}
+        <input type="text" id="contact-input" class="f-input" style="margin-top:10px" placeholder="${botConfig.lang.q_contact}">
+        <button class="confirm-btn" id="submit-btn" onclick="submitEvaluation()">
+            <span>${botConfig.lang.btnSend}</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+        </button>
+    `;
+    document.querySelector('.phone').appendChild(div);
+    scrollChat();
+}
+
+window.previewPhoto = (input) => {
+    if (input.files && input.files[0]) {
+        state.photo = input.files[0]; // Guarda o File original
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = document.getElementById('photo-preview');
+            img.src = e.target.result;
+            img.style.display = 'block';
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+window.submitEvaluation = async () => {
+    const btn = document.getElementById('submit-btn');
+    const area = document.getElementById('feedback-area');
+    const contact = document.getElementById('contact-input');
+    
+    state.feedback = area.value;
+    state.contact = contact.value;
+
+    btn.disabled = true;
+    btn.innerHTML = `<span>${botConfig.lang.sending}</span>`;
+
+    try {
+        const payload = {
+            nota: state.rating,
+            feedback: state.feedback,
+            problema: state.problem || state.aspect,
+            tipo_contato: state.contact ? 'whatsapp' : 'nao',
+            contato_valor: state.contact,
+            nome_cliente: state.nome_cliente,
+            primeira_visita: state.first_visit,
+            periodo_visita: state.period,
+        };
+
+        const res = await fetch(`/avaliar/${bizSlug}/salvar`, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) throw new Error("Fail");
+        
+        const data = await res.json();
+
+        // Se houver foto selecionada, envia ela usando PhotoUploader e data.token
+        if (state.photo && data.token) {
+            btn.innerHTML = `<span>Enviando foto...</span>`;
+            await PhotoUploader.upload({
+                file: state.photo,
+                reviewToken: data.token,
+                slug: bizSlug,
+                csrfToken: '{{ csrf_token() }}'
+            });
+        }
+
+        document.querySelector('.input-container').remove();
+        if (state.feedback) addUserMsg(state.feedback);
+
+        await addBotMsg(botConfig.lang.success);
+        await addBotMsg(botConfig.lang.finalMsg);
+
+        if (state.rating >= 4) {
+            await addBotMsg(botConfig.lang.googleCTA);
+            const gDiv = document.createElement('div');
+            gDiv.style.padding = '0 20px';
+            gDiv.innerHTML = `
+                <a href="${botConfig.tenant.google_link}" target="_blank" class="confirm-btn" style="background:#4285F4; text-decoration:none">
+                    ${botConfig.lang.googleBtn}
+                </a>
+            `;
+            chat.appendChild(gDiv);
+        } else {
+            await addBotMsg(botConfig.lang.nextVisit);
+        }
+
+        setTimeout(() => {
+            showSuccessScreen();
+        }, 3000);
+
+    } catch (e) {
+        btn.disabled = false;
+        btn.innerHTML = `<span>${botConfig.lang.retryBtn}</span>`;
+    }
+};
+
+function showSuccessScreen() {
+    const screen = document.createElement('div');
+    screen.className = 'success-screen';
+    screen.innerHTML = `
+        <div class="success-icon">✓</div>
+        <h2 style="color:white; margin-bottom:10px">${botConfig.lang.success}</h2>
+        <p style="color:var(--text-muted); font-size:14px">Obrigado por nos ajudar a crescer!</p>
+    `;
+    document.querySelector('.phone').appendChild(screen);
+    
+    setTimeout(() => {
+        if (window.opener) {
+            window.close();
+        } else {
+            location.reload();
+        }
+    }, botConfig.config.auto_close);
+}
+
+// Service Worker Registration
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW fail', err));
+    });
+}
+
+init();
 </script>
 @endsection

@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password'])]
+#[Fillable(['name', 'email', 'password', 'tenant_id', 'role', 'last_login_at'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -27,15 +27,17 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'last_login_at' => 'datetime',
         ];
     }
-    public function clientes(): \Illuminate\Database\Eloquent\Relations\HasMany
+
+    public function cliente(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->hasMany(Cliente::class);
+        return $this->belongsTo(Cliente::class, 'tenant_id');
     }
 
     public function isAdmin(): bool
     {
-        return $this->email === 'admin@cpreview.com'; // Por enquanto, baseado no email
+        return $this->role === 'super_admin' || $this->email === 'admin@cpreview.com';
     }
 }

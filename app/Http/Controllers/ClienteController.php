@@ -4,18 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\Cliente;
 use App\Models\Avaliacao;
-use App\Services\WhatsAppService;
+use App\Services\NotificationService;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 use Illuminate\Http\Request;
 
 class ClienteController extends Controller
 {
-    protected $whatsappService;
+    protected $notificationService;
 
-    public function __construct(WhatsAppService $whatsappService)
+    public function __construct(NotificationService $notificationService)
     {
-        $this->whatsappService = $whatsappService;
+        $this->notificationService = $notificationService;
     }
 
     public function dashboard(Cliente $cliente)
@@ -72,10 +72,8 @@ class ClienteController extends Controller
             'resolvido' => true
         ]);
 
-        // Se a avaliação foi via WhatsApp, envia a resposta de encerramento
-        if ($avaliacao->tipo_contato === 'whatsapp' && $avaliacao->contato_valor) {
-            $this->whatsappService->sendResponseToCustomer($avaliacao);
-        }
+        // Fecha o loop com o cliente informando sobre a resolução
+        $this->notificationService->closeLoop($avaliacao);
 
         return redirect()->back()->with('success', 'Ciclo encerrado e cliente notificado!');
     }

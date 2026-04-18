@@ -27,9 +27,9 @@ class AuthController extends Controller
             }
 
             // Para lojistas, redireciona para o dashboard deles
-            $cliente = Auth::user()->clientes()->first();
-            if ($cliente) {
-                return redirect()->intended(route('cliente.dashboard', ['cliente' => $cliente->id]));
+            $tenantId = Auth::user()->tenant_id;
+            if ($tenantId) {
+                return redirect()->intended(route('cliente.dashboard', ['cliente' => $tenantId]));
             }
 
             return redirect()->intended('/');

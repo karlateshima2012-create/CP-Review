@@ -1,0 +1,1446 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CP Review — Arquitetura SaaS</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Bebas+Neue&display=swap');
+
+:root {
+  --bg: #F8F6F1;
+  --paper: #FFFFFF;
+  --ink: #0C0C0C;
+  --muted: #6B6560;
+  --line: #E0DBD4;
+  --line2: #C8C2BA;
+
+  --red: #C0392B;
+  --red-light: #FDF0EE;
+  --blue: #1A56DB;
+  --blue-light: #EBF2FF;
+  --green: #1A7A4A;
+  --green-light: #EDFAF3;
+  --orange: #C05C00;
+  --orange-light: #FFF5EB;
+  --purple: #6B21A8;
+  --purple-light: #F5F0FF;
+
+  --role-admin: #C0392B;
+  --role-owner: #1A56DB;
+  --role-consumer: #1A7A4A;
+
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'IBM Plex Sans', sans-serif;
+  --display: 'Bebas Neue', cursive;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ── LAYOUT ── */
+.page { max-width: 1120px; margin: 0 auto; padding: 0 32px 120px; }
+
+/* ── COVER ── */
+.cover {
+  border-bottom: 3px solid var(--ink);
+  padding: 64px 0 40px;
+  margin-bottom: 0;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 32px;
+  align-items: end;
+}
+
+.cover-tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.cover-tag::before { content:''; width:24px; height:1px; background:var(--red); }
+
+.cover h1 {
+  font-family: var(--display);
+  font-size: clamp(60px, 8vw, 110px);
+  line-height: .9;
+  letter-spacing: .02em;
+  margin-bottom: 18px;
+}
+
+.cover h1 span { color: var(--red); }
+
+.cover-desc {
+  font-size: 16px;
+  color: var(--muted);
+  max-width: 560px;
+  line-height: 1.65;
+  font-weight: 300;
+}
+
+.cover-meta {
+  text-align: right;
+}
+
+.cover-meta-line {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 2.2;
+  letter-spacing: .05em;
+}
+
+.cover-verdict {
+  margin-top: 20px;
+  background: var(--ink);
+  color: white;
+  padding: 10px 16px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+/* ── SECTION ── */
+.sec {
+  padding: 56px 0 0;
+}
+
+.sec-line {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 28px;
+}
+
+.sec-n {
+  font-family: var(--display);
+  font-size: 48px;
+  color: var(--line2);
+  line-height: 1;
+}
+
+.sec-h {
+  font-family: var(--display);
+  font-size: clamp(22px, 3vw, 34px);
+  line-height: 1;
+  letter-spacing: .03em;
+}
+
+.sec-sub {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--muted);
+  max-width: 280px;
+  text-align: right;
+  line-height: 1.5;
+  font-family: var(--mono);
+}
+
+/* ── CALLOUT ── */
+.callout {
+  border-left: 3px solid;
+  padding: 14px 20px;
+  margin-bottom: 20px;
+}
+.callout.red   { border-color: var(--red);    background: var(--red-light); }
+.callout.blue  { border-color: var(--blue);   background: var(--blue-light); }
+.callout.green { border-color: var(--green);  background: var(--green-light); }
+.callout.orange{ border-color: var(--orange); background: var(--orange-light); }
+
+.callout-tag {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+.callout.red    .callout-tag { color: var(--red); }
+.callout.blue   .callout-tag { color: var(--blue); }
+.callout.green  .callout-tag { color: var(--green); }
+.callout.orange .callout-tag { color: var(--orange); }
+
+.callout p { font-size: 13px; color: #333; line-height: 1.65; }
+.callout p strong { font-weight: 600; color: var(--ink); }
+
+/* ── ASSESSMENT TABLE ── */
+.assess-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 24px;
+  font-size: 13px;
+}
+
+.assess-table th {
+  background: var(--ink);
+  color: white;
+  padding: 10px 14px;
+  text-align: left;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.assess-table td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+  color: #333;
+  line-height: 1.5;
+}
+
+.assess-table tr:nth-child(even) td { background: #FAFAF8; }
+
+.status-pill {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 9px;
+  padding: 2px 8px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  border-radius: 2px;
+}
+
+.s-ok     { background: var(--green-light);  color: var(--green); }
+.s-gap    { background: var(--orange-light); color: var(--orange); }
+.s-miss   { background: var(--red-light);    color: var(--red); }
+.s-risk   { background: #FFF8E0;             color: #8B6500; border: 1px solid #E0C000; }
+
+/* ── ARCHITECTURE DIAGRAM ── */
+.arch-diagram {
+  background: var(--ink);
+  color: white;
+  padding: 40px;
+  margin-bottom: 28px;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.8;
+  overflow-x: auto;
+}
+
+.arch-diagram pre {
+  white-space: pre;
+  color: rgba(255,255,255,.8);
+}
+
+.arch-diagram .layer-title {
+  color: #F59E0B;
+  font-size: 10px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.arch-diagram .c-blue   { color: #93C5FD; }
+.arch-diagram .c-green  { color: #6EE7B7; }
+.arch-diagram .c-yellow { color: #FDE68A; }
+.arch-diagram .c-red    { color: #FCA5A5; }
+.arch-diagram .c-purple { color: #C4B5FD; }
+.arch-diagram .c-muted  { color: rgba(255,255,255,.3); }
+
+/* ── ROLE FLOWS ── */
+.role-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
+  margin-bottom: 0;
+  border-bottom: 2px solid;
+}
+
+.role-header.admin   { background: #1A0A0A; border-color: var(--red);    color: white; }
+.role-header.owner   { background: #0A0F1A; border-color: var(--blue);   color: white; }
+.role-header.consumer{ background: #0A1A10; border-color: var(--green);  color: white; }
+
+.role-icon { font-size: 22px; }
+
+.role-name {
+  font-family: var(--display);
+  font-size: 22px;
+  letter-spacing: .05em;
+}
+
+.role-desc {
+  font-size: 12px;
+  opacity: .6;
+  font-family: var(--mono);
+}
+
+.role-tag {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  opacity: .5;
+}
+
+.role-body {
+  border: 1px solid var(--line);
+  border-top: none;
+  margin-bottom: 28px;
+}
+
+/* ── SCREEN CARDS ── */
+.screens-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1px;
+  background: var(--line);
+  margin-bottom: 24px;
+}
+
+.screen-card {
+  background: var(--paper);
+  padding: 18px 20px;
+}
+
+.screen-id {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.screen-name {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--ink);
+}
+
+.screen-elems {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.screen-elems li {
+  font-size: 12px;
+  color: var(--muted);
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  line-height: 1.4;
+}
+
+.screen-elems li::before {
+  content: '·';
+  color: var(--line2);
+  font-size: 18px;
+  line-height: .9;
+  flex-shrink: 0;
+}
+
+.screen-elems li.key { color: var(--ink); }
+.screen-elems li.key::before { color: var(--red); }
+
+/* ── FLOW STEPS ── */
+.flow-steps {
+  padding: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.flow-title {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+.flow-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  counter-reset: flow;
+}
+
+.flow-item {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--line);
+  align-items: flex-start;
+}
+.flow-item:last-child { border-bottom: none; }
+
+.flow-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 1px;
+}
+
+.flow-content {}
+
+.flow-action {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+
+.flow-detail {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.flow-tag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 9px;
+  padding: 1px 6px;
+  border-radius: 2px;
+  margin-top: 4px;
+  font-weight: 600;
+}
+
+.ft-db     { background: #EEF2FF; color: #3730A3; }
+.ft-api    { background: #F0FFF4; color: #166534; }
+.ft-mail   { background: #FFF7ED; color: #9A3412; }
+.ft-wapp   { background: #F0FFF4; color: #166534; }
+.ft-line   { background: #ECFDF5; color: #047857; }
+.ft-cache  { background: #FDF4FF; color: #7E22CE; }
+.ft-js     { background: #FEFCE8; color: #854D0E; }
+.ft-sec    { background: #FFF1F2; color: #9F1239; }
+
+/* ── TECH STACK TABLE ── */
+.stack-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--line);
+  margin-bottom: 24px;
+}
+
+.stack-cell {
+  background: var(--paper);
+  padding: 16px 18px;
+}
+
+.stack-layer {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.stack-tech {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.stack-why {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* ── DB SCHEMA ── */
+.schema-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.schema-table {
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.schema-table-head {
+  background: var(--ink);
+  color: white;
+  padding: 8px 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .1em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.schema-table-head span {
+  font-size: 9px;
+  opacity: .5;
+  margin-left: auto;
+}
+
+.schema-field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 14px;
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+}
+.schema-field:last-child { border-bottom: none; }
+
+.schema-field-name {
+  font-family: var(--mono);
+  color: var(--ink);
+  font-size: 11px;
+}
+
+.schema-field-type {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--blue);
+}
+
+.schema-field.pk .schema-field-name { color: var(--red); }
+.schema-field.fk .schema-field-name { color: var(--blue); }
+.schema-field.idx .schema-field-name::after {
+  content: ' ⟨i⟩';
+  font-size: 9px;
+  color: var(--muted);
+}
+
+/* ── PRIORITY ROADMAP ── */
+.roadmap-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 24px;
+  font-size: 13px;
+}
+
+.roadmap-table th {
+  background: var(--ink);
+  color: white;
+  padding: 10px 14px;
+  text-align: left;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.roadmap-table td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+.roadmap-table tr:nth-child(even) td { background: #FAFAF8; }
+
+.p-badge {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 9px;
+  padding: 2px 8px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.p1 { background: var(--red); color: white; }
+.p2 { background: var(--orange); color: white; }
+.p3 { background: var(--blue); color: white; }
+.p4 { background: var(--muted); color: white; }
+
+.effort {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* ── SECURITY TABLE ── */
+.sec-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.sec-card {
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.sec-card-head {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sec-card-body { padding: 12px 16px; }
+
+.sec-item {
+  font-size: 12px;
+  padding: 5px 0;
+  border-bottom: 1px dashed var(--line);
+  display: flex;
+  gap: 8px;
+  color: #333;
+  line-height: 1.4;
+}
+.sec-item:last-child { border-bottom: none; }
+.sec-item::before { content: '→'; color: var(--red); font-family: var(--mono); font-size: 11px; flex-shrink:0; margin-top:1px; }
+
+/* ── FOOTER ── */
+.doc-footer {
+  margin-top: 80px;
+  padding-top: 20px;
+  border-top: 3px solid var(--ink);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.doc-footer-brand {
+  font-family: var(--display);
+  font-size: 24px;
+  letter-spacing: .05em;
+}
+
+.doc-footer-meta {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: .08em;
+  text-align: right;
+  line-height: 1.8;
+}
+
+hr.rule { border: none; border-top: 1px solid var(--line); margin: 40px 0; }
+
+@media (max-width: 768px) {
+  .cover { grid-template-columns: 1fr; }
+  .stack-grid, .sec-grid { grid-template-columns: 1fr; }
+  .screens-grid { grid-template-columns: 1fr; }
+  .sec-line { flex-wrap: wrap; }
+  .sec-sub { margin-left: 0; text-align: left; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ══ COVER ══════════════════════════════════════════════ -->
+<div class="cover">
+  <div>
+    <div class="cover-tag">Arquitetura de Solução — Documento Técnico Senior</div>
+    <h1>CP<span> REVIEW</span><br>SAAS</h1>
+    <p class="cover-desc">Especificação completa de arquitetura para plataforma SaaS multi-tenant de coleta de satisfação com interface conversacional, BI integrado e operação dual Brasil + Japão.</p>
+  </div>
+  <div class="cover-meta">
+    <div class="cover-meta-line">VERSÃO: 2.0 — ARQUITETURA SENIOR</div>
+    <div class="cover-meta-line">PAPÉIS: 3 (ADMIN / LOJISTA / CONSUMIDOR)</div>
+    <div class="cover-meta-line">TELAS: 24 ESPECIFICADAS</div>
+    <div class="cover-meta-line">MERCADOS: BRASIL + JAPÃO</div>
+    <div class="cover-meta-line">STACK: LARAVEL 11 + VANILLA JS</div>
+    <div class="cover-verdict">STATUS: APROVADO COM MELHORIAS CRÍTICAS</div>
+  </div>
+</div>
+
+<!-- ══ 01 — AVALIAÇÃO DO PROJETO ══════════════════════════ -->
+<div class="sec">
+  <div class="sec-line">
+    <span class="sec-n">01</span>
+    <span class="sec-h">Avaliação Técnica — O Que Está Certo e o Que Falta</span>
+    <span class="sec-sub">Diagnóstico honesto antes de arquitetar</span>
+  </div>
+
+  <div class="callout green">
+    <div class="callout-tag">Veredicto Geral</div>
+    <p>A visão do produto é <strong>genuinamente sólida</strong>. A interface conversacional PWA resolve um problema real melhor do que qualquer alternativa existente no segmento. O modelo de negócio é sustentável. O stack técnico escolhido (Laravel + Vanilla JS) é a decisão certa para o contexto. O projeto está pronto para ser construído — com as lacunas abaixo endereçadas antes de escrever a primeira linha de código.</p>
+  </div>
+
+  <table class="assess-table">
+    <thead>
+      <tr>
+        <th>Dimensão</th>
+        <th>O que existe</th>
+        <th>O que falta / precisa melhorar</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Interface conversacional (PWA)</strong></td>
+        <td>Demo funcional com fluxo alto/baixo, typing indicator, bolhas, Google CTA</td>
+        <td>Sem detecção de idioma, sem campo de foto, sem pergunta de contexto (1ª visita / turno), sem Service Worker offline</td>
+        <td><span class="status-pill s-gap">Gap Médio</span></td>
+      </tr>
+      <tr>
+        <td><strong>Multi-tenancy</strong></td>
+        <td>Conceito mencionado, UUIDs citados</td>
+        <td>Isolamento de dados não especificado. Falta definir: shared DB com tenant_id ou schema separado por tenant? Políticas Laravel (Gates/Policies) não detalhadas.</td>
+        <td><span class="status-pill s-miss">Crítico</span></td>
+      </tr>
+      <tr>
+        <td><strong>Modelo de dados</strong></td>
+        <td>Tabelas clientes + avaliações (versão PHP simples)</td>
+        <td>Schema insuficiente para SaaS. Falta: tenants, users, bots_config, notifications, sessions, media, audit_log</td>
+        <td><span class="status-pill s-miss">Crítico</span></td>
+      </tr>
+      <tr>
+        <td><strong>Autenticação e roles</strong></td>
+        <td>Login simples no painel admin</td>
+        <td>Falta sistema de roles: Super Admin / Lojista / (Consumidor anônimo). Sanctum ou Breeze não especificados.</td>
+        <td><span class="status-pill s-miss">Crítico</span></td>
+      </tr>
+      <tr>
+        <td><strong>Personalização do bot</strong></td>
+        <td>Mencionado como feature ("lojista edita roteiro")</td>
+        <td>Sem especificação de como o roteiro é armazenado, editado e servido ao PWA. JSON? Markdown? Builder visual?</td>
+        <td><span class="status-pill s-gap">Gap Médio</span></td>
+      </tr>
+      <tr>
+        <td><strong>Notificações (WhatsApp / LINE)</strong></td>
+        <td>Evolution API + LINE Notify citados</td>
+        <td>Evolution API é instável para produção. Falta fallback via e-mail e lógica de retry. LINE Notify foi descontinuado em 2024 — usar LINE Messaging API.</td>
+        <td><span class="status-pill s-risk">Risco</span></td>
+      </tr>
+      <tr>
+        <td><strong>Dashboard de BI</strong></td>
+        <td>Conceito de mapa de calor e métricas mencionado</td>
+        <td>Nenhuma tela especificada. Quais métricas exatamente? Qual granularidade? Como são calculadas? Queries não definidas.</td>
+        <td><span class="status-pill s-gap">Gap Médio</span></td>
+      </tr>
+      <tr>
+        <td><strong>Closing the Loop</strong></td>
+        <td>Mencionado como feature</td>
+        <td>Fluxo não especificado. Como o lojista responde? Via painel? Via WhatsApp? O sistema reenvia como? Identificador anônimo de sessão necessário.</td>
+        <td><span class="status-pill s-gap">Gap Médio</span></td>
+      </tr>
+      <tr>
+        <td><strong>Segurança</strong></td>
+        <td>UUID, Rate Limiting, CSRF mencionados</td>
+        <td>Falta: proteção de upload de fotos (MIME validation, size limit, path traversal), SQL injection via prepared statements confirmado, XSS em outputs do bot</td>
+        <td><span class="status-pill s-risk">Risco</span></td>
+      </tr>
+      <tr>
+        <td><strong>Offline / Service Worker</strong></td>
+        <td>Mencionado como diferencial</td>
+        <td>Não implementado no demo atual. Estratégia de cache e sync queue não definida.</td>
+        <td><span class="status-pill s-miss">Crítico</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout red">
+    <div class="callout-tag">Alerta Crítico — LINE Notify</div>
+    <p>O LINE Notify foi <strong>oficialmente descontinuado em março de 2024</strong>. Qualquer integração usando esta API irá falhar em produção. A solução correta para o Japão é a <strong>LINE Messaging API</strong> com um canal de notificação dedicado. Isso exige a criação de um LINE Official Account do sistema (não do lojista) para envio de alertas. Custo: gratuito até 200 mensagens/mês por conta.</p>
+  </div>
+</div>
+
+<!-- ══ 02 — ARQUITETURA GERAL ═════════════════════════════ -->
+<div class="sec">
+  <div class="sec-line">
+    <span class="sec-n">02</span>
+    <span class="sec-h">Arquitetura da Solução</span>
+    <span class="sec-sub">Visão de alto nível — todas as camadas</span>
+  </div>
+
+  <div class="arch-diagram">
+<span class="layer-title">CAMADA DE APRESENTAÇÃO</span>
+<span class="c-blue">┌──────────────────────────────────────────────────────────────────────────┐</span>
+<span class="c-blue">│</span>  <span class="c-yellow">PWA Chat (Consumidor)</span>          <span class="c-yellow">Painel Admin (Super Admin)</span>        <span class="c-yellow">Painel Lojista</span>   <span class="c-blue">│</span>
+<span class="c-blue">│</span>  Vanilla JS · Service Worker    Laravel Blade / Livewire            Laravel Blade   <span class="c-blue">│</span>
+<span class="c-blue">│</span>  Offline Cache · IndexedDB      Gestão de tenants · BI Global      BI · Bot Config  <span class="c-blue">│</span>
+<span class="c-blue">└──────────────────────────┬───────────────────────────────────────────────┘</span>
+                           <span class="c-muted">│ HTTPS</span>
+<span class="layer-title">CAMADA DE APLICAÇÃO (LARAVEL 11)</span>
+<span class="c-green">┌──────────────────────────────────────────────────────────────────────────┐</span>
+<span class="c-green">│</span>  <span class="c-yellow">API Routes (Sanctum)</span>          <span class="c-yellow">Web Routes (Session)</span>               <span class="c-yellow">Jobs / Queues</span>     <span class="c-green">│</span>
+<span class="c-green">│</span>  POST /api/review               GET /painel/*                      NotifyLowRating   <span class="c-green">│</span>
+<span class="c-green">│</span>  GET  /api/bot-script/{slug}    GET /admin/*                       SendMonthlyReport <span class="c-green">│</span>
+<span class="c-green">│</span>  POST /api/media/upload         POST /painel/reviews/resolve       SyncOfflineReview <span class="c-green">│</span>
+<span class="c-green">│</span>                                                                                       <span class="c-green">│</span>
+<span class="c-green">│</span>  <span class="c-yellow">Middleware Stack</span>                                                                   <span class="c-green">│</span>
+<span class="c-green">│</span>  TenantResolver · RateLimit(60/min) · CORS · CSRF · AuthSanctum                    <span class="c-green">│</span>
+<span class="c-green">└──────────────────────────┬───────────────────────────────────────────────┘</span>
+                           <span class="c-muted">│</span>
+<span class="layer-title">CAMADA DE DOMÍNIO</span>
+<span class="c-purple">┌──────────────────────────────────────────────────────────────────────────┐</span>
+<span class="c-purple">│</span>  ReviewService   BotScriptService   NotificationService   ReportService    <span class="c-purple">│</span>
+<span class="c-purple">│</span>  TenantService   MediaService       LoopService           QRCodeService    <span class="c-purple">│</span>
+<span class="c-purple">└──────────────────────────┬───────────────────────────────────────────────┘</span>
+                           <span class="c-muted">│</span>
+<span class="layer-title">CAMADA DE DADOS</span>
+<span class="c-red">┌──────────────────────────────────────────────────────────────────────────┐</span>
+<span class="c-red">│</span>  <span class="c-yellow">MySQL (Shared DB + tenant_id)</span>    <span class="c-yellow">Redis (Queue + Cache)</span>    <span class="c-yellow">Storage (S3/Local)</span>   <span class="c-red">│</span>
+<span class="c-red">│</span>  tenants · users · reviews        Session · Rate Limit      /media/reviews/      <span class="c-red">│</span>
+<span class="c-red">│</span>  bots_config · notifications      Bot Script Cache          QR Codes             <span class="c-red">│</span>
+<span class="c-red">│</span>  media · audit_logs · sessions    Monthly Report Cache      Reports PDF          <span class="c-red">│</span>
+<span class="c-red">└──────────────────────────┬───────────────────────────────────────────────┘</span>
+                           <span class="c-muted">│</span>
+<span class="layer-title">INTEGRAÇÕES EXTERNAS</span>
+<span class="c-blue">┌──────────────────────────────────────────────────────────────────────────┐</span>
+<span class="c-blue">│</span>  <span class="c-yellow">WhatsApp (BR)</span>                <span class="c-yellow">LINE Messaging API (JP)</span>    <span class="c-yellow">SMTP (Relatórios)</span>    <span class="c-blue">│</span>
+<span class="c-blue">│</span>  Evolution API ou Meta Cloud   LINE Bot Channel            Mailgun / SES        <span class="c-blue">│</span>
+<span class="c-blue">│</span>  Fallback: SMTP se falhar      Fallback: SMTP se falhar    HTML templates        <span class="c-blue">│</span>
+<span class="c-blue">└──────────────────────────────────────────────────────────────────────────┘</span>
+  </div>
+
+  <div class="callout blue">
+    <div class="callout-tag">Decisão Arquitetural — Multi-Tenancy</div>
+    <p>Usar <strong>Shared Database com tenant_id</strong> em todas as tabelas, com Global Scope no Eloquent aplicando filtro automático por tenant. É a abordagem correta para o estágio atual: simples de implementar, performática até ~10.000 tenants, e migra facilmente para schemas separados se necessário. Cada tenant é identificado pelo UUID do estabelecimento, resolvido via middleware antes de qualquer query.</p>
+  </div>
+</div>
+
+<!-- ══ 03 — MODELO DE DADOS ════════════════════════════════ -->
+<div class="sec">
+  <div class="sec-line">
+    <span class="sec-n">03</span>
+    <span class="sec-h">Modelo de Dados — Schema Completo</span>
+    <span class="sec-sub">MySQL com isolamento por tenant_id</span>
+  </div>
+
+  <div class="schema-grid">
+
+    <div class="schema-table">
+      <div class="schema-table-head">tenants <span>CORE</span></div>
+      <div class="schema-field pk"><span class="schema-field-name">id</span><span class="schema-field-type">UUID PK</span></div>
+      <div class="schema-field"><span class="schema-field-name">slug</span><span class="schema-field-type">VARCHAR(60) UNIQUE</span></div>
+      <div class="schema-field"><span class="schema-field-name">name</span><span class="schema-field-type">VARCHAR(120)</span></div>
+      <div class="schema-field"><span class="schema-field-name">emoji</span><span class="schema-field-type">VARCHAR(10)</span></div>
+      <div class="schema-field"><span class="schema-field-name">google_place_id</span><span class="schema-field-type">VARCHAR(200)</span></div>
+      <div class="schema-field"><span class="schema-field-name">locale</span><span class="schema-field-type">ENUM(pt,ja)</span></div>
+      <div class="schema-field"><span class="schema-field-name">plan</span><span class="schema-field-type">ENUM(lite,standard)</span></div>
+      <div class="schema-field"><span class="schema-field-name">notify_channel</span><span class="schema-field-type">ENUM(whatsapp,line,email)</span></div>
+      <div class="schema-field"><span class="schema-field-name">notify_target</span><span class="schema-field-type">VARCHAR(200)</span></div>
+      <div class="schema-field"><span class="schema-field-name">active</span><span class="schema-field-type">BOOLEAN</span></div>
+      <div class="schema-field"><span class="schema-field-name">trial_ends_at</span><span class="schema-field-type">TIMESTAMP NULL</span></div>
+      <div class="schema-field"><span class="schema-field-name">created_at</span><span class="schema-field-type">TIMESTAMP</span></div>
+    </div>
+
+    <div class="schema-table">
+      <div class="schema-table-head">users <span>AUTH</span></div>
+      <div class="schema-field pk"><span class="schema-field-name">id</span><span class="schema-field-type">UUID PK</span></div>
+      <div class="schema-field fk"><span class="schema-field-name">tenant_id</span><span class="schema-field-type">UUID FK NULL</span></div>
+      <div class="schema-field"><span class="schema-field-name">name</span><span class="schema-field-type">VARCHAR(120)</span></div>
+      <div class="schema-field idx"><span class="schema-field-name">email</span><span class="schema-field-type">VARCHAR(200) UNIQUE</span></div>
+      <div class="schema-field"><span class="schema-field-name">password</span><span class="schema-field-type">VARCHAR(255) HASHED</span></div>
+      <div class="schema-field"><span class="schema-field-name">role</span><span class="schema-field-type">ENUM(super_admin,owner)</span></div>
+      <div class="schema-field"><span class="schema-field-name">locale</span><span class="schema-field-type">ENUM(pt,ja)</span></div>
+      <div class="schema-field"><span class="schema-field-name">last_login_at</span><span class="schema-field-type">TIMESTAMP NULL</span></div>
+    </div>
+
+    <div class="schema-table">
+      <div class="schema-table-head">bot_scripts <span>CONFIG</span></div>
+      <div class="schema-field pk"><span class="schema-field-name">id</span><span class="schema-field-type">UUID PK</span></div>
+      <div class="schema-field fk"><span class="schema-field-name">tenant_id</span><span class="schema-field-type">UUID FK</span></div>
+      <div class="schema-field"><span class="schema-field-name">locale</span><span class="schema-field-type">ENUM(pt,ja)</span></div>
+      <div class="schema-field"><span class="schema-field-name">welcome_msg</span><span class="schema-field-type">TEXT</span></div>
+      <div class="schema-field"><span class="schema-field-name">high_msg</span><span class="schema-field-type">TEXT</span></div>
+      <div class="schema-field"><span class="schema-field-name">low_msg</span><span class="schema-field-type">TEXT</span></div>
+      <div class="schema-field"><span class="schema-field-name">issues_json</span><span class="schema-field-type">JSON</span></div>
+      <div class="schema-field"><span class="schema-field-name">aspects_json</span><span class="schema-field-type">JSON</span></div>
+      <div class="schema-field"><span class="schema-field-name">tone</span><span class="schema-field-type">ENUM(casual,formal,keigo)</span></div>
+      <div class="schema-field"><span class="schema-field-name">updated_at</span><span class="schema-field-type">TIMESTAMP</span></div>
+    </div>
+
+    <div class="schema-table">
+      <div class="schema-table-head">reviews <span>CORE</span></div>
+      <div class="schema-field pk"><span class="schema-field-name">id</span><span class="schema-field-type">UUID PK</span></div>
+      <div class="schema-field fk"><span class="schema-field-name">tenant_id</span><span class="schema-field-type">UUID FK IDX</span></div>
+      <div class="schema-field idx"><span class="schema-field-name">session_token</span><span class="schema-field-type">VARCHAR(64) IDX</span></div>
+      <div class="schema-field"><span class="schema-field-name">rating</span><span class="schema-field-type">TINYINT(1-5)</span></div>
+      <div class="schema-field"><span class="schema-field-name">issue_category</span><span class="schema-field-type">VARCHAR(60) NULL</span></div>
+      <div class="schema-field"><span class="schema-field-name">feedback_text</span><span class="schema-field-type">TEXT NULL</span></div>
+      <div class="schema-field"><span class="schema-field-name">is_first_visit</span><span class="schema-field-type">BOOLEAN NULL</span></div>
+      <div class="schema-field"><span class="schema-field-name">visit_period</span><span class="schema-field-type">ENUM(lunch,dinner,other) NULL</span></div>
+      <div class="schema-field"><span class="schema-field-name">contact_email</span><span class="schema-field-type">VARCHAR(200) NULL ENC</span></div>
+      <div class="schema-field"><span class="schema-field-name">status</span><span class="schema-field-type">ENUM(new,seen,resolved)</span></div>
+      <div class="schema-field"><span class="schema-field-name">loop_closed_at</span><span class="schema-field-type">TIMESTAMP NULL</span></div>
+      <div class="schema-field idx"><span class="schema-field-name">created_at</span><span class="schema-field-type">TIMESTAMP IDX</span></div>
+    </div>
+
+    <div class="schema-table">
+      <div class="schema-table-head">media <span>UPLOADS</span></div>
+      <div class="schema-field pk"><span class="schema-field-name">id</span><span class="schema-field-type">UUID PK</span></div>
+      <div class="schema-field fk"><span class="schema-field-name">review_id</span><span class="schema-field-type">UUID FK</span></div>
+      <div class="schema-field fk"><span class="schema-field-name">tenant_id</span><span class="schema-field-type">UUID FK</span></div>
+      <div class="schema-field"><span class="schema-field-name">path</span><span class="schema-field-type">VARCHAR(500)</span></div>
+      <div class="schema-field"><span class="schema-field-name">mime_type</span><span class="schema-field-type">VARCHAR(60)</span></div>
+      <div class="schema-field"><span class="schema-field-name">size_bytes</span><span class="schema-field-type">INT</span></div>
+      <div class="schema-field"><span class="schema-field-name">created_at</span><span class="schema-field-type">TIMESTAMP</span></div>
+    </div>
+
+    <div class="schema-table">
+      <div class="schema-table-head">notifications_log <span>AUDIT</span></div>
+      <div class="schema-field pk"><span class="schema-field-name">id</span><span class="schema-field-type">BIGINT PK</span></div>
+      <div class="schema-field fk"><span class="schema-field-name">review_id</span><span class="schema-field-type">UUID FK</span></div>
+      <div class="schema-field fk"><span class="schema-field-name">tenant_id</span><span class="schema-field-type">UUID FK</span></div>
+      <div class="schema-field"><span class="schema-field-name">channel</span><span class="schema-field-type">ENUM(whatsapp,line,email)</span></div>
+      <div class="schema-field"><span class="schema-field-name">status</span><span class="schema-field-type">ENUM(sent,failed,retry)</span></div>
+      <div class="schema-field"><span class="schema-field-name">attempts</span><span class="schema-field-type">TINYINT DEFAULT 0</span></div>
+      <div class="schema-field"><span class="schema-field-name">sent_at</span><span class="schema-field-type">TIMESTAMP NULL</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ 04 — PAPEL: SUPER ADMIN ════════════════════════════ -->
+<div class="sec">
+  <div class="sec-line">
+    <span class="sec-n">04</span>
+    <span class="sec-h">Papel: Super Admin — Você</span>
+  </div>
+
+  <div class="role-header admin">
+    <span class="role-icon">🛡️</span>
+    <div>
+      <div class="role-name">Super Admin</div>
+      <div class="role-desc">Controle total do SaaS — você é a única pessoa com este acesso</div>
+    </div>
+    <span class="role-tag">ROUTE PREFIX: /admin</span>
+  </div>
+
+  <div class="role-body">
+    <div class="screens-grid">
+
+      <div class="screen-card">
+        <div class="screen-id">ADM-01</div>
+        <div class="screen-name">Dashboard Global</div>
+        <ul class="screen-elems">
+          <li class="key">Total de tenants ativos / em trial / inativos</li>
+          <li class="key">Receita recorrente mensal (MRR) consolidada</li>
+          <li class="key">Total de avaliações geradas hoje / este mês</li>
+          <li>Gráfico de novos tenants por semana</li>
+          <li>Lista de tenants com trial expirando em 7 dias</li>
+          <li>Alertas de falha em notificações (WhatsApp/LINE)</li>
+        </ul>
+      </div>
+
+      <div class="screen-card">
+        <div class="screen-id">ADM-02</div>
+        <div class="screen-name">Gestão de Tenants</div>
+        <ul class="screen-elems">
+          <li class="key">Tabela paginada com busca e filtros (plano, país, status)</li>
+          <li class="key">Ações: ativar, suspender, upgrade de plano</li>
+          <li>Ver avaliações de qualquer tenant (suporte)</li>
+          <li>Impersonar tenant para debug (log de auditoria)</li>
+          <li>Exportar lista em CSV</li>
+        </ul>
+      </div>
+
+      <div class="screen-card">
+        <div class="screen-id">ADM-03</div>
+        <div class="screen-name">Criar / Editar Tenant</div>
+        <ul class="screen-elems">
+          <li class="key">Nome, slug (gerado automaticamente), emoji, idioma</li>
+          <li class="key">Google Place ID (campo com validação de URL)</li>
+          <li class="key">Canal de notificação + destino (número/LINE ID)</li>
+          <li>Plano e data de fim do trial</li>
+          <li>Gera QR Code automaticamente ao salvar</li>
+          <li>Preview do bot com as configurações atuais</li>
+        </ul>
+      </div>
+
+      <div class="screen-card">
+        <div class="screen-id">ADM-04</div>
+        <div class="screen-name">Gerador de QR Codes</div>
+        <ul class="screen-elems">
+          <li class="key">QR Code com logo do tenant (upload PNG)</li>
+          <li class="key">Export PNG (digital) e PDF A4/A5 (impressão)</li>
+          <li>Preview em tempo real com cor personalizada</li>
+          <li>Histórico de QR Codes gerados por tenant</li>
+          <li>Link direto: /r/{slug} (curto e memorável)</li>
+        </ul>
+      </div>
+
+      <div class="screen-card">
+        <div class="screen-id">ADM-05</div>
+        <div class="screen-name">Monitor de Notificações</div>
+        <ul class="screen-elems">
+          <li class="key">Log em tempo real: enviadas, falhas, retries</li>
+          <li class="key">Reenvio manual de notificações com falha</li>
+          <li>Filtro por canal (WhatsApp / LINE / e-mail)</li>
+          <li>Taxa de sucesso por canal e por período</li>
+        </ul>
+      </div>
+
+      <div class="screen-card">
+        <div class="screen-id">ADM-06</div>
+        <div class="screen-name">Envio de Relatórios</div>
+        <ul class="screen-elems">
+          <li class="key">Disparar relatório mensal para todos os Standard</li>
+          <li class="key">Disparar para tenant específico manualmente</li>
+          <li>Preview do e-mail antes de enviar</li>
+          <li>Log de envios com status de abertura</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="flow-steps">
+      <div class="flow-title">Fluxo: Onboarding de novo cliente</div>
+      <div class="flow-list">
+        <div class="flow-item"><span class="flow-num">01</span><div class="flow-content"><div class="flow-action">Recebe formulário de onboarding do cliente</div><div class="flow-detail">Tally.so ou formulário interno → dados chegam por e-mail ou webhook</div></div></div>
+        <div class="flow-item"><span class="flow-num">02</span><div class="flow-content"><div class="flow-action">Acessa ADM-03 e cria o tenant</div><div class="flow-detail">Preenche nome, slug, Google Place ID, idioma, canal de notificação e plano</div><span class="flow-tag ft-db">INSERT tenants</span></div></div>
+        <div class="flow-item"><span class="flow-num">03</span><div class="flow-content"><div class="flow-action">Sistema gera o script padrão do bot automaticamente</div><div class="flow-detail">BotScriptService cria registro em bot_scripts com textos padrão do idioma selecionado</div><span class="flow-tag ft-db">INSERT bot_scripts</span></div></div>
+        <div class="flow-item"><span class="flow-num">04</span><div class="flow-content"><div class="flow-action">Gera QR Code personalizado em ADM-04</div><div class="flow-detail">QRCodeService gera PNG + PDF com logo. Salva em /storage/qrcodes/{tenant_id}/</div><span class="flow-tag ft-cache">QR salvo</span></div></div>
+        <div class="flow-item"><span class="flow-num">05</span><div class="flow-content"><div class="flow-action">Cria usuário lojista e envia e-mail de boas-vindas</div><div class="flow-detail">Cria user com role=owner vinculado ao tenant. Laravel Mail envia link de primeiro acesso.</div><span class="flow-tag ft-mail">E-mail enviado</span></div></div>
+        <div class="flow-item"><span class="flow-num">06</span><div class="flow-content"><div class="flow-action">Envia QR Code + instruções para o cliente</div><div class="flow-detail">Baixa PDF do QR e envia junto com o PDF de instruções de uso (1 página)</div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 05 — PAPEL: LOJISTA ═════════════════════════════════ -->
+<div class="sec">
+  <div class="sec-line">
+    <span class="sec-n">05</span>
+    <span class="sec-h">Papel: Lojista — Dono do Estabelecimento</span>
+  </div>
+
+  <div class="role-header owner">
+    <span class="role-icon">🏪</span>
+    <div>
+      <div class="role-name">Lojista</div>
+      <div class="role-desc">Acessa apenas os dados do próprio estabelecimento — isolamento por tenant_id</div>
+    </div>
+    <span class="role-tag">ROUTE PREFIX: /painel</span>
+  </div>
+
+  <div class="role-body">
+    <div class="screens-grid">
+
+      <div class="screen-card">
+        <div class="screen-id">LJT-01</div>
+        <div class="screen-name">Dashboard de Insights</div>
+        <ul class="screen-elems">
+          <li class="key">Média de notas do mês atual vs mês anterior</li>
+          <li class="key">Total de avaliações: positivas (4-5) e negativas (1-3)</li>
+          <li class="key">Mapa de calor: dias × períodos (almoço/jantar) com intensidade de notas baixas</li>
+          <li>Proporção novos clientes vs recorrentes (donut chart)</li>
+          <li>Tendência semanal — gráfico de linha simples</li>
+          <li>Problemas mais citados — top 3 categorias</li>
+        </ul>
+      </div>
+
+      <div class="screen-card">
+        <div class="screen-id">LJT-02</div>
+        <div class="screen-name">Avaliações Recentes</div>
+        <ul class="screen-elems">
+          <li class="key">Lista com nota, categoria, data, hora e status</li>
+          <li class="key">Filtros: nota, status (nova/vista/resolvida), período</li>
+          <li class="key">Badge vermelho em novas não lidas</li>
+          <li>Paginação com 20 itens por página</li>
+          <li>Acesso rápido ao detalhe em clique</li>
+        </ul>
+      </div>
+
+      <div class="screen-card">
+        <div class="screen-id">LJT-03</div>
+        <div class="screen-name">Detalhe da Avaliação</div>
+        <ul class="screen-elems">
+          <li class="key">Nota, categoria, texto completo do feedback</li>
+          <li class="key">Foto do problema (se enviada) — visualização inline</li>
+          <li class="key">Campo de resposta para fechar o loop (se cliente deixou contato)</li>
+          <li>Botão "Marcar como resolvida" — dispara mensagem automática</li>
+          <li>Timeline: recebida → vista → resolvida</li>
+          <li>Contexto: primeira visita? período do dia?</li>
+        </ul>
+      </div>
+
+      <div class="screen-card">
+        <div class="screen-id">LJT-04</div>
+        <div class="screen-name">Configurar Bot</div>
+        <ul class="screen-elems">
+          <li class="key">Editar mensagem de boas-vindas (com preview ao vivo)</li>
+          <li class="key">Editar mensagens para nota alta e nota baixa</li>
+          <li class="key">Editar opções do grid de problemas (adicionar/remover/reordenar)</li>
+          <li>Selecionar tom: Casual / Formal / Keigo (JP)</li>
+          <li>Preview do fluxo completo antes de salvar</li>
+          <li class="key">Salvar → invalida cache do script imediatamente</li>
+        </ul>
+      </div>
+
+      <div class="screen-card">
+        <div class="screen-id">LJT-05</div>
+        <div class="screen-name">Meu QR Code</div>
+        <ul class="screen-elems">
+          <li class="key">Visualização do QR Code atual</li>
+          <li class="key">Download PNG (redes sociais) e PDF A4 (impressão)</li>
+          <li>Link direto copiável com 1 clique</li>
+          <li>Histórico de QR Codes anteriores</li>
+        </ul>
+      </div>
+
+      <div class="screen-card">
+        <div class="screen-id">LJT-06</div>
+        <div class="screen-name">Configurações da Conta</div>
+        <ul class="screen-elems">
+          <li>Alterar senha</li>
+          <li class="key">Alterar canal de notificação (WhatsApp/LINE/e-mail)</li>
+          <li class="key">Alterar número/contato de destino dos alertas</li>
+          <li>Testar notificação (botão "enviar alerta de teste")</li>
+          <li>Preferência de idioma do painel</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="flow-steps">
+      <div class="flow-title">Fluxo: Lojista recebe alerta e fecha o loop</div>
+      <div class="flow-list">
+        <div class="flow-item"><span class="flow-num">01</span><div class="flow-content"><div class="flow-action">Cliente deixa nota 2 com feedback e foto</div><div class="flow-detail">PWA envia para POST /api/review — dados salvos, job disparado</div><span class="flow-tag ft-db">INSERT reviews + media</span></div></div>
+        <div class="flow-item"><span class="flow-num">02</span><div class="flow-content"><div class="flow-action">NotifyLowRatingJob executa em segundo plano</div><div class="flow-detail">Verifica canal preferido do tenant. Tenta WhatsApp (BR) ou LINE (JP). Se falhar 3x → fallback e-mail.</div><span class="flow-tag ft-wapp">WhatsApp / LINE</span><span class="flow-tag ft-mail">Fallback e-mail</span></div></div>
+        <div class="flow-item"><span class="flow-num">03</span><div class="flow-content"><div class="flow-action">Lojista recebe alerta em segundos</div><div class="flow-detail">Mensagem contém: nota, categoria do problema e link direto para LJT-03 no painel</div></div></div>
+        <div class="flow-item"><span class="flow-num">04</span><div class="flow-content"><div class="flow-action">Lojista acessa LJT-03 e lê o detalhe</div><div class="flow-detail">Status muda de "new" para "seen" automaticamente ao abrir</div><span class="flow-tag ft-db">UPDATE status=seen</span></div></div>
+        <div class="flow-item"><span class="flow-num">05</span><div class="flow-content"><div class="flow-action">Lojista resolve o problema internamente e clica "Resolvida"</div><div class="flow-detail">Se cliente deixou contato: LoopService envia mensagem de agradecimento automática</div><span class="flow-tag ft-db">UPDATE status=resolved</span><span class="flow-tag ft-mail">Loop fechado</span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 06 — PAPEL: CONSUMIDOR ══════════════════════════════ -->
+<div class="sec">
+  <div class="sec-line">
+    <span class="sec-n">06</span>
+    <span class="sec-h">Papel: Consumidor — Cliente do Estabelecimento</span>
+  </div>
+
+  <div class="role-header consumer">
+    <span class="role-icon">📱</span>
+    <div>
+      <div class="role-name">Consumidor</div>
+      <div class="role-desc">Anônimo por padrão — sem login, sem cadastro, sem rastreamento</div>
+    </div>
+    <span class="role-tag">ROUTE: /r/{slug}</span>
+  </div>
+
+  <div class="role-body">
+    <div class="screens-grid">
+
+      <div class="screen-card">
+        <div class="screen-id">CON-01</div>
+        <div class="screen-name">Chat de Avaliação (PWA)</div>
+        <ul class="screen-elems">
+          <li class="key">Carrega em &lt;1s via Service Worker cache</li>
+          <li class="key">Detecta idioma do dispositivo → PT ou JA automático</li>
+          <li class="key">Script personalizado do bot carregado via GET /api/bot-script/{slug}</li>
+          <li>Pergunta de contexto: primeira visita? (2 botões)</li>
+          <li>Pergunta de turno: almoço / jantar / outro (3 botões)</li>
+          <li class="key">Estrelas 1–5 com feedback visual por nota</li>
+          <li class="key">Fluxo alto: quick replies de aspecto + CTA Google</li>
+          <li class="key">Fluxo baixo: grid de problemas + texto + foto opcional</li>
+          <li>Contato opcional (e-mail) para receber retorno</li>
+          <li>Tela de sucesso + auto-close 4 segundos</li>
+        </ul>
+      </div>
+
+      <div class="screen-card">
+        <div class="screen-id">CON-02</div>
+        <div class="screen-name">Modo Offline</div>
+        <ul class="screen-elems">
+          <li class="key">Service Worker armazena avaliação em IndexedDB se sem internet</li>
+          <li class="key">Background Sync API reenvio automático quando volta a conexão</li>
+          <li>Indicador visual sutil de "modo offline"</li>
+          <li>Sem degradação de UX — fluxo continua normalmente</li>
+        </ul>
+      </div>
+
+      <div class="screen-card">
+        <div class="screen-id">CON-03</div>
+        <div class="screen-name">Tenant não encontrado / inativo</div>
+        <ul class="screen-elems">
+          <li>Página amigável: "Este QR Code não está mais ativo"</li>
+          <li>Sem mensagem técnica de erro</li>
+          <li>Sem exposição de informações do sistema</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="flow-steps">
+      <div class="flow-title">Fluxo completo do consumidor — nota baixa com foto</div>
+      <div class="flow-list">
+        <div class="flow-item"><span class="flow-num">01</span><div class="flow-content"><div class="flow-action">Escaneia QR Code → /r/restaurante-sakura abre em &lt;1s</div><div class="flow-detail">Service Worker serve o shell do PWA do cache. Apenas o script do bot vem do servidor.</div><span class="flow-tag ft-cache">Cache hit</span></div></div>
+        <div class="flow-item"><span class="flow-num">02</span><div class="flow-content"><div class="flow-action">Bot detecta idioma e carrega script personalizado</div><div class="flow-detail">navigator.language === 'ja' → carrega bot_scripts(locale=ja) do tenant. Redis cache de 5 minutos.</div><span class="flow-tag ft-cache">Redis cache</span></div></div>
+        <div class="flow-item"><span class="flow-num">03</span><div class="flow-content"><div class="flow-action">Responde: primeira visita = Sim, turno = Almoço</div><div class="flow-detail">Dados armazenados em state local do JS. Sem chamada ao servidor ainda.</div><span class="flow-tag ft-js">State local</span></div></div>
+        <div class="flow-item"><span class="flow-num">04</span><div class="flow-content"><div class="flow-action">Seleciona 2 estrelas → grid de problemas aparece</div><div class="flow-detail">Escolhe "Atendimento ruim" → campo de texto aparece</div></div></div>
+        <div class="flow-item"><span class="flow-num">05</span><div class="flow-content"><div class="flow-action">Digita feedback e adiciona foto</div><div class="flow-detail">Foto validada no client: JPEG/PNG, máx 5MB. Redimensionada para 1200px antes do upload.</div><span class="flow-tag ft-js">Client-side validation</span></div></div>
+        <div class="flow-item"><span class="flow-num">06</span><div class="flow-content"><div class="flow-action">Clica Enviar → POST /api/review (multipart)</div><div class="flow-detail">Rate limit: 3 avaliações por IP por hora. Foto enviada para /storage/media/. JSON salvo no MySQL.</div><span class="flow-tag ft-api">API call</span><span class="flow-tag ft-sec">Rate limit</span></div></div>
+        <div class="flow-item"><span class="flow-num">07</span><div class="flow-content"><div class="flow-action">Tela de sucesso → auto-close em 4 segundos</div><div class="flow-detail">Job de notificação disparado assincronamente. Consumidor não espera pelo envio do WhatsApp/LINE.</div><span class="flow-tag ft-db">Salvo + job dispatch</span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 07 — TECH STACK DEFINITIVO ═════════════════════════ -->
+<div class="sec">
+  <div class="sec-line">
+    <span class="sec-n">07</span>
+    <span class="sec-h">Stack Técnico Definitivo e Justificativas</span>
+  </div>
+
+  <div class="stack-grid">
+    <div class="stack-cell">
+      <div class="stack-layer">Backend Framework</div>
+      <div class="stack-tech">Laravel 11 + PHP 8.3</div>
+      <div class="stack-why">Eloquent com Global Scopes resolve multi-tenancy elegantemente. Queues nativas para jobs assíncronos. Sanctum para API auth. Política de segurança madura.</div>
+    </div>
+    <div class="stack-cell">
+      <div class="stack-layer">Banco de Dados</div>
+      <div class="stack-tech">MySQL 8.0</div>
+      <div class="stack-why">Transações ACID para integridade. JSON columns para bot_scripts. Índices compostos em (tenant_id, created_at) para queries de dashboard. Disponível em Hostinger.</div>
+    </div>
+    <div class="stack-cell">
+      <div class="stack-layer">Cache e Filas</div>
+      <div class="stack-tech">Redis (ou database driver)</div>
+      <div class="stack-why">Cache de bot_scripts evita query a cada scan de QR. Filas para envio assíncrono de notificações. Se Hostinger não tiver Redis, database driver funciona até 500 tenants.</div>
+    </div>
+    <div class="stack-cell">
+      <div class="stack-layer">Frontend — PWA</div>
+      <div class="stack-tech">Vanilla JS + CSS + Service Worker</div>
+      <div class="stack-why">Zero dependências = carregamento &lt;50kb = &lt;1 segundo em 3G. Sem React, sem Vue — JavaScript puro é suficiente e ideal para contexto mobile-first.</div>
+    </div>
+    <div class="stack-cell">
+      <div class="stack-layer">Frontend — Painel</div>
+      <div class="stack-tech">Laravel Blade + Alpine.js</div>
+      <div class="stack-why">Alpine.js para interatividade leve (filtros, modais, preview do bot) sem overhead de SPA. Blade components para reutilização. Livewire se necessário para tempo real.</div>
+    </div>
+    <div class="stack-cell">
+      <div class="stack-layer">Notificações BR</div>
+      <div class="stack-tech">Evolution API + fallback SMTP</div>
+      <div class="stack-why">Evolution API é a opção mais acessível para WhatsApp unofficial. Fallback obrigatório: se falhar 3 tentativas, envia e-mail. Meta Cloud API quando crescer.</div>
+    </div>
+    <div class="stack-cell">
+      <div class="stack-layer">Notificações JP</div>
+      <div class="stack-tech">LINE Messaging API (não LINE Notify)</div>
+      <div class="stack-why">LINE Notify foi descontinuado. Messaging API com Webhook é o caminho oficial. Um LINE Official Account do sistema envia alertas para os donos cadastrados.</div>
+    </div>
+    <div class="stack-cell">
+      <div class="stack-layer">E-mail</div>
+      <div class="stack-tech">Mailgun ou SMTP Hostinger</div>
+      <div class="stack-why">Laravel Mail com templates Blade em PT e JA. Relatórios mensais em HTML responsivo. SMTP do Hostinger funciona para início, Mailgun para escala.</div>
+    </div>
+    <div class="stack-cell">
+      <div class="stack-layer">Upload / Storage</div>
+      <div class="stack-tech">Laravel Storage (local → S3)</div>
+      <div class="stack-why">Fotos de feedback salvas localmente no Hostinger inicialmente. Migration para S3/R2 quando necessário. Validação: MIME, tamanho, extensão no servidor.</div>
+    </div>
+    <div class="stack-cell">
+      <div class="stack-layer">Autenticação</div>
+      <div class="stack-tech">Laravel Sanctum + Policies</div>
+      <div class="stack-why">Sanctum para tokens de API (PWA → backend). Session auth para painel web. Policies para isolar dados por tenant (Gate::before para super_admin).</div>
+    </div>
+    <div class="stack-cell">
+      <div class="stack-layer">QR Code</div>
+      <div class="stack-tech">simplesoftwarebv/simple-qrcode</div>
+      <div class="stack-why">Biblioteca PHP nativa, sem dependência externa. Gera SVG e PNG. Logo do tenant sobreposto via GD ou Imagick. Export PDF via dompdf.</div>
+    </div>
+    <div class="stack-cell">
+      <div class="stack-layer">Hospedagem</div>
+      <div class="stack-tech">Hostinger Premium (atual) → Cloud</div>
+      <div class="stack-why">Hostinger Premium suporta até ~50 tenants confortavelmente. Migrar para Hostinger Cloud KVM ao passar de 50 para ter SSH, Redis nativo e mais controle.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 08 — SEGURANÇA ══════════════════════════════════════ -->
+<div class="sec">
+  <div class="sec-line">
+    <span class="sec-n">08</span>
+    <span class="sec-h">Segurança — Checklist Completo</span>
+    <span class="sec-sub">Não opcional — implementar desde o primeiro dia</span>
+  </div>
+
+  <div class="sec-grid">
+    <div class="sec-card">
+      <div class="sec-card-head">🔐 API (endpoint público /api/review)</div>
+      <div class="sec-card-body">
+        <div class="sec-item">Rate limiting: 3 reviews por IP por hora via throttle middleware</div>
+        <div class="sec-item">Validação de slug: tenant deve existir e estar ativo antes de aceitar dados</div>
+        <div class="sec-item">PreparedStatements via Eloquent em todas as queries (padrão Laravel)</div>
+        <div class="sec-item">Sanitização de texto: strip_tags + mb_substr antes de persistir</div>
+        <div class="sec-item">Upload de foto: validação MIME no servidor (não só extensão), máx 5MB, rename para UUID</div>
+        <div class="sec-item">CORS restrito ao domínio do PWA — sem wildcard em produção</div>
+      </div>
+    </div>
+
+    <div class="sec-card">
+      <div class="sec-card-head">🏠 Painel (autenticado)</div>
+      <div class="sec-card-body">
+        <div class="sec-item">CSRF token em todos os formulários (Laravel padrão)</div>
+        <div class="sec-item">Policies garantem que lojista só acessa dados do próprio tenant_id</div>
+        <div class="sec-item">Super admin nunca vazado no token — role verificada no servidor</div>
+        <div class="sec-item">Sessão expira em 2 horas de inatividade</div>
+        <div class="sec-item">2FA opcional para super admin (Google Authenticator)</div>
+        <div class="sec-item">Audit log: toda ação admin registrada com IP, user e timestamp</div>
+      </div>
+    </div>
+
+    <div class="sec-card">
+      <div class="sec-card-head">📊 Dados do Consumidor</div>
+      <div class="sec-card-body">
+        <div class="sec-item">Contato do cliente (e-mail) armazenado criptografado (encrypt() do Laravel)</div>
+        <div class="sec-item">Session token anônimo para closing the loop — sem PII vinculada</div>
+        <div class="sec-item">Fotos armazenadas fora da pasta public — servidas via signed URL</div>
+        <div class="sec-item">Nenhum cookie de tracking no PWA — sem Google Analytics</div>
+        <div class="sec-item">LGPD/PDPA: aviso de privacidade na tela inicial do PWA</div>
+      </div>
+    </div>
+
+    <div class="sec-card">
+      <div class="sec-card-head">🔔 Notificações Externas</div>
+      <div class="sec-card-body">
+        <div class="sec-item">Credenciais WhatsApp/LINE em .env — nunca no código ou banco</div>
+        <div class="sec-item">Jobs com retry e fallback — falha silenciosa nunca aceitável</div>
+        <div class="sec-item">Log de todas as tentativas em notifications_log para auditoria</div>
+        <div class="sec-item">Webhook LINE validado com assinatura HMAC-SHA256</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 09 — ROADMAP DE IMPLEMENTAÇÃO ═════════════════════════ -->
+<div class="sec">
+  <div class="sec-line">
+    <span class="sec-n">09</span>
+    <span class="sec-h">Roadmap de Implementação</span>
+    <span class="sec-sub">Ordem de construção — sem pular etapas</span>
+  </div>
+
+  <div class="callout orange">
+    <div class="callout-tag">Princípio de construção</div>
+    <p>Construir na ordem: <strong>dados → API → PWA → painel admin → painel lojista → BI → integrações</strong>. O PWA (produto que o consumidor vê) deve funcionar perfeitamente antes de qualquer feature do painel. Um produto com painel rico e PWA quebrado não vende.</p>
+  </div>
+
+  <table class="roadmap-table">
+    <thead>
+      <tr>
+        <th>Sprint</th>
+        <th>O que construir</th>
+        <th>Entregável concreto</th>
+        <th>Prioridade</th>
+        <th>Esforço</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Sprint 1</strong><br><small>Semana 1–2</small></td>
+        <td>Fundação: migrations, models, seeders, auth</td>
+        <td>Schema criado, Super Admin logando, primeiro tenant criado via tinker</td>
+        <td><span class="p-badge p1">P1</span></td>
+        <td class="effort">3 dias</td>
+      </tr>
+      <tr>
+        <td><strong>Sprint 2</strong><br><small>Semana 2–3</small></td>
+        <td>API pública + multi-tenancy + bot script endpoint</td>
+        <td>POST /api/review salvando. GET /api/bot-script/{slug} retornando JSON. Rate limiting ativo.</td>
+        <td><span class="p-badge p1">P1</span></td>
+        <td class="effort">4 dias</td>
+      </tr>
+      <tr>
+        <td><strong>Sprint 3</strong><br><small>Semana 3–4</small></td>
+        <td>PWA conversacional completo + Service Worker</td>
+        <td>Demo atual evoluído: detecção de idioma, pergunta de contexto, foto, offline mode, auto-close</td>
+        <td><span class="p-badge p1">P1</span></td>
+        <td class="effort">5 dias</td>
+      </tr>
+      <tr>
+        <td><strong>Sprint 4</strong><br><small>Semana 4–5</small></td>
+        <td>Painel Admin: CRUD tenants + gerador QR</td>
+        <td>ADM-01 ao ADM-04 funcionando. Onboarding completo de novo cliente em 10 minutos.</td>
+        <td><span class="p-badge p1">P1</span></td>
+        <td class="effort">4 dias</td>
+      </tr>
+      <tr>
+        <td><strong>Sprint 5</strong><br><small>Semana 5–6</small></td>
+        <td>Notificações: WhatsApp + LINE + fallback e-mail</td>
+        <td>Job de alerta funcionando com retry e log. Lojista recebe WhatsApp em &lt;5s após nota baixa.</td>
+        <td><span class="p-badge p1">P1</span></td>
+        <td class="effort">4 dias</td>
+      </tr>
+      <tr>
+        <td><strong>Sprint 6</strong><br><small>Semana 6–7</small></td>
+        <td>Painel Lojista: avaliações + detalhe + closing the loop</td>
+        <td>LJT-01 ao LJT-03. Lojista lê feedback, vê foto, clica "Resolvida" e sistema fecha o loop.</td>
+        <td><span class="p-badge p2">P2</span></td>
+        <td class="effort">4 dias</td>
+      </tr>
+      <tr>
+        <td><strong>Sprint 7</strong><br><small>Semana 7–8</small></td>
+        <td>Dashboard BI + mapa de calor + relatório mensal</td>
+        <td>LJT-01 completo com charts. Script de relatório e-mail automático no dia 1 funcionando.</td>
+        <td><span class="p-badge p2">P2</span></td>
+        <td class="effort">5 dias</td>
+      </tr>
+      <tr>
+        <td><strong>Sprint 8</strong><br><small>Semana 8–9</small></td>
+        <td>Configurador do bot + upload de foto seguro</td>
+        <td>LJT-04 completo. Lojista edita script e vê preview ao vivo. Upload de foto validado e seguro.</td>
+        <td><span class="p-badge p2">P2</span></td>
+        <td class="effort">3 dias</td>
+      </tr>
+      <tr>
+        <td><strong>Sprint 9</strong><br><small>Semana 9–10</small></td>
+        <td>Monitor de notificações + conta lojista + testes</td>
+        <td>ADM-05, ADM-06, LJT-05, LJT-06. Testes de integração nos fluxos críticos.</td>
+        <td><span class="p-badge p3">P3</span></td>
+        <td class="effort">4 dias</td>
+      </tr>
+      <tr>
+        <td><strong>Sprint 10</strong><br><small>Semana 10–11</small></td>
+        <td>Hardening de segurança + performance + deploy</td>
+        <td>Auditoria de segurança, índices de banco otimizados, configuração de produção no Hostinger.</td>
+        <td><span class="p-badge p3">P3</span></td>
+        <td class="effort">3 dias</td>
+      </tr>
+      <tr>
+        <td><strong>v2.0</strong><br><small>Mês 3+</small></td>
+        <td>Multi-idioma completo JP, portal de self-service, Stripe/PIX</td>
+        <td>Lojista contrata e paga online. Onboarding sem intervenção manual sua.</td>
+        <td><span class="p-badge p4">FUTURO</span></td>
+        <td class="effort">2 semanas</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══ FOOTER ══════════════════════════════════════════════ -->
+<div class="doc-footer">
+  <div class="doc-footer-brand">CP REVIEW SAAS</div>
+  <div class="doc-footer-meta">
+    ARQUITETURA SENIOR — DOCUMENTO INTERNO<br>
+    24 TELAS · 3 PAPÉIS · 10 SPRINTS<br>
+    ABRIL 2026
+  </div>
+</div>
+
+</div>
+</body>
+</html>

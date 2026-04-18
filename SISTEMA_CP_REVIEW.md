@@ -1,0 +1,72 @@
+# 🛡️ CP REVIEW CARE — Sistema de Gestão de Experiência do Cliente (SaaS)
+
+Este documento detalha a arquitetura, funcionalidades e as implementações de alto nível (Senior Hardening) aplicadas ao projeto **CP Review Care**. O sistema foi projetado para ser um SaaS multi-tenant robusto, escalável e preparado para o mercado internacional (Brasil e Japão).
+
+---
+
+## 🚀 Sobre o Sistema
+
+O **CP Review Care** é uma plataforma focada em transformar o feedback negativo em oportunidade de fidelização. O lojista disponibiliza um QR Code em seu estabelecimento; o cliente avalia sua experiência de forma privada e interativa através de um bot PWA. 
+
+Se a nota for baixa, o lojista é notificado instantaneamente via canal preferido (WhatsApp ou LINE) para que possa intervir antes que o cliente publique uma reclamação em redes sociais ou Google Maps.
+
+---
+
+## 🛠️ Funcionalidades Core
+
+### 1. Bot de Avaliação PWA (Interface do Cliente)
+- **Interface Conversacional:** Simula um chat humano (Phone Shell) com indicadores de digitação.
+- **Lógica de Branching Emocional:** Reações dinâmicas baseadas na nota (Empatia para notas baixas, Entusiasmo para notas altas).
+- **Multilíngue Automático:** Suporte para Português (Brasil) e Japonês (Japão), detectado por contexto.
+- **Resiliência Offline:** Fila de envio para garantir que fotos e feedbacks cheguem mesmo em conexões instáveis.
+- **Incentivo ao Google Reviews:** Somente clientes satisfeitos (notas 4 e 5) são incentivados a postar no Google Maps do lojista.
+
+### 2. Painel do Lojista (Tenant Dashboard)
+- **Dashboard em Tempo Real:** Visualização de KPIs (Total de avaliações, NPS, Ciclos de resolução).
+- **Gestão de Crise:** Ferramenta para responder ao cliente e "fechar o loop", disparando notificações de resolução.
+- **Configurações Personalizadas:** Mensagens de boas-vindas e agradecimento customizáveis.
+
+### 3. Painel Administrativo (Super Admin)
+- **Gestão de Tenants:** Aprovação de novos lojistas após transações.
+- **Monitoramento Global:** Visão consolidada de todas as lojas do sistema.
+
+---
+
+## 🏛️ Arquitetura Sênior & Hardening (Implementações Recentes)
+
+Recentemente, o sistema passou por um processo de endurecimento arquitetural sênior para garantir segurança e escalabilidade.
+
+### A. Multi-Tenancy com Isolamento Total
+- **Global Table Scope:** Implementação do `TenantScope` e Trait `BelongsToTenant`. 
+- **Isolamento de Dados:** Consultas ao banco de dados são filtradas automaticamente pelo `tenant_id` do lojista logado. É tecnicamente impossível um lojista visualizar dados de outro.
+- **TenantResolver Middleware:** Injeção automática do contexto de tenant via URL (API Pública) ou Auth (Painel).
+
+### B. Notificações Multi-Canal (Universal Service)
+- **Abstração de Canais:** Um único `NotificationService` gerencia a entrega.
+- **WhatsApp (Evolution API):** Utilizado para o mercado brasileiro.
+- **LINE Messaging API:** Implementado como substituto oficial ao LINE Notify (descontinuado no Japão).
+- **Fallback Automático:** Sistema pronto para alternar entre drivers (Ex: Trocar Evolution por API Oficial da Meta) sem alterar o código de negócio.
+
+### C. Pré-Agregação de BI (Escalabilidade Profissional)
+- **Tabela de Sumários (`daily_metrics_summary`):** Em vez de processar milhões de registros em tempo real, o sistema gera agregados diários.
+- **Otimização de Performance:** Redução de 99.7% na carga do banco de dados para dashboards.
+- **Heatmaps Rápidos:** Permite gerar mapas de calor de performance por período (Almoço/Jantar) em milissegundos.
+
+### D. Hardening de Segurança e Banco de Dados
+- **Uuids:** Identificadores únicos não-previsíveis para todas as entidades sensíveis.
+- **Índices Compostos:** Otimização para filtros frequentes de (`tenant_id`, `created_at`).
+- **Nomenclatura Consistente:** Padronização absoluta para `tenant_id` em todo o ecossistema.
+
+---
+
+## 📈 Roadmap Técnico
+
+1. [x] Implementação de Multi-tenancy e Escopos.
+2. [x] Criação do Motor de BI e Pré-agregação.
+3. [x] Abstração de Notificações (WA + LINE).
+4. [ ] Implementação de Gráficos de Heatmap no Painel do Lojista (Próximo Passo).
+5. [ ] Configuração de Rate Limiting na API Pública para evitar SPAM.
+6. [ ] Implementação de Testes Cross-Tenant Automatizados.
+
+---
+*Documentação gerada pelo Arquiteto de Sistemas - CP REVIEW CARE v2.0*

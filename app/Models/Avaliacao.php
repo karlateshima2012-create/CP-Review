@@ -9,12 +9,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Avaliacao extends Model
 {
-    use HasUuids, HasFactory;
+    use HasUuids, HasFactory, \App\Traits\BelongsToTenant;
 
     protected $table = 'avaliacoes';
 
     protected $fillable = [
-        'cliente_id', 'nota', 'feedback', 'problema', 'nome_cliente',
+        'tenant_id', 'nota', 'feedback', 'problema', 'nome_cliente',
         'tipo_contato', 'contato_valor', 'token_resposta',
         'resposta_dono', 'respondida_em', 'resolvido',
         'primeira_visita', 'periodo_visita', 'foto_problema'
@@ -25,9 +25,9 @@ class Avaliacao extends Model
         'respondida_em' => 'datetime'
     ];
 
-    public function cliente(): BelongsTo
+    public function tenant(): BelongsTo
     {
-        return $this->belongsTo(Cliente::class);
+        return $this->belongsTo(Cliente::class, 'tenant_id');
     }
 
     public function isNegativa(): bool
