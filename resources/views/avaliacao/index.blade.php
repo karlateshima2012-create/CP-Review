@@ -3,255 +3,338 @@
 @section('title', 'Avaliar Experiência')
 
 @section('content')
-<div class="min-h-screen bg-[#F0F2F5] flex flex-col max-w-lg mx-auto shadow-2xl overflow-hidden relative border-x border-gray-200">
-    
-    <!-- Header -->
-    <div class="bg-white p-4 border-b flex items-center gap-3 z-10 shadow-sm">
-        <div class="relative">
-            <div class="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center text-white text-xl">
-                <span>🤖</span>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --bg: #0F0F0F;
+  --surface: #1A1A1A;
+  --surface2: #242424;
+  --border: #2E2E2E;
+  --bubble-bot: #1E1E1E;
+  --bubble-bot-border: #2A2A2A;
+  --bubble-user: #2563EB;
+  --bubble-user-dark: #1D4ED8;
+  --text: #F0F0F0;
+  --text-muted: #888;
+  --text-dim: #555;
+  --accent: #2563EB;
+  --accent-glow: rgba(37,99,235,0.25);
+  --green: #10B981;
+  --green-glow: rgba(16,185,129,0.2);
+  --yellow: #F59E0B;
+  --red: #EF4444;
+  --radius-bubble: 20px;
+  --radius-btn: 14px;
+  --font: 'Nunito', sans-serif;
+}
+
+body {
+  background: #080808;
+  font-family: var(--font);
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.bot-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: #080808;
+}
+
+.phone {
+  width: 100%;
+  max-width: 430px;
+  height: 100vh;
+  background: var(--bg);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 100px rgba(0,0,0,0.5);
+}
+
+@media (min-width: 500px) {
+    .phone {
+        height: 844px;
+        border-radius: 40px;
+        border: 4px solid #1A1A1A;
+    }
+}
+
+/* HEADER */
+.header {
+  flex-shrink: 0;
+  padding: 40px 20px 14px;
+  background: rgba(15,15,15,.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 10;
+}
+
+.biz-avatar {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #2563EB, #7C3AED);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+}
+
+.biz-name { font-size: 15px; font-weight: 700; color: var(--text); }
+.biz-status { font-size: 11px; color: var(--green); display: flex; align-items: center; gap: 5px; }
+.biz-status::before { content:''; width:6px; height:6px; background:var(--green); border-radius:50%; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+/* CHAT */
+.chat-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.chat-area::-webkit-scrollbar { display: none; }
+
+.msg { display: flex; animation: msgIn 0.3s ease-out both; }
+.msg.bot { justify-content: flex-start; }
+.msg.user { justify-content: flex-end; }
+
+@keyframes msgIn { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
+
+.bubble {
+  max-width: 80%;
+  padding: 12px 16px;
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.bot-bubble {
+  background: var(--bubble-bot);
+  border: 1px solid var(--bubble-bot-border);
+  border-radius: 18px 18px 18px 4px;
+  color: var(--text);
+}
+
+.user-bubble {
+  background: var(--bubble-user);
+  border-radius: 18px 18px 4px 18px;
+  color: white;
+  font-weight: 600;
+}
+
+/* TYPING */
+.typing { display: flex; gap: 4px; padding: 5px 0; }
+.typing span { width: 6px; height: 6px; background: #555; border-radius: 50%; animation: typeDot 1.2s infinite; }
+.typing span:nth-child(2) { animation-delay: 0.2s; }
+.typing span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typeDot { 0%,60%,100%{opacity:.3;transform:scale(1)} 30%{opacity:1;transform:scale(1.2)} }
+
+/* STAR BTN */
+.star-container { display: flex; gap: 8px; margin-top: 5px; }
+.star-btn {
+  width: 44px; height: 44px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.star-btn:active { transform: scale(0.9); }
+.star-btn.active { border-color: var(--yellow); background: rgba(245,158,11,0.1); }
+
+/* WIDGETS */
+.qr-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 5px; }
+.qr-btn {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.input-box {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 12px;
+  color: white;
+  width: 100%;
+  font-family: inherit;
+  margin-top: 8px;
+  outline: none;
+}
+.send-btn {
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 20px;
+  margin-top: 8px;
+  font-weight: 700;
+  width: 100%;
+}
+
+.bottom-bar { padding: 15px; text-align: center; font-size: 10px; color: var(--text-dim); border-top: 1px solid var(--border); }
+</style>
+
+<div class="bot-container">
+    <div class="phone">
+        <!-- Header -->
+        <div class="header">
+            <div class="biz-avatar">💼</div>
+            <div class="biz-info">
+                <div class="biz-name">{{ $cliente->nome_empresa }}</div>
+                <div class="biz-status">Online agora</div>
             </div>
-            <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+            <div style="margin-left: auto; font-size: 10px; color: var(--green); border: 1px solid var(--green); padding: 2px 6px; border-radius: 5px;">
+                🔒 PRIVADO
+            </div>
         </div>
-        <div>
-            <h1 class="font-bold text-gray-800 text-lg leading-tight">{{ $cliente->nome_empresa }}</h1>
-            <p class="text-xs text-green-600 font-semibold uppercase tracking-wider">Atendimento Digital Ativo</p>
+
+        <!-- Chat Area -->
+        <div class="chat-area" id="chat"></div>
+
+        <!-- Bottom Bar -->
+        <div class="bottom-bar">
+            🛡️ Seus dados estão seguros e são usados apenas para melhoria interna.
         </div>
-    </div>
-
-    <!-- Chat Area -->
-    <div id="chat-container" class="flex-1 p-4 space-y-4 overflow-y-auto pb-32">
-        <!-- Messages will be injected here -->
-    </div>
-
-    <!-- Typing Indicator -->
-    <div id="typing-indicator" class="hidden absolute bottom-28 left-4 z-10">
-        <div class="bg-white p-3 rounded-2xl rounded-bl-none shadow-sm flex gap-1">
-            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-        </div>
-    </div>
-
-    <!-- Floating Input Area -->
-    <div id="input-area" class="absolute bottom-0 left-0 right-0 bg-white p-4 border-t shadow-lg transition-transform duration-300 transform translate-y-full z-20">
-        <!-- Dynamic controls (stars, options, text) -->
     </div>
 </div>
 
-<style>
-    .chat-bubble {
-        max-width: 85%;
-        padding: 12px 16px;
-        border-radius: 20px;
-        font-size: 15px;
-        line-height: 1.4;
-        position: relative;
-        animation: bubblePop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    .bubble-bot {
-        background: white;
-        color: #1c1e21;
-        border-bottom-left-radius: 4px;
-        align-self: flex-start;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-    }
-
-    .bubble-user {
-        background: #6D28D9;
-        color: white;
-        border-bottom-right-radius: 4px;
-        align-self: flex-end;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-    }
-
-    @keyframes bubblePop {
-        from { opacity: 0; transform: scale(0.8) translateY(20px); }
-        to { opacity: 1; transform: scale(1) translateY(0); }
-    }
-
-    #chat-container::-webkit-scrollbar { display: none; }
-</style>
-
 <script>
-    const chatContainer = document.getElementById('chat-container');
-    const typingIndicator = document.getElementById('typing-indicator');
-    const inputArea = document.getElementById('input-area');
+const chat = document.getElementById('chat');
+let state = { nota: 0, motivo: '', feedback: '' };
 
-    let state = {
-        nota: 0,
-        problema: null,
-        feedback: ''
-    };
+function scroll() { chat.scrollTo({ top: chat.scrollHeight, behavior: 'smooth' }); }
 
-    const strings = {
-        br: {
-            welcome: "Olá!👋 Prazer em falar com você. Sou o assistente de qualidade da <b>{{ $cliente->nome_empresa }}</b>.",
-            askRating: "Em uma escala de 1 a 5, como você avalia sua experiência conosco hoje?✨",
-            empathy: "Lamento muito que sua experiência não tenha sido 100% positiva.😔 Queremos muito entender o que aconteceu para melhorar.",
-            enthusiasm: "Que alegria!🤩 Saber que você gostou do nosso trabalho é o que nos motiva. Pode nos contar o que mais te agradou?",
-            askProblem: "Qual destes pontos mais te incomodou?👇",
-            askPositive: "Qual destes pontos você mais gostou?👇",
-            askComment: "Se quiser, deixe um comentário adicional sobre sua experiência:",
-            thanks: "Recebemos sua avaliação! Muito obrigado pela ajuda em nosso crescimento.🚀"
-        },
-        jp: {
-            welcome: "こんにちは！👋 <b>{{ $cliente->nome_empresa }}</b> のカスタマーサポートアシスタントです。",
-            askRating: "本日の体験はいかがでしたでしょうか？ 5段階（1:不満〜5:満足）でお聞かせください。✨",
-            empathy: "ご期待に沿えず申し訳ございません。😔 今後の改善のため、詳しくお聞かせいただけますでしょうか？",
-            enthusiasm: "嬉しいお言葉をありがとうございます！🤩 特にどの点にご満足いただけましたか？",
-            askProblem: "気になった点はどれでしょうか？👇",
-            askPositive: "良かった点はどれでしょうか？👇",
-            askComment: "その他、お気づきの点がございましたらお聞かせください：",
-            thanks: "貴重なご意見ありがとうございました。🚀 またのご来店を心よりお待ちしております。"
-        }
-    };
+async function addTyping() {
+    const div = document.createElement('div');
+    div.id = 'typing';
+    div.className = 'msg bot';
+    div.innerHTML = `<div class="bubble bot-bubble"><div class="typing"><span></span><span></span><span></span></div></div>`;
+    chat.appendChild(div);
+    scroll();
+    await new Promise(r => setTimeout(r, 1200));
+    div.remove();
+}
 
-    const lang = (navigator.language.startsWith('ja')) ? 'jp' : 'br';
-    const s = strings[lang];
+async function addBotMsg(text) {
+    await addTyping();
+    const div = document.createElement('div');
+    div.className = 'msg bot';
+    div.innerHTML = `<div class="bubble bot-bubble">${text}</div>`;
+    chat.appendChild(div);
+    scroll();
+}
 
-    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+function addUserMsg(text) {
+    const div = document.createElement('div');
+    div.className = 'msg user';
+    div.innerHTML = `<div class="bubble user-bubble">${text}</div>`;
+    chat.appendChild(div);
+    scroll();
+}
 
-    function addBubble(text, type = 'bot') {
-        const wrapper = document.createElement('div');
-        wrapper.className = `flex flex-col ${type === 'bot' ? 'items-start' : 'items-end'}`;
-        
-        const bubble = document.createElement('div');
-        bubble.className = `chat-bubble ${type === 'bot' ? 'bubble-bot' : 'bubble-user'}`;
-        bubble.innerHTML = text;
-        
-        wrapper.appendChild(bubble);
-        chatContainer.appendChild(wrapper);
-        chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
+async function start() {
+    await addBotMsg("Olá! 👋 Bem-vindo ao suporte de qualidade da <b>{{ $cliente->nome_empresa }}</b>.");
+    await addBotMsg("Como foi sua experiência conosco hoje? Sua nota ajuda muito nosso time! ✨");
+    
+    const stars = document.createElement('div');
+    stars.className = 'star-container';
+    stars.innerHTML = [1,2,3,4,5].map(i => `<button class="star-btn" onclick="setRating(${i})">⭐</button>`).join('');
+    chat.appendChild(stars);
+    scroll();
+}
+
+window.setRating = async (n) => {
+    state.nota = n;
+    document.querySelector('.star-container').remove();
+    addUserMsg(`${n} estrelas`);
+
+    if (n <= 3) {
+        await addBotMsg("Poxa, lamento que não tenha sido perfeito. 😔");
+        await addBotMsg("O que mais te incomodou hoje?");
+        const options = ['Atendimento 👤', 'Demora ⏰', 'Qualidade 🍽️', 'Limpeza 🧼'];
+        renderOptions(options);
+    } else {
+        await addBotMsg("Que notícia maravilhosa! 🤩");
+        await addBotMsg("O que você mais gostou na visita?");
+        const options = ['Sabor 😋', 'Equipe 🤝', 'Velocidade ⚡', 'Ambiente ✨'];
+        renderOptions(options);
     }
+};
 
-    async function showTyping(ms = 800) {
-        typingIndicator.classList.remove('hidden');
-        chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
-        await sleep(ms);
-        typingIndicator.classList.add('hidden');
+function renderOptions(options) {
+    const wrap = document.createElement('div');
+    wrap.className = 'qr-wrap';
+    wrap.innerHTML = options.map(opt => `<button class="qr-btn" onclick="setOption('${opt}')">${opt}</button>`).join('');
+    chat.appendChild(wrap);
+    scroll();
+}
+
+window.setOption = async (opt) => {
+    state.motivo = opt;
+    document.querySelector('.qr-wrap').remove();
+    addUserMsg(opt);
+
+    await addBotMsg("Obrigado por nos contar! 🙏");
+    await addBotMsg("Quer deixar algum detalhe adicional ou sugestão?");
+    
+    const inputWrap = document.createElement('div');
+    inputWrap.innerHTML = `
+        <textarea id="f-area" class="input-box" placeholder="Escreva aqui..."></textarea>
+        <button class="send-btn" onclick="finish()">Enviar Avaliação</button>
+    `;
+    chat.appendChild(inputWrap);
+    scroll();
+};
+
+window.finish = async () => {
+    state.feedback = document.getElementById('f-area').value;
+    document.getElementById('f-area').parentElement.remove();
+    if(state.feedback) addUserMsg(state.feedback);
+
+    await addBotMsg("Recebido! 🚀");
+    await addBotMsg("Sua avaliação foi enviada diretamente para a nossa gerência.");
+    
+    // Server push
+    fetch("{{ route('avaliacao.salvar', $cliente->slug) }}", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+        body: JSON.stringify({
+            nota: state.nota,
+            problema: state.motivo,
+            feedback: state.feedback
+        })
+    });
+
+    if (state.nota >= 4) {
+        await addBotMsg("Como você teve uma ótima experiência, poderia nos ajudar avaliando no Google também? ✨");
+        const gBtn = document.createElement('div');
+        gBtn.innerHTML = `
+            <a href="https://www.google.com/maps?q={{ urlencode($cliente->nome_empresa) }}" target="_blank" 
+               style="display:block; background:white; color:#4285F4; text-align:center; padding:15px; border-radius:15px; font-weight:bold; text-decoration:none; margin-top:10px; border:1px solid #ddd;">
+               🚀 Abrir Google Reviews
+            </a>
+        `;
+        chat.appendChild(gBtn);
+    } else {
+        await addBotMsg("Trabalharemos duro para que sua próxima visita seja 5 estrelas! 🍜");
     }
+    
+    scroll();
+};
 
-    function toggleInput(show, html = '') {
-        if (show) {
-            inputArea.innerHTML = html;
-            inputArea.classList.remove('translate-y-full');
-        } else {
-            inputArea.classList.add('translate-y-full');
-        }
-    }
-
-    async function startFlow() {
-        await sleep(1000);
-        await showTyping(1200);
-        addBubble(s.welcome);
-        
-        await sleep(500);
-        await showTyping(1000);
-        addBubble(s.askRating);
-
-        toggleInput(true, `
-            <div class="flex justify-between gap-2 max-w-sm mx-auto">
-                ${[1,2,3,4,5].map(i => `
-                    <button onclick="handleRating(${i})" class="flex-1 p-2 text-3xl transition-transform active:scale-90">
-                        ${i <= 3 ? '⭐' : '🌟'}
-                        <div class="text-[10px] font-bold text-gray-400 mt-1">${i}</div>
-                    </button>
-                `).join('')}
-            </div>
-        `);
-    }
-
-    window.handleRating = async (rating) => {
-        state.nota = rating;
-        toggleInput(false);
-        addBubble(`${rating} ${rating === 1 ? 'Estrela' : 'Estrelas'}`, 'user');
-
-        await sleep(800);
-        await showTyping(1000);
-
-        if (rating <= 3) {
-            addBubble(s.empathy);
-            await sleep(500);
-            addBubble(s.askProblem);
-            const options = ['Atendimento 👤', 'Demora ⏰', 'Qualidade 🍽️', 'Limpeza 🧼'];
-            toggleInput(true, `
-                <div class="grid grid-cols-2 gap-2">
-                    ${options.map(opt => `
-                        <button onclick="handleOption('${opt}')" class="p-3 border-2 border-purple-50 rounded-xl text-sm font-semibold hover:bg-purple-100 transition-colors">
-                            ${opt}
-                        </button>
-                    `).join('')}
-                </div>
-            `);
-        } else {
-            addBubble(s.enthusiasm);
-            await sleep(500);
-            addBubble(s.askPositive);
-            const options = ['Sabor 😋', 'Equipe 🤝', 'Rapidez ⚡', 'Ambiente ✨'];
-            toggleInput(true, `
-                <div class="grid grid-cols-2 gap-2">
-                    ${options.map(opt => `
-                        <button onclick="handleOption('${opt}')" class="p-3 border-2 border-purple-50 rounded-xl text-sm font-semibold hover:bg-purple-100 transition-colors">
-                            ${opt}
-                        </button>
-                    `).join('')}
-                </div>
-            `);
-        }
-    };
-
-    window.handleOption = async (option) => {
-        state.problema = option;
-        toggleInput(false);
-        addBubble(option, 'user');
-
-        await sleep(600);
-        await showTyping(800);
-        addBubble(s.askComment);
-
-        toggleInput(true, `
-            <div class="space-y-3">
-                <textarea id="feedback-txt" class="w-full p-4 border rounded-2xl text-sm focus:ring-purple-600 focus:border-purple-600 outline-none" rows="3" placeholder="Quer nos contar mais detalhes?"></textarea>
-                <button onclick="handleFinal()" class="w-full bg-purple-600 text-white p-4 rounded-2xl font-bold shadow-lg transition-transform active:scale-95">
-                    Finalizar e Enviar
-                </button>
-            </div>
-        `);
-    };
-
-    window.handleFinal = async () => {
-        state.feedback = document.getElementById('feedback-txt').value;
-        toggleInput(false);
-        
-        if (state.feedback) addBubble(state.feedback, 'user');
-
-        await showTyping(1500);
-        addBubble(s.thanks);
-
-        // Server sync
-        fetch("{{ route('avaliacao.salvar', $cliente->slug) }}", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify(state)
-        });
-
-        if (state.nota >= 4) {
-            await sleep(800);
-            await showTyping(1000);
-            addBubble("Pode compartilhar essa alegria no Google também? Isso nos ajuda demais!👇");
-            toggleInput(true, `
-                <a href="https://search.google.com/local/writereview?placeid=SEU_PLACE_ID_AQUI" target="_blank" class="w-full bg-[#4285F4] text-white p-4 rounded-2xl font-bold text-center block shadow-md">
-                    ⭐ Avaliar no Google Maps
-                </a>
-            `);
-        }
-    };
-
-    startFlow();
+start();
 </script>
 @endsection
