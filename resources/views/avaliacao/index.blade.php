@@ -687,20 +687,21 @@ async function finishChat(isPos) {
     // Send payload quietly in background
     submitEvaluation().catch(e => console.error(e));
 
+    // IF positive (4-5 stars), we show Google Button FIRST as requested
+    if (isPos) {
+        await showGoogleBtn(null, true);
+        await wait(800);
+    }
+
     const finalTexts = (isPos ? botConfig.lang.highFinalMsg : botConfig.lang.lowFinalMsg).split('\n');
     for (const text of finalTexts) {
         await addBotMsg(text);
         await wait(600);
     }
     
-    // IF positive (4-5 stars), we show Google Button as the VERY last thing
-    if (isPos) {
-        await showGoogleBtn(null, true);
-    } else {
-        setTimeout(() => {
-            showSuccessScreen();
-        }, 3000);
-    }
+    setTimeout(() => {
+        showSuccessScreen();
+    }, 3000);
 }
 
 async function submitEvaluation() {
