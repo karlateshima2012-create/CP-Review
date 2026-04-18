@@ -597,15 +597,11 @@ window.handleRecommend = async (rec) => {
     await wait(400);
 
     if (rec === 'yes') {
-        const parts = botConfig.lang.recommend_yes.split('\n');
-        await addBotMsg(parts[0]);
-        await wait(300);
-        await showGoogleBtn(parts[1], true);
+        await showGoogleBtn(botConfig.lang.recommend_yes, true);
     } else if (rec === 'maybe') {
         await showGoogleBtn(botConfig.lang.recommend_maybe, true);
     } else {
-        await addBotMsg(botConfig.lang.recommend_no);
-        await finishChat(true);
+        await showGoogleBtn(botConfig.lang.recommend_no, true);
     }
 };
 
