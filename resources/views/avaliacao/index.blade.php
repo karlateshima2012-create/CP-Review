@@ -161,7 +161,7 @@ body {
     font-size: 42px;
     cursor: pointer;
     transition: transform 0.2s;
-    filter: grayscale(1) opacity(0.2);
+    filter: grayscale(1) opacity(0.8);
 }
 .star-item.active {
     filter: grayscale(0) opacity(1);
@@ -445,7 +445,6 @@ window.handleProblem = async (opt) => {
     state.problem = opt;
     event.target.closest('.problems-grid').remove();
     addUserMsg(opt);
-    await addBotMsg("Entendi...");
     await wait(300);
     await askFeedbackText();
 };
@@ -567,7 +566,6 @@ window.handlePeriod = async (p, isPos) => {
     await wait(300);
     
     if (isPos) {
-        await addBotMsg(botConfig.lang.period_ack);
         await askRecommend();
     } else {
         await askContact();
