@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,22 +6,30 @@
 
 @layer base {
     body {
-        @apply antialiased;
-        font-family: 'Inter', sans-serif;
+        @apply antialiased bg-neutral-bg text-neutral-primary font-sans;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        @apply font-sans font-semibold;
+    }
+
+    /* Display H1 utility if needed */
+    .font-display {
+        font-family: 'Bebas Neue', cursive;
     }
 }
 
 @layer components {
     .btn-primary {
-        @apply bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition;
+        @apply bg-brand-600 text-white px-16 py-8 rounded-lg hover:bg-brand-700 transition font-sans font-medium;
     }
     
     .btn-secondary {
-        @apply bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition;
+        @apply bg-neutral-secondary/10 text-neutral-secondary px-16 py-8 rounded-lg hover:bg-neutral-secondary/20 transition font-sans font-medium;
     }
     
     .card {
-        @apply bg-white rounded-xl shadow-sm border border-gray-100;
+        @apply bg-neutral-card rounded-lg shadow-sm border border-neutral-border;
     }
 }
 

@@ -6,32 +6,33 @@
 <script src="/pwa/offline-queue.js"></script>
 <script src="/pwa/photo-upload.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700;800&display=swap');
 
 :root {
-  --bg: #0F0F0F;
-  --surface: #1A1A1A;
-  --surface2: #242424;
-  --border: #2E2E2E;
-  --bubble-bot: #1E1E1E;
-  --bubble-bot-border: #2A2A2A;
-  --bubble-user: #2563EB;
-  --bubble-user-dark: #1D4ED8;
-  --text: #F0F0F0;
-  --text-muted: #888;
-  --text-dim: #555;
-  --accent: #2563EB;
-  --accent-glow: rgba(37,99,235,0.25);
+  --bg: #F3F4F6;
+  --surface: #FFFFFF;
+  --surface2: #F9FAFB;
+  --border: #E5E7EB;
+  --bubble-bot: #FFFFFF;
+  --bubble-bot-border: #E5E7EB;
+  --bubble-user: #7C3AED;
+  --bubble-user-dark: #6D28D9;
+  --text: #111827;
+  --text-muted: #4B5563;
+  --text-dim: #9CA3AF;
+  --accent: #7C3AED;
+  --accent-glow: rgba(124, 58, 237, 0.15);
+  --header-bg: #7C3AED;
   --green: #10B981;
   --yellow: #F59E0B;
   --red: #EF4444;
   --radius-bubble: 20px;
   --radius-btn: 14px;
-  --font: 'Nunito', sans-serif;
+  --font: 'IBM Plex Sans', sans-serif;
 }
 
 body {
-  background: #080808;
+  background: #E5E7EB;
   font-family: var(--font);
   margin: 0; padding: 0;
   overflow: hidden;
@@ -43,7 +44,7 @@ body {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: #080808;
+  background: #E5E7EB;
 }
 
 .phone {
@@ -62,7 +63,8 @@ body {
     .phone {
         height: 844px;
         border-radius: 40px;
-        border: 4px solid #1A1A1A;
+        border: 12px solid #FFFFFF;
+        box-shadow: 0 20px 40px -10px rgba(0,0,0,0.1);
     }
 }
 
@@ -70,29 +72,30 @@ body {
 .header {
   flex-shrink: 0;
   padding: 45px 20px 15px;
-  background: rgba(15,15,15,0.85);
-  backdrop-filter: blur(20px);
+  background: var(--header-bg);
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
   gap: 12px;
   z-index: 20;
+  color: #FFFFFF;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .biz-avatar {
   width: 42px; height: 42px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #2563EB, #7C3AED);
+  background: #FFFFFF;
   display: flex; align-items: center; justify-content: center;
   font-size: 22px;
-  box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .biz-info { flex: 1; }
-.biz-name { font-size: 15px; font-weight: 800; color: var(--text); line-height: 1.2; }
-.biz-status { font-size: 11px; color: var(--green); display: flex; align-items: center; gap: 5px; font-weight: 600; }
-.biz-status::before { content:''; width:6px; height:6px; background:var(--green); border-radius:50%; animation: pulse 2s infinite; }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.biz-name { font-size: 16px; font-weight: 700; color: #FFFFFF; line-height: 1.2; }
+.biz-status { font-size: 12px; color: rgba(255,255,255,0.8); display: flex; align-items: center; gap: 5px; font-weight: 500; }
+.biz-status::before { content:''; width:6px; height:6px; background:#10B981; border-radius:50%; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
 
 /* CHAT AREA */
 .chat-area {
@@ -123,22 +126,22 @@ body {
 .bot-bubble {
   background: var(--bubble-bot);
   border: 1px solid var(--bubble-bot-border);
-  border-radius: 18px 18px 18px 4px;
+  border-radius: 0 18px 18px 18px;
   color: var(--text);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
 .user-bubble {
   background: var(--bubble-user);
-  border-radius: 18px 18px 4px 18px;
+  border-radius: 18px 0 18px 18px;
   color: white;
-  font-weight: 700;
-  box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+  font-weight: 600;
+  box-shadow: 0 2px 4px var(--accent-glow);
 }
 
 /* TYPING */
 .typing { display: flex; gap: 4px; padding: 6px 0; }
-.typing span { width: 6px; height: 6px; background: #666; border-radius: 50%; animation: typeDot 1.2s infinite; }
+.typing span { width: 6px; height: 6px; background: var(--text-muted); border-radius: 50%; animation: typeDot 1.2s infinite; }
 .typing span:nth-child(2) { animation-delay: 0.2s; }
 .typing span:nth-child(3) { animation-delay: 0.4s; }
 @keyframes typeDot { 0%,60%,100%{opacity:.3;transform:scale(1)} 30%{opacity:1;transform:scale(1.2)} }
@@ -170,21 +173,21 @@ body {
     width: 100%;
 }
 .qr-btn {
-    background: var(--surface2);
+    background: var(--surface);
     border: 1px solid var(--border);
-    color: var(--text);
+    color: var(--accent);
     padding: 14px;
     border-radius: 16px;
-    font-size: 14px;
-    font-weight: 700;
-    text-align: left;
+    font-size: 15px;
+    font-weight: 600;
+    text-align: center;
     transition: 0.2s;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
 }
-.qr-btn:active { background: var(--border); transform: scale(0.98); }
-.qr-btn i { color: var(--accent); opacity: 0.5; }
+.qr-btn:active { background: var(--surface2); transform: scale(0.98); }
 
 .qr-row {
     display: flex;
@@ -212,19 +215,21 @@ body {
     position: absolute;
     bottom: 0; width: 100%;
     z-index: 30;
+    box-shadow: 0 -4px 10px rgba(0,0,0,0.03);
 }
 .f-input {
     background: var(--surface2);
     border: 1px solid var(--border);
     border-radius: 14px;
-    padding: 12px 16px;
-    color: white;
+    padding: 14px 16px;
+    color: var(--text);
     width: 100%;
     font-family: inherit;
     outline: none;
-    font-size: 14px;
+    font-size: 15px;
     resize: none;
 }
+.f-input::placeholder { color: var(--text-dim); }
 .confirm-btn {
     background: var(--accent);
     color: white;
@@ -258,6 +263,8 @@ body {
     display: flex; align-items: center; justify-content: center;
     font-size: 40px;
     margin-bottom: 20px;
+    box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
+    color: #FFF;
 }
 
 /* PHOTO UPLOAD */
@@ -295,7 +302,7 @@ body {
                 <div class="biz-name" id="header-biz-name">...</div>
                 <div class="biz-status">Online</div>
             </div>
-            <div style="font-size: 10px; color: var(--green); border: 1px solid var(--green); padding: 2px 6px; border-radius: 5px; font-weight: bold;">
+            <div style="font-size: 11px; background: rgba(255,255,255,0.2); color: #FFF; padding: 4px 8px; border-radius: 8px; font-weight: 600;">
                 PWA
             </div>
         </div>
@@ -718,7 +725,7 @@ function showSuccessScreen() {
     screen.className = 'success-screen';
     screen.innerHTML = `
         <div class="success-icon">✓</div>
-        <h2 style="color:white; margin-bottom:10px">${botConfig.lang.success}</h2>
+        <h2 style="color:var(--text); margin-bottom:10px">${botConfig.lang.success}</h2>
         <p style="color:var(--text-muted); font-size:14px">Obrigado por nos ajudar a crescer!</p>
     `;
     document.querySelector('.phone').appendChild(screen);
