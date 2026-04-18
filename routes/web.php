@@ -14,6 +14,7 @@ Route::post('/contratar', [LandingController::class, 'contratar']);
 // Avaliação (pública)
 Route::get('/avaliar/{slug}', [AvaliacaoController::class, 'show'])->name('avaliacao.show');
 Route::post('/avaliar/{slug}/salvar', [AvaliacaoController::class, 'salvar'])
+    ->name('avaliacao.salvar')
     ->middleware('throttle:avaliacoes');
 
 // Auth
