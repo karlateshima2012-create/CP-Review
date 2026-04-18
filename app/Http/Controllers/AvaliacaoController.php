@@ -83,7 +83,7 @@ class AvaliacaoController extends Controller
         $translations = [
             'pt' => [
                 'welcome' => "👋 Obrigado pela visita!",
-                'askRate' => "Como foi sua experiência hoje?",
+                'askRate' => "Como foi sua experiência hoje?\nClique nas estrelas e nos dê uma nota",
                 'highRate' => "💛 Que bom! Ficamos muito felizes com isso",
                 'lowRate' => "💛 Obrigado pela sinceridade\nIsso nos ajuda a melhorar",
                 'lowRateQ' => "O que aconteceu?",
@@ -123,7 +123,7 @@ class AvaliacaoController extends Controller
             ],
             'ja' => [
                 'welcome' => "👋 ご来店ありがとうございました！",
-                'askRate' => "本日の体験はいかがでしたか？",
+                'askRate' => "本日の体験はいかがでしたか？\n星をタップして評価をお願いします",
                 'highRate' => "💛 よかったです！私たちもとても嬉しいです",
                 'lowRate' => "💛 率直なご意見ありがとうございます\n改善の参考にさせていただきます",
                 'lowRateQ' => "何がありましたか？",

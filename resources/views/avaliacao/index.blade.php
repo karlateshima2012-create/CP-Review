@@ -150,18 +150,22 @@ body {
 .star-rating {
     display: flex;
     justify-content: space-around;
-    padding: 10px 0;
+    padding: 20px 0;
     width: 100%;
+    background: var(--surface2);
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    margin-top: 10px;
 }
 .star-item {
-    font-size: 32px;
+    font-size: 42px;
     cursor: pointer;
     transition: transform 0.2s;
-    filter: grayscale(1) opacity(0.5);
+    filter: grayscale(1) opacity(0.2);
 }
 .star-item.active {
     filter: grayscale(0) opacity(1);
-    transform: scale(1.2);
+    transform: scale(1.3);
 }
 
 /* QUICK REPLIES / BUTTONS */
@@ -387,8 +391,11 @@ async function startConversation() {
 }
 
 async function askRating() {
-    const txt = botConfig.lang.askRate.replace('{name}', state.nome_cliente);
-    await addBotMsg(txt);
+    const lines = botConfig.lang.askRate.split('\n');
+    for (const line of lines) {
+        await addBotMsg(line);
+        await wait(400);
+    }
     const div = document.createElement('div');
     div.className = 'star-rating';
     div.innerHTML = [1,2,3,4,5].map(i => `<span class="star-item" onclick="handleRating(${i})">⭐</span>`).join('');
