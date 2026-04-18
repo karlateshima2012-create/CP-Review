@@ -424,5 +424,61 @@ Equilíbrio entre a robustez técnica SaaS e a fluidez conversacional. Prioridad
 - **Contraste:** Ratio mínimo 4.5:1 (WCAG AA) em toda a interface.
 
 ---
+
+## ══ 10 — FLUXO CONVERSACIONAL DO BOT ══
+
+### **🟢 FLUXO POSITIVO (Avaliação 4 ou 5 estrelas)**
+
+1. **Bot:** 👋 Obrigado pela visita!
+2. **Bot:** Primeira vez aqui? `[👍 Sim | 🔄 Já conhecia]`
+3. **Bot:** Que bom saber disso!
+4. **Bot:** Como foi sua experiência hoje? Clique nas estrelas e nos dê uma nota
+5. **Cliente:** *(Seleciona 4 ou 5 estrelas)*
+6. **Bot:** 💛 Que incrível! Isso significa muito pra gente.
+7. **Bot:** Veio em qual horário? `[🌅 Manhã | 🌤️ Tarde | 🌙 Noite]`
+8. **Bot:** Excelente! 👍
+9. **Bot:** Você nos indicaria para um amigo? `[✨ Com certeza! | 👍 Sim | 😶 Não]`
+10. **Bot:** *(Resposta baseada na indicação)*:
+    - *Se respondeu Com certeza ou Sim:*
+        - **Bot:** 💛 Ficamos muito felizes em saber disso!
+        - **Bot:** Se puder, compartilhe essa experiência no Google também
+        - **Bot:** *(Exibe Botão)* **⭐ Avalie no Google**
+    - *Se respondeu Não:*
+        - **Bot:** Tudo bem! Ficamos felizes que sua experiência foi boa.
+        - **Bot:** 👉 Sua avaliação no Google faz toda diferença para novos clientes
+        - **Bot:** *(Exibe Botão)* **⭐ Avalie no Google**
+11. **Bot:** 🙏 Agradecemos de verdade pelo seu tempo!
+12. **Bot:** 🙌 Muito obrigado! Até a próxima.
+13. **Tela de Sucesso:** *(Ocorre após o clique no Google ou automaticamente em 4s)*
+
+### **🔴 FLUXO NEGATIVO (Avaliação 1 a 3 estrelas)**
+
+*Este fluxo foca em ouvir o cliente, coletar provas (foto) e oferecer suporte para evitar o "detrator".*
+
+1. **Bot:** 👋 Obrigado pela visita!
+2. **Bot:** Primeira vez aqui? `[👍 Sim | 🔄 Já conhecia]`
+3. **Bot:** Que bom saber disso!
+4. **Bot:** Como foi sua experiência hoje? Clique nas estrelas e nos dê uma nota
+5. **Cliente:** *(Seleciona 1, 2 ou 3 estrelas)*
+6. **Bot:** 💛 Obrigado pela sinceridade. Isso nos ajuda a melhorar.
+7. **Bot:** O que te deixou insatisfeito?
+    `[Atendimento] [Serviço/Produto] [Ambiente] [Preço] [Demora] [Outro]`
+8. **Bot:** Quer contar mais um pouquinho? (opcional)
+    `[📝 Campo de texto] [⏭️ Pular] [👍 Enviar]`
+    *⚠️ REGRA:*
+    - Se clicar em "Pular" → vai direto para o passo 12
+    - Se clicar em "Enviar" (com texto) → vai para o passo 9
+9. **Bot:** Se quiser, pode enviar uma foto também (opcional)
+    `[📷 Enviar foto] [⏭️ Pular] [👍 Enviar]`
+    *⚠️ REGRA:*
+    - Se enviar foto ou pular → vai para o passo 10
+10. **Bot:** 💛 Obrigado! 👍
+11. **Bot:** Podemos te responder sobre isso?
+    `[📱 WhatsApp] [💬 LINE] [❌ Não precisa]`
+12. **Bot:** 🙏 Muito obrigado! Sua opinião já foi enviada para quem precisa resolver.
+13. **Bot:** 💛 Nosso compromisso é melhorar. Agradecemos demais pela sinceridade.
+14. **Tela de Sucesso:** (Automático em 4 segundos)
+
+---
 **CP REVIEW SAAS — Documento Interno de Diretrizes**
 Versão 2.2 • Abril 2026 • Design System: Vibrant Logic

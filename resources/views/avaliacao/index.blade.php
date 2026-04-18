@@ -387,8 +387,30 @@ async function init() {
 async function startConversation() {
     await addBotMsg(botConfig.lang.welcome);
     await wait(400);
-    await askRating();
+    await askFirstVisit();
 }
+
+async function askFirstVisit() {
+    await addBotMsg(botConfig.lang.q_first_visit);
+    const div = document.createElement('div');
+    div.className = 'qr-row';
+    div.innerHTML = `
+        <button class="qr-btn" onclick="handleFirstVisit(true)">${botConfig.lang.btn_yes}</button>
+        <button class="qr-btn" onclick="handleFirstVisit(false)">${botConfig.lang.btn_no}</button>
+    `;
+    chat.appendChild(div);
+    scrollChat();
+}
+
+window.handleFirstVisit = async (val) => {
+    state.first_visit = val;
+    event.target.closest('.qr-row').remove();
+    addUserMsg(val ? botConfig.lang.btn_yes : botConfig.lang.btn_no);
+    await wait(400);
+    await addBotMsg(botConfig.lang.first_visit_ack);
+    await wait(400);
+    await askRating();
+};
 
 async function askRating() {
     const lines = botConfig.lang.askRate.split('\n');
@@ -421,7 +443,7 @@ window.handleRating = async (r) => {
 async function handlePositiveFlow() {
     await addBotMsg(botConfig.lang.highRate);
     await wait(300);
-    await askFirstVisit(true);
+    await askPeriod(true);
 }
 
 // ==========================================
@@ -468,12 +490,16 @@ window.handleFeedbackSubmit = async (hasValue) => {
     if (hasValue) {
         state.feedback = document.getElementById('feedback-area').value;
         addUserMsg(state.feedback || "Enviado");
+        document.querySelector('.input-container').remove();
+        await wait(300);
+        await askPhoto();
     } else {
+        // Pular texto -> Vai direto para passo 12 (finalizar)
         addUserMsg(botConfig.lang.btn_skip);
+        document.querySelector('.input-container').remove();
+        await wait(300);
+        await finishChat(false);
     }
-    document.querySelector('.input-container').remove();
-    await wait(300);
-    await askPhoto();
 };
 
 async function askPhoto() {
@@ -487,7 +513,7 @@ async function askPhoto() {
             <img id="photo-preview" class="photo-preview">
         </div>
         <div style="display:flex; gap:10px; margin-top:10px">
-            <button class="confirm-btn" style="background:var(--surface2); color:var(--text)" onclick="handlePhotoSubmit(false)">${botConfig.lang.btn_feedback_no}</button>
+            <button class="confirm-btn" style="background:var(--surface2); color:var(--text)" onclick="handlePhotoSubmit(false)">${botConfig.lang.btn_skip}</button>
             <button class="confirm-btn" onclick="handlePhotoSubmit(true)">${botConfig.lang.btn_feedback_send}</button>
         </div>
     `;
@@ -510,39 +536,17 @@ window.previewPhoto = (input) => {
 
 window.handlePhotoSubmit = async (hasValue) => {
     if (hasValue && state.photo) {
-        addUserMsg(botConfig.lang.btn_send);
+        addUserMsg("🖼️ Foto anexada");
     } else {
         state.photo = null;
         addUserMsg(botConfig.lang.btn_skip);
     }
     document.querySelector('.input-container').remove();
     await wait(300);
-    await askFirstVisit(false);
-};
-
-// ==========================================
-// PERGUNTAS COMUNS (DIRECIONADAS)
-// ==========================================
-async function askFirstVisit(isPos) {
-    await addBotMsg(botConfig.lang.q_first_visit);
-    const div = document.createElement('div');
-    div.className = 'qr-row';
-    div.innerHTML = `
-        <button class="qr-btn" onclick="handleFirstVisit(true, ${isPos})">${botConfig.lang.btn_yes}</button>
-        <button class="qr-btn" onclick="handleFirstVisit(false, ${isPos})">${botConfig.lang.btn_no}</button>
-    `;
-    chat.appendChild(div);
-    scrollChat();
-}
-
-window.handleFirstVisit = async (val, isPos) => {
-    state.first_visit = val;
-    event.target.closest('.qr-row').remove();
-    addUserMsg(val ? botConfig.lang.btn_yes : botConfig.lang.btn_no);
+    await addBotMsg(botConfig.lang.photo_ack);
     await wait(300);
-    await addBotMsg(isPos ? botConfig.lang.first_visit_ack : botConfig.lang.first_visit_ack_low);
-    await wait(300);
-    await askPeriod(isPos);
+    // Pós foto vai pro contato
+    await askContact();
 };
 
 async function askPeriod(isPos) {
