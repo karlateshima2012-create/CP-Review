@@ -31,9 +31,10 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\Cliente::create([
             'user_id' => $user->id,
-            'nome_empresa' => 'Restaurante Sabor Senior',
-            'email' => 'contato@saborsenior.com',
-            'slug' => 'sabor-senior',
+            'nome_empresa' => 'CREATIVE PRINT',
+            'email' => 'contato@creativeprint.com',
+            'slug' => 'creative-print',
+            'google_maps_link' => 'https://g.page/r/CT0IMW6LPFnnEBM/review',
             'telefone_whatsapp' => '5511999999999',
             'plano' => 'elite',
             'ativo' => true,
