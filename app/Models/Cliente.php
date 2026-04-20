@@ -38,7 +38,12 @@ class Cliente extends Model
 
     public function avaliacoes(): HasMany
     {
-        return $this->hasMany(Avaliacao::class, 'tenant_id');
+        // Fallback defensivo para evitar crash durante a migração de cliente_id -> tenant_id
+        $foreignKey = \Illuminate\Support\Facades\Schema::hasTable('avaliacoes') && 
+                      \Illuminate\Support\Facades\Schema::hasColumn('avaliacoes', 'tenant_id') 
+                      ? 'tenant_id' : 'cliente_id';
+                      
+        return $this->hasMany(Avaliacao::class, $foreignKey);
     }
 
     public function getUrlAvaliacaoAttribute(): string

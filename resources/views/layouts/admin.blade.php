@@ -28,7 +28,7 @@
     
     <div class="flex h-full">
         <!-- Sidebar -->
-        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-72 bg-white border-r border-[#E5E7EB] transform -translate-x-full transition-transform duration-300 lg:translate-x-0 lg:static lg:inset-0 flex-shrink-0 flex flex-col">
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-72 bg-[#F8FAFC] border-r border-[#E5E7EB] transform -translate-x-full transition-transform duration-300 lg:translate-x-0 lg:static lg:inset-0 flex-shrink-0 flex flex-col">
             <div class="p-10 flex justify-between items-center lg:block">
                 <div>
                     <h1 class="font-display text-3xl text-[#7C3AED] tracking-wider">CP REVIEW <span class="text-gray-400">CARE</span></h1>
