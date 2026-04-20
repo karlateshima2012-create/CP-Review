@@ -59,9 +59,15 @@
         <div class="mt-8 pt-8 border-t border-white/20">
             <h3 class="text-white text-xs font-bold uppercase tracking-widest text-center mb-4 opacity-60">Consoles de Teste</h3>
             <div class="grid grid-cols-1 gap-3">
-                <a href="{{ url('/avaliar/sabor-senior') }}" target="_blank" class="flex items-center justify-center gap-2 p-3 bg-white/10 hover:bg-white/20 border border-white/10 rounded-xl text-white text-sm transition-all group">
-                    <span class="text-lg group-hover:scale-125 transition-transform">📱</span>
-                    <span>Simular Visão: <b>Ver Bot (Cliente)</b></span>
+                <a href="{{ url('/avaliar/sabor-senior') }}" target="_blank" class="flex flex-col items-center justify-center p-4 bg-white/10 hover:bg-white/20 border border-white/10 rounded-xl text-white text-sm transition-all group">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-lg group-hover:scale-125 transition-transform">📱</span>
+                        <span>Simular Visão: <b>Ver Bot (Cliente)</b></span>
+                    </div>
+                    <p class="text-[10px] text-white/50 mb-3 text-center">Para ver exatamente como o cliente vê no celular,<br> aponte a câmera para o QR Code abaixo:</p>
+                    <div class="p-2 bg-white rounded-lg shadow-inner">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data={{ urlencode(url('/avaliar/sabor-senior')) }}" alt="QR Code PWA" width="100" height="100">
+                    </div>
                 </a>
                 
                 <div class="p-4 bg-purple-900/30 rounded-2xl border border-white/5 space-y-2">
