@@ -71,17 +71,15 @@ body {
 /* HEADER */
 .header {
   flex-shrink: 0;
-  padding: 40px 20px 20px;
+  padding: 45px 20px 15px;
   background: var(--header-bg);
   border-bottom: 1px solid var(--border);
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 15px;
   z-index: 20;
   color: #FFFFFF;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  position: relative;
 }
 
 .biz-avatar {
@@ -94,9 +92,9 @@ body {
   margin-bottom: 4px;
 }
 
-.biz-info { text-align: center; }
+.biz-info { flex: 1; }
 .biz-name { font-size: 18px; font-weight: 800; color: #FFFFFF; line-height: 1.2; letter-spacing: 0.5px; }
-.biz-status { font-size: 12px; color: rgba(255,255,255,0.8); display: flex; align-items: center; justify-content: center; gap: 5px; font-weight: 500; }
+.biz-status { font-size: 12px; color: rgba(255,255,255,0.8); display: flex; align-items: center; gap: 5px; font-weight: 500; }
 .biz-status::before { content:''; width:6px; height:6px; background:#10B981; border-radius:50%; animation: pulse 2s infinite; }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
 
@@ -322,7 +320,7 @@ body {
                 <div class="biz-name" id="header-biz-name">...</div>
                 <div class="biz-status">Online</div>
             </div>
-            <div onclick="showSuccessScreen()" style="position: absolute; top: 15px; right: 15px; font-size: 18px; color: #FFF; cursor: pointer; opacity: 0.6; padding: 6px 10px; border-radius: 50%; background: rgba(255,255,255,0.1); line-height: 1; transition: 0.2s; z-index: 50; display: flex; align-items: center; justify-content: center;" onmouseover="this.style.opacity=1;this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.opacity=0.6;this.style.background='rgba(255,255,255,0.1)'">
+            <div onclick="showSuccessScreen()" style="font-size: 18px; color: #FFF; cursor: pointer; opacity: 0.6; padding: 10px; border-radius: 50%; background: rgba(255,255,255,0.1); line-height: 1; transition: 0.2s; display: flex; align-items: center; justify-content: center;" onmouseover="this.style.opacity=1;this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.opacity=0.6;this.style.background='rgba(255,255,255,0.1)'">
                 ✕
             </div>
         </div>
