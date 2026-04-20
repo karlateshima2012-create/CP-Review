@@ -54,6 +54,8 @@ Route::prefix('/admin')->middleware(['auth', 'admin.auth'])->group(function () {
     Route::post('/clientes/{cliente}/qrcode/branding', [AdminController::class, 'updateQrBranding'])->name('admin.clientes.qrcode.branding');
     
     Route::get('/transacoes', [AdminController::class, 'transacoes'])->name('admin.transacoes');
+    Route::get('/notificacoes', [AdminController::class, 'notifications'])->name('admin.notifications');
+    Route::post('/notificacoes/{id}/retry', [AdminController::class, 'retryNotification'])->name('admin.notifications.retry');
     Route::post('/aprovar', [AdminController::class, 'aprovarCliente']);
     Route::post('/rejeitar', [AdminController::class, 'rejeitarCliente']);
 });

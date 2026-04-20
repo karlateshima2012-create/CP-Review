@@ -257,6 +257,54 @@ class AdminController extends Controller
         return view('admin.clientes-qrcode', compact('cliente', 'historico'));
     }
 
+    public function notifications(Request $request)
+    {
+        $hasLogs = Schema::hasTable('notificacoes_logs');
+        
+        $query = $hasLogs ? \App\Models\NotificacaoLog::with('tenant') : collect();
+        
+        if ($hasLogs) {
+            if ($request->canal) $query->where('canal', $request->canal);
+            if ($request->status) $query->where('status', $request->status);
+            
+            $logs = $query->orderBy('created_at', 'desc')->paginate(50);
+            
+            // Stats
+            $stats = [
+                'total' => \App\Models\NotificacaoLog::count(),
+                'sucesso' => \App\Models\NotificacaoLog::where('status', 'enviada')->count(),
+                'falha' => \App\Models\NotificacaoLog::where('status', 'falha')->count(),
+            ];
+            $stats['taxa'] = $stats['total'] > 0 ? round(($stats['sucesso'] / $stats['total']) * 100, 1) : 0;
+        } else {
+            $logs = collect();
+            $stats = ['total' => 0, 'sucesso' => 0, 'falha' => 0, 'taxa' => 0];
+        }
+
+        return view('admin.notifications', compact('logs', 'stats', 'hasLogs'));
+    }
+
+    public function retryNotification($id, \App\Services\NotificationService $notifier)
+    {
+        $log = \App\Models\NotificacaoLog::findOrFail($id);
+        $cliente = $log->tenant;
+        $avaliacao = $log->avaliacao;
+        
+        $success = false;
+        if ($log->canal === 'whatsapp') {
+            $success = $notifier->sendWhatsApp($log->destinatario, $log->mensagem, $cliente, $avaliacao);
+        } elseif ($log->canal === 'line') {
+            $success = $notifier->sendLine($log->destinatario, $log->mensagem, $cliente, $avaliacao);
+        }
+
+        if ($success) {
+            $log->update(['status' => 'enviada', 'retries' => $log->retries + 1, 'erro_mensagem' => null]);
+            return back()->with('success', 'Notificação reenviada com sucesso!');
+        }
+
+        return back()->with('error', 'Falha ao reenviar notificação.');
+    }
+
     public function updateQrBranding(Request $request, Cliente $cliente)
     {
         $data = $request->validate([

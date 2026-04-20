@@ -28,16 +28,15 @@ class NotificationService
     public function notifyLowRating(Cliente $cliente, Avaliacao $avaliacao): bool
     {
         $message = $this->buildNotificationMessage($cliente, $avaliacao);
+        $success = false;
 
         if ($cliente->canal_notificacao === 'whatsapp' && $cliente->telefone_whatsapp) {
-            return $this->sendWhatsApp($cliente->telefone_whatsapp, $message);
+            $success = $this->sendWhatsApp($cliente->telefone_whatsapp, $message, $cliente, $avaliacao);
+        } elseif ($cliente->canal_notificacao === 'line' && $cliente->line_user_id) {
+            $success = $this->sendLine($cliente->line_user_id, $message, $cliente, $avaliacao);
         }
 
-        if ($cliente->canal_notificacao === 'line' && $cliente->line_user_id) {
-            return $this->sendLine($cliente->line_user_id, $message);
-        }
-
-        return false;
+        return $success;
     }
 
     /**
@@ -47,14 +46,13 @@ class NotificationService
     {
         $cliente = $avaliacao->tenant;
         $message = $this->buildCloseLoopMessage($cliente, $avaliacao);
+        $success = false;
 
         if ($avaliacao->tipo_contato === 'whatsapp' && $avaliacao->contato_valor) {
-            return $this->sendWhatsApp($avaliacao->contato_valor, $message);
+            $success = $this->sendWhatsApp($avaliacao->contato_valor, $message, $cliente, $avaliacao);
         }
 
-        // LINE customer response logic could be added here if LINE IDs are captured
-
-        return false;
+        return $success;
     }
 
     protected function buildCloseLoopMessage(Cliente $cliente, Avaliacao $avaliacao): string
@@ -96,9 +94,12 @@ class NotificationService
         return $message;
     }
 
-    public function sendWhatsApp(string $phone, string $message): bool
+    public function sendWhatsApp(string $phone, string $message, Cliente $cliente = null, Avaliacao $avaliacao = null): bool
     {
-        if (empty($this->waUrl)) return false;
+        if (empty($this->waUrl)) {
+            $this->logFail('whatsapp', $phone, $message, 'URL da API Evolution não configurada', $cliente, $avaliacao);
+            return false;
+        }
 
         try {
             $response = Http::withHeaders([
@@ -109,16 +110,28 @@ class NotificationService
                 'text' => $message
             ]);
 
-            return $response->successful();
+            $success = $response->successful();
+            
+            if ($success) {
+                $this->logSuccess('whatsapp', $phone, $message, $cliente, $avaliacao);
+            } else {
+                $this->logFail('whatsapp', $phone, $message, "Erro API Evolution: " . $response->body(), $cliente, $avaliacao);
+            }
+
+            return $success;
         } catch (\Exception $e) {
             Log::error('WhatsApp send error: ' . $e->getMessage());
+            $this->logFail('whatsapp', $phone, $message, $e->getMessage(), $cliente, $avaliacao);
             return false;
         }
     }
 
-    public function sendLine(string $userId, string $message): bool
+    public function sendLine(string $userId, string $message, Cliente $cliente = null, Avaliacao $avaliacao = null): bool
     {
-        if (empty($this->lineToken)) return false;
+        if (empty($this->lineToken)) {
+            $this->logFail('line', $userId, $message, 'Token do LINE não configurado', $cliente, $avaliacao);
+            return false;
+        }
 
         try {
             $response = Http::withToken($this->lineToken)
@@ -132,11 +145,47 @@ class NotificationService
                     ]
                 ]);
 
-            return $response->successful();
+            $success = $response->successful();
+
+            if ($success) {
+                $this->logSuccess('line', $userId, $message, $cliente, $avaliacao);
+            } else {
+                $this->logFail('line', $userId, $message, "Erro API LINE: " . $response->body(), $cliente, $avaliacao);
+            }
+
+            return $success;
         } catch (\Exception $e) {
             Log::error('LINE send error: ' . $e->getMessage());
+            $this->logFail('line', $userId, $message, $e->getMessage(), $cliente, $avaliacao);
             return false;
         }
+    }
+
+    protected function logSuccess($canal, $dest, $msg, $cliente, $avaliacao)
+    {
+        if (!$cliente) return;
+        \App\Models\NotificacaoLog::create([
+            'tenant_id' => $cliente->id,
+            'avaliacao_id' => $avaliacao?->id,
+            'canal' => $canal,
+            'destinatario' => $dest,
+            'mensagem' => $msg,
+            'status' => 'enviada'
+        ]);
+    }
+
+    protected function logFail($canal, $dest, $msg, $erro, $cliente, $avaliacao)
+    {
+        if (!$cliente) return;
+        \App\Models\NotificacaoLog::create([
+            'tenant_id' => $cliente->id,
+            'avaliacao_id' => $avaliacao?->id,
+            'canal' => $canal,
+            'destinatario' => $dest,
+            'mensagem' => $msg,
+            'status' => 'falha',
+            'erro_mensagem' => $erro
+        ]);
     }
 
     protected function formatPhone(string $phone): string
@@ -147,4 +196,5 @@ class NotificationService
         }
         return $phone;
     }
+}
 }
