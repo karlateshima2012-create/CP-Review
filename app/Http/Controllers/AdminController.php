@@ -144,6 +144,29 @@ class AdminController extends Controller
         });
     }
 
+    public function createCliente()
+    {
+        return view('admin.clientes-create');
+    }
+
+    public function storeCliente(Request $request, \App\Services\OnboardingService $onboarding)
+    {
+        $data = $request->validate([
+            'nome_empresa' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'pais' => 'required|in:br,jp',
+            'canal_notificacao' => 'required|in:whatsapp,line',
+            'telefone_whatsapp' => 'nullable|string',
+            'plano' => 'required|string',
+            'valor_mensal' => 'required|numeric',
+            'google_maps_link' => 'nullable|url'
+        ]);
+
+        $cliente = $onboarding->onboard($data);
+
+        return redirect()->route('admin.clientes')->with('success', "Tenant {$cliente->nome_empresa} criado com sucesso! E-mail de onboarding enviado.");
+    }
+
     public function clientes(Request $request)
     {
         $hasStatus = \Illuminate\Support\Facades\Schema::hasColumn('clientes', 'status');

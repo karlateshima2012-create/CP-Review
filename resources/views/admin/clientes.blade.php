@@ -14,9 +14,9 @@
             <a href="{{ route('admin.clientes.export') }}" class="bg-white text-gray-700 px-4 py-2 rounded-xl text-sm font-bold border border-gray-200 hover:bg-gray-50 transition flex items-center gap-2">
                 📥 Exportar CSV
             </a>
-            <button onclick="alert('Funcionalidade em desenvolvimento: Novos clientes devem ser aprovados via Transações para garantir o fluxo financeiro.')" class="bg-purple-600 text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-purple-700 transition shadow-lg shadow-purple-200">
+            <a href="{{ route('admin.clientes.create') }}" class="bg-purple-600 text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-purple-700 transition shadow-lg shadow-purple-200">
                 + Novo Cliente
-            </button>
+            </a>
         </div>
     </div>
 
