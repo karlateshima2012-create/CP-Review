@@ -7,20 +7,21 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-100 flex flex-col h-screen overflow-hidden">
     @if(session()->has('impersonate_tenant_id'))
-    <div class="bg-red-600 text-white py-2 px-4 flex justify-between items-center text-xs font-bold uppercase tracking-widest sticky top-0 z-[9999] shadow-lg">
+    <div class="bg-red-600 text-white py-2 px-4 flex justify-between items-center text-xs font-bold uppercase tracking-widest z-[9999] shadow-lg flex-shrink-0">
         <div class="flex items-center gap-2">
             <span>🕵️ MODO SUPORTE (SIMULANDO TENANT)</span>
         </div>
-        <a href="{{ route('admin.stop-impersonation') }}" class="bg-white text-red-600 px-3 py-1 rounded-lg hover:bg-gray-100 transition">
+        <a href="{{ route('admin.stop-impersonation') }}" class="bg-white text-red-600 px-3 py-1 rounded-lg hover:bg-gray-100 transition whitespace-nowrap">
             PARAR E VOLTAR
         </a>
     </div>
     @endif
-    <div class="flex h-screen">
+    
+    <div class="flex flex-1 overflow-hidden">
         <!-- Sidebar -->
-        <aside class="w-64 bg-purple-800 text-white flex-shrink-0">
+        <aside class="w-64 bg-purple-800 text-white flex-shrink-0 relative">
             <div class="p-6">
                 <h1 class="text-2xl font-bold">CP Review Care</h1>
                 <p class="text-sm text-purple-300 mt-1">Admin Panel</p>
