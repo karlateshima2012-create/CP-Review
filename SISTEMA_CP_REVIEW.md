@@ -22,6 +22,7 @@ Se a nota for baixa, o lojista é notificado instantaneamente via canal preferid
 - **Multilíngue Automático:** Suporte para Português (Brasil) e Japonês (Japão), detectado por contexto.
 - **Resiliência Offline:** Fila de envio oculta para garantir que dados (texto e foto) cheguem ao servidor no momento que a conexão do celular restaurar, salvando a review.
 - **Incentivo ao Google Reviews:** Somente clientes satisfeitos (notas 4 e 5) são incentivados a postar no Google Maps do lojista.
+- **Opções de Contato Inteligentes:** Detecção de idioma oferece canais de contato culturalmente relevantes (WhatsApp/E-mail para Português, LINE/E-mail para Japonês).
 
 ### 2. Painel do Lojista (Tenant Dashboard)
 - **Dashboard em Tempo Real:** Visualização de KPIs (Total de avaliações, NPS, Ciclos de resolução).

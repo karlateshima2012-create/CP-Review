@@ -631,18 +631,34 @@ async function askContact() {
     await addBotMsg(botConfig.lang.q_contact);
     const div = document.createElement('div');
     div.className = 'options-grid';
-    div.innerHTML = `
-        <button class="qr-btn" onclick="handleContactChoice('whatsapp')">${botConfig.lang.btn_contact_wa}</button>
-        <button class="qr-btn" onclick="handleContactChoice('line')">${botConfig.lang.btn_contact_line}</button>
-        <button class="qr-btn" onclick="handleContactChoice('no')">${botConfig.lang.btn_contact_no}</button>
-    `;
+    
+    // Condicional de Idioma para as opções de contato
+    if (botConfig.config.locale === 'pt') {
+        div.innerHTML = `
+            <button class="qr-btn" onclick="handleContactChoice('whatsapp')">${botConfig.lang.btn_contact_wa}</button>
+            <button class="qr-btn" onclick="handleContactChoice('email')">${botConfig.lang.btn_contact_email}</button>
+            <button class="qr-btn" onclick="handleContactChoice('no')">${botConfig.lang.btn_contact_no}</button>
+        `;
+    } else {
+        div.innerHTML = `
+            <button class="qr-btn" onclick="handleContactChoice('line')">${botConfig.lang.btn_contact_line}</button>
+            <button class="qr-btn" onclick="handleContactChoice('email')">${botConfig.lang.btn_contact_email}</button>
+            <button class="qr-btn" onclick="handleContactChoice('no')">${botConfig.lang.btn_contact_no}</button>
+        `;
+    }
+    
     chat.appendChild(div);
     scrollChat();
 }
 
 window.handleContactChoice = async (c) => {
     event.target.closest('.options-grid').remove();
-    const map = { whatsapp: botConfig.lang.btn_contact_wa, line: botConfig.lang.btn_contact_line, no: botConfig.lang.btn_contact_no };
+    const map = { 
+        whatsapp: botConfig.lang.btn_contact_wa, 
+        line: botConfig.lang.btn_contact_line, 
+        email: botConfig.lang.btn_contact_email,
+        no: botConfig.lang.btn_contact_no 
+    };
     addUserMsg(map[c]);
     
     if (c === 'no') {
@@ -651,9 +667,15 @@ window.handleContactChoice = async (c) => {
     } else {
         const div = document.createElement('div');
         div.className = 'input-container';
+        
+        let placeholder = "Seu contato...";
+        if (c === 'email') placeholder = botConfig.config.locale === 'pt' ? "Seu melhor e-mail..." : "メールアドレスを入力してください...";
+        else if (c === 'whatsapp') placeholder = "DDD + Número...";
+        else if (c === 'line') placeholder = "LINE ID...";
+
         div.innerHTML = `
-            <input type="text" id="contact-val" class="f-input" placeholder="Seu número/ID...">
-            <button class="confirm-btn" onclick="submitContact('${c}')">Continuar ➔</button>
+            <input type="text" id="contact-val" class="f-input" placeholder="${placeholder}">
+            <button class="confirm-btn" onclick="submitContact('${c}')">${botConfig.lang.btn_send_txt} ➔</button>
         `;
         document.querySelector('.phone').appendChild(div);
         scrollChat();
