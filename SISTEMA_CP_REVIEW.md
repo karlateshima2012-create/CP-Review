@@ -14,11 +14,13 @@ Se a nota for baixa, o lojista é notificado instantaneamente via canal preferid
 
 ## 🛠️ Funcionalidades Core
 
-### 1. Bot de Avaliação PWA (Interface do Cliente)
-- **Interface Conversacional:** Simula um chat humano (Phone Shell) com indicadores de digitação.
+### 1. Interface Web Mobile B2C (Bot de Avaliação)
+- **Zero Atrito (Uso Único):** Não é exigido e nem sugerido nenhum tipo de instalação (App ou tela inicial). O cliente acessa, avalia e finaliza instantaneamente através de uma Web Page Otimizada, mantendo a URL visível como padrão de segurança dos navegadores.
+- **Motor PWA de Alta Performance:** Embora não seja um "aplicativo instalável" para o cliente, o frontend utiliza a tecnologia de *Service Workers* sob o capô para garantir carregamento ultrarrápido (cache instantâneo da interface) independentemente da velocidade do 4G ou Wi-Fi local.
+- **Interface Conversacional:** Simula um chat humano (Phone Shell) com indicadores de digitação e animações fluidas.
 - **Lógica de Branching Emocional:** Reações dinâmicas baseadas na nota (Empatia para notas baixas, Entusiasmo para notas altas).
 - **Multilíngue Automático:** Suporte para Português (Brasil) e Japonês (Japão), detectado por contexto.
-- **Resiliência Offline:** Fila de envio para garantir que fotos e feedbacks cheguem mesmo em conexões instáveis.
+- **Resiliência Offline:** Fila de envio oculta para garantir que dados (texto e foto) cheguem ao servidor no momento que a conexão do celular restaurar, salvando a review.
 - **Incentivo ao Google Reviews:** Somente clientes satisfeitos (notas 4 e 5) são incentivados a postar no Google Maps do lojista.
 
 ### 2. Painel do Lojista (Tenant Dashboard)
