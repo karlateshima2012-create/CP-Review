@@ -38,6 +38,10 @@ Route::middleware(['auth'])->prefix('/cliente')->group(function () {
 Route::prefix('/admin')->middleware(['auth', 'admin.auth'])->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/clientes', [AdminController::class, 'clientes'])->name('admin.clientes');
+    Route::get('/clientes/export', [AdminController::class, 'exportClientes'])->name('admin.clientes.export');
+    Route::get('/clientes/{cliente}/impersonate', [AdminController::class, 'impersonate'])->name('admin.clientes.impersonate');
+    Route::get('/stop-impersonation', [AdminController::class, 'stopImpersonation'])->name('admin.stop-impersonation');
+    
     Route::get('/clientes/{cliente}/edit', [AdminController::class, 'editCliente'])->name('admin.clientes.edit');
     Route::post('/clientes/{cliente}/update', [AdminController::class, 'updateCliente'])->name('admin.clientes.update');
     Route::delete('/clientes/{cliente}', [AdminController::class, 'destroyCliente'])->name('admin.clientes.destroy');

@@ -16,8 +16,12 @@ class TenantScope implements Scope
         if (Auth::check()) {
             $user = Auth::user();
             
-            // Assuming we'll add 'is_admin' or check role
-            if ($user->role !== 'super_admin' && $user->tenant_id) {
+            // Suporte para Impersonate (Super Admin simulando um Lojista)
+            if ($user->role === 'super_admin' && session()->has('impersonate_tenant_id')) {
+                $builder->where($model->getTable() . '.tenant_id', session('impersonate_tenant_id'));
+            } 
+            // Filtro normal para Lojistas
+            else if ($user->role !== 'super_admin' && $user->tenant_id) {
                 $builder->where($model->getTable() . '.tenant_id', $user->tenant_id);
             }
         }

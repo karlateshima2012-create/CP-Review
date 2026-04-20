@@ -128,13 +128,70 @@ class AdminController extends Controller
         });
     }
 
-    public function clientes()
+    public function clientes(Request $request)
     {
-        $clientes = Cliente::withCount('avaliacoes')
-            ->orderBy('created_at', 'desc')
-            ->paginate(30);
+        $query = Cliente::withCount('avaliacoes');
+
+        // Busca
+        if ($request->search) {
+            $query->where(function($q) use ($request) {
+                $q->where('nome_empresa', 'like', "%{$request->search}%")
+                  ->orWhere('email', 'like', "%{$request->search}%")
+                  ->orWhere('slug', 'like', "%{$request->search}%");
+            });
+        }
+
+        // Filtros
+        if ($request->plano) $query->where('plano', $request->plano);
+        if ($request->pais) $query->where('pais', $request->pais);
+        if ($request->status) $query->where('status', $request->status);
+
+        $clientes = $query->orderBy('created_at', 'desc')->paginate(30);
         
         return view('admin.clientes', compact('clientes'));
+    }
+
+    public function exportClientes()
+    {
+        $clientes = Cliente::all();
+        $csvHeader = ['ID', 'Empresa', 'Email', 'Plano', 'Status', 'Data Ativação'];
+        
+        $callback = function() use ($clientes, $csvHeader) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $csvHeader);
+            foreach ($clientes as $c) {
+                fputcsv($file, [$c->id, $c->nome_empresa, $c->email, $c->plano, $c->status, $c->created_at]);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, [
+            "Content-type" => "text/csv",
+            "Content-Disposition" => "attachment; filename=tenants_" . date('Y-m-d') . ".csv",
+            "Pragma" => "no-cache",
+            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+            "Expires" => "0"
+        ]);
+    }
+
+    public function impersonate(Cliente $cliente)
+    {
+        session(['impersonate_tenant_id' => $cliente->id]);
+        
+        \App\Models\AuditLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'impersonate_start',
+            'details' => "Iniciado impersonate do tenant: {$cliente->nome_empresa} (#{$cliente->id})",
+            'ip_address' => request()->ip()
+        ]);
+
+        return redirect()->route('cliente.dashboard', $cliente->id);
+    }
+
+    public function stopImpersonation()
+    {
+        session()->forget('impersonate_tenant_id');
+        return redirect()->route('admin.dashboard')->with('success', 'Voltamos para o painel Master!');
     }
 
     public function transacoes()
