@@ -19,10 +19,23 @@
     <div class="container mx-auto px-4 py-16">
         <div class="text-center text-white mb-12">
             <h1 class="text-5xl font-bold mb-4">Seu feedback é o seu faturamento</h1>
-            <p class="text-xl opacity-90">Gestão inteligente de reputação para negócios de alto nível.</p>
+            <p class="text-xl opacity-90 mb-8">Gestão inteligente de reputação para negócios de alto nível.</p>
+            
+            <!-- Simulador QR Code -->
+            <div class="inline-block bg-white/10 p-6 rounded-3xl border border-white/20 backdrop-blur-md shadow-2xl">
+                <p class="text-sm font-bold uppercase tracking-widest text-purple-200 mb-4 flex items-center justify-center gap-2">
+                    📱 Teste na Prática
+                </p>
+                <div class="p-3 bg-white rounded-xl inline-block shadow-lg mb-3">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ urlencode(url('/avaliar/sabor-senior')) }}" alt="QR Code PWA" class="w-32 h-32 rounded-lg">
+                </div>
+                <p class="text-[13px] text-white/80 max-w-[200px] leading-tight">
+                    Aponte a câmera e simule a experiência exata do seu cliente.
+                </p>
+            </div>
         </div>
 
-        <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mt-12">
             @php
                 $planos = [
                     ['name' => 'Lite', 'price' => 'R$ 49', 'features' => ['QR Code', '100 avaliações/mês', 'Relatório básico'], 'btn' => 'Contratar Lite'],
