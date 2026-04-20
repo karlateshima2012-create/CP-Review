@@ -7,7 +7,7 @@
     <!-- Navbar -->
     <nav class="container mx-auto px-6 py-6 flex justify-between items-center bg-transparent relative z-10">
         <div class="flex items-center gap-2">
-            <img src="/logo.svg" alt="CP Review Logo" class="h-10">
+            <img src="/logo.png" alt="CP Review Logo" class="h-10">
         </div>
         <div>
             <a href="{{ url('/login') }}" class="bg-brand-600 hover:bg-brand-700 text-white px-6 py-2.5 rounded-xl font-semibold transition-all shadow-md hover:shadow-lg">
@@ -65,7 +65,7 @@
     <!-- RODA PE -->
     <footer class="bg-white py-12">
         <div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-            <img src="/logo.svg" alt="CP Review" class="h-8 grayscale opacity-50">
+            <img src="/logo.png" alt="CP Review" class="h-8 grayscale opacity-50">
             <p class="text-neutral-secondary text-sm">
                 &copy; 2026 Creative Print. Todos os direitos reservados.
             </p>

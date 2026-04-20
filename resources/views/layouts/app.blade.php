@@ -11,7 +11,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="CP Review">
     <link rel="apple-touch-icon" href="/icon-512.png">
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="/favicon.png">
 
     <title>CP Review Care - @yield('title')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
