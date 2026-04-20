@@ -54,8 +54,13 @@
                     <div class="p-4 bg-brand-50 rounded-2xl shadow-inner mb-6 border border-brand-100">
                         <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&color=7C3AED&bgcolor=F5F3FF&data={{ urlencode(url('/avaliar/creative-print')) }}" alt="QR Code" class="w-48 h-48 rounded-lg mix-blend-multiply">
                     </div>
+                    
+                    <a href="{{ url('/avaliar/creative-print') }}" target="_blank" class="mb-6 flex items-center gap-2 bg-brand-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-brand-700 transition-all shadow-lg shadow-brand-200">
+                        <span>🚀 Simular no Navegador</span>
+                    </a>
+
                     <p class="text-body-m text-neutral-secondary font-medium w-64 text-center">
-                        Simule a visão do Bot e veja o poder da conversa inteligente.
+                        Acesse direto ou aponte a câmera para simular no celular.
                     </p>
                 </div>
             </div>
