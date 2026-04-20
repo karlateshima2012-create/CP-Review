@@ -36,18 +36,22 @@ class AvaliacaoController extends Controller
                 'nome_empresa' => 'CREATIVE PRINT',
                 'email' => 'contato@creativeprint.com',
                 'slug' => 'creative-print',
-                'telefone_whatsapp' => '5511999999999',
+                'telefone_whatsapp' => '09011886491',
                 'plano' => 'elite',
                 'ativo' => true,
                 'data_ativacao' => now(),
             ];
 
-            // Só adiciona o link se a coluna já existir no banco (evita erro 500 se migration não rodou)
             if (\Schema::hasColumn('clientes', 'google_maps_link')) {
                 $data['google_maps_link'] = 'https://g.page/r/CT0IMW6LPFnnEBM/review';
             }
 
             $cliente = Cliente::create($data);
+        }
+
+        // Força a atualização do número se já existir (para garantir o teste da usuária)
+        if ($cliente && $slug === 'creative-print' && $cliente->telefone_whatsapp !== '09011886491') {
+            $cliente->update(['telefone_whatsapp' => '09011886491']);
         }
 
         if (!$cliente) abort(404);

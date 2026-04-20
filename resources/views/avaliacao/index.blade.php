@@ -723,7 +723,7 @@ async function finishChat(isPos) {
     closeDiv.style.marginTop = '20px';
     closeDiv.innerHTML = `
         <button onclick="showSuccessScreen()" style="background:var(--surface2); border:1px solid var(--border); border-radius:20px; color:var(--text-dim); font-size:13px; cursor:pointer; padding:8px 16px; font-weight:600">
-            ✕ Encerrar PWA
+            ✕ SAIR
         </button>
     `;
     chat.appendChild(closeDiv);
