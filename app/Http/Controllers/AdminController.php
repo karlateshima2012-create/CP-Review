@@ -12,15 +12,49 @@ class AdminController extends Controller
 {
     public function dashboard()
     {
+        // KPIs Básicos
         $totalClientes = Cliente::count();
         $totalAvaliacoes = Avaliacao::count();
-        $mediaNotas = Avaliacao::avg('nota');
+        $mediaNotas = Avaliacao::avg('nota') ?: 0;
         $negativasPendentes = Avaliacao::where('nota', '<=', 3)
             ->where('resolvido', false)
             ->count();
+
+        // 1. Status Breakdown
+        $clientesStatus = [
+            'ativos' => Cliente::where('status', 'ativo')->count(),
+            'trial' => Cliente::where('status', 'trial')->count(),
+            'inativos' => Cliente::where('status', 'inativo')->count(),
+        ];
+
+        // 2. MRR Consolidada (Baseado nos clientes ativos)
+        $mrr = Cliente::where('ativo', true)->sum('valor_mensal');
+
+        // 3. Avaliações Hoje / Mês
+        $avaliacoesHoje = Avaliacao::whereDate('created_at', now()->toDateString())->count();
+        $avaliacoesMes = Avaliacao::whereMonth('created_at', now()->month)
+                                  ->whereYear('created_at', now()->year)
+                                  ->count();
+
+        // 4. Tenants com Trial Expirando em 7 dias
+        $trialsExpirando = Cliente::where('status', 'trial')
+            ->whereNotNull('trial_ends_at')
+            ->whereBetween('trial_ends_at', [now(), now()->addDays(7)])
+            ->get();
+
+        // 5. Gráfico de Novos Tenants (últimas 4 semanas)
+        $chartTenants = Cliente::selectRaw('WEEK(created_at) as week, COUNT(*) as total')
+            ->where('created_at', '>=', now()->subWeeks(4))
+            ->groupBy('week')
+            ->get();
+
+        // 6. Alertas de Falha (Mock por enquanto ou buscar em logs se existir)
+        $alertasFalha = []; 
+
         $transacoesPendentes = Transacao::where('status', 'pendente')
             ->orderBy('created_at', 'desc')
             ->get();
+
         $ultimasAvaliacoes = Avaliacao::with('tenant')
             ->orderBy('created_at', 'desc')
             ->limit(20)
@@ -28,7 +62,9 @@ class AdminController extends Controller
 
         return view('admin.dashboard', compact(
             'totalClientes', 'totalAvaliacoes', 'mediaNotas',
-            'negativasPendentes', 'transacoesPendentes', 'ultimasAvaliacoes'
+            'negativasPendentes', 'transacoesPendentes', 'ultimasAvaliacoes',
+            'clientesStatus', 'mrr', 'avaliacoesHoje', 'avaliacoesMes',
+            'trialsExpirando', 'chartTenants', 'alertasFalha'
         ));
     }
 

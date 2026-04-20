@@ -14,14 +14,22 @@ class Cliente extends Model
     protected $fillable = [
         'user_id', 'nome_empresa', 'email', 'telefone_whatsapp', 'line_user_id',
         'slug', 'google_maps_link', 'pais', 'canal_notificacao', 'plano', 'ativo', 'data_ativacao',
+        'valor_mensal', 'trial_ends_at', 'status',
         'msg_boas_vindas_br', 'msg_pergunta_nota_br', 'msg_agradecimento_alta_br', 'msg_agradecimento_baixa_br',
         'msg_boas_vindas_jp', 'msg_pergunta_nota_jp', 'msg_agradecimento_alta_jp', 'msg_agradecimento_baixa_jp'
     ];
 
     protected $casts = [
         'ativo' => 'boolean',
-        'data_ativacao' => 'datetime'
+        'data_ativacao' => 'datetime',
+        'trial_ends_at' => 'datetime',
+        'valor_mensal' => 'decimal:2'
     ];
+
+    public function inTrial(): bool
+    {
+        return $this->status === 'trial' || ($this->trial_ends_at && $this->trial_ends_at->isFuture());
+    }
 
     public function user(): BelongsTo
     {
