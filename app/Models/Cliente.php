@@ -38,7 +38,7 @@ class Cliente extends Model
 
     public function avaliacoes(): HasMany
     {
-        return $this->hasMany(Avaliacao::class);
+        return $this->hasMany(Avaliacao::class, 'tenant_id');
     }
 
     public function getUrlAvaliacaoAttribute(): string
