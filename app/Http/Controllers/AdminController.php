@@ -7,14 +7,17 @@ use App\Models\Transacao;
 use App\Models\Avaliacao;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
+
 
 class AdminController extends Controller
 {
     public function dashboard()
     {
-        $hasStatus = \Illuminate\Support\Facades\Schema::hasColumn('clientes', 'status');
-        $hasValue = \Illuminate\Support\Facades\Schema::hasColumn('clientes', 'valor_mensal');
-        $hasTrial = \Illuminate\Support\Facades\Schema::hasColumn('clientes', 'trial_ends_at');
+        $hasStatus = Schema::hasColumn('clientes', 'status');
+        $hasValue = Schema::hasColumn('clientes', 'valor_mensal');
+        $hasTrial = Schema::hasColumn('clientes', 'trial_ends_at');
 
         // KPIs Básicos
         $totalClientes = Cliente::count();
@@ -46,11 +49,17 @@ class AdminController extends Controller
             ->whereBetween('trial_ends_at', [now(), now()->addDays(7)])
             ->get() : collect();
 
-        // 5. Gráfico de Novos Tenants (últimas 4 semanas)
-        $chartTenants = Cliente::selectRaw('WEEK(created_at) as week, COUNT(*) as total')
+        // 5. Gráfico de Novos Tenants (últimas 4 semanas) - Agonóstico a banco de dados
+        $chartTenants = Cliente::select('created_at')
             ->where('created_at', '>=', now()->subWeeks(4))
-            ->groupBy('week')
-            ->get();
+            ->get()
+            ->groupBy(function($date) {
+                return $date->created_at->format('W'); // Semana do ano
+            })
+            ->map(function($week, $key) {
+                return (object) ['week' => $key, 'total' => $week->count()];
+            })
+            ->values();
 
         // 6. Alertas de Falha
         $alertasFalha = []; 
