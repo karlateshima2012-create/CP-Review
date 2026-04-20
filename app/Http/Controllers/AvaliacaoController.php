@@ -31,17 +31,23 @@ class AvaliacaoController extends Controller
                 ['name' => 'Admin CP Review', 'password' => \Illuminate\Support\Facades\Hash::make('admin123')]
             );
 
-            $cliente = Cliente::create([
+            $data = [
                 'user_id' => $user->id,
                 'nome_empresa' => 'CREATIVE PRINT',
                 'email' => 'contato@creativeprint.com',
                 'slug' => 'creative-print',
-                'google_maps_link' => 'https://g.page/r/CT0IMW6LPFnnEBM/review',
                 'telefone_whatsapp' => '5511999999999',
                 'plano' => 'elite',
                 'ativo' => true,
                 'data_ativacao' => now(),
-            ]);
+            ];
+
+            // Só adiciona o link se a coluna já existir no banco (evita erro 500 se migration não rodou)
+            if (\Schema::hasColumn('clientes', 'google_maps_link')) {
+                $data['google_maps_link'] = 'https://g.page/r/CT0IMW6LPFnnEBM/review';
+            }
+
+            $cliente = Cliente::create($data);
         }
 
         if (!$cliente) abort(404);
