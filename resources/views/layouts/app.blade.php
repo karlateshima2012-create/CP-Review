@@ -16,9 +16,9 @@
     <title>CP Review Care - @yield('title')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gray-50 flex flex-col min-h-screen">
+<body>
     @if(session()->has('impersonate_tenant_id'))
-    <div class="bg-red-600 text-white py-2 px-4 flex justify-between items-center text-[10px] font-bold uppercase tracking-widest z-[9999] shadow-lg flex-shrink-0 sticky top-0">
+    <div class="bg-red-600 text-white py-2 px-4 flex justify-between items-center text-xs font-bold uppercase tracking-widest sticky top-0 z-[9999] shadow-lg">
         <div class="flex items-center gap-2">
             <span>🕵️ MODO SUPORTE (SIMULANDO TENANT)</span>
         </div>
