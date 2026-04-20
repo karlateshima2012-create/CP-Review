@@ -38,6 +38,11 @@ Route::middleware(['auth'])->prefix('/cliente')->group(function () {
 Route::prefix('/admin')->middleware(['auth', 'admin.auth'])->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/clientes', [AdminController::class, 'clientes'])->name('admin.clientes');
+    Route::get('/clientes/{cliente}/edit', [AdminController::class, 'editCliente'])->name('admin.clientes.edit');
+    Route::post('/clientes/{cliente}/update', [AdminController::class, 'updateCliente'])->name('admin.clientes.update');
+    Route::delete('/clientes/{cliente}', [AdminController::class, 'destroyCliente'])->name('admin.clientes.destroy');
+    Route::get('/clientes/{cliente}/qrcode', [AdminController::class, 'generateQrCode'])->name('admin.clientes.qrcode');
+    
     Route::get('/transacoes', [AdminController::class, 'transacoes'])->name('admin.transacoes');
     Route::post('/aprovar', [AdminController::class, 'aprovarCliente']);
     Route::post('/rejeitar', [AdminController::class, 'rejeitarCliente']);

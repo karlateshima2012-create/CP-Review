@@ -5,8 +5,11 @@
 @section('content')
 <div class="px-4 sm:px-6 lg:px-8 py-8">
     <div class="bg-white rounded-xl shadow-sm">
-        <div class="px-6 py-4 border-b border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
             <h2 class="text-xl font-semibold text-gray-800">🏢 Clientes</h2>
+            <button onclick="alert('Funcionalidade em desenvolvimento: Novos clientes devem ser aprovados via Transações para garantir o fluxo financeiro.')" class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-purple-700 transition">
+                + Novo Cliente
+            </button>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full">
@@ -24,7 +27,7 @@
                 <tbody class="divide-y divide-gray-200">
                     @foreach($clientes as $cliente)
                     <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 text-sm text-gray-600">#{{ $cliente->id }}</td>
+                        <td class="px-6 py-4 text-[10px] text-gray-400 font-mono">...{{ substr($cliente->id, -8) }}</td>
                         <td class="px-6 py-4">
                             <div class="font-medium text-gray-800">{{ $cliente->nome_empresa }}</div>
                             <div class="text-sm text-gray-500">Slug: {{ $cliente->slug }}</div>
@@ -45,7 +48,21 @@
                             <span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-medium">Ativo</span>
                         </td>
                         <td class="px-6 py-4">
-                            <a href="{{ route('cliente.dashboard', $cliente->id) }}" target="_blank" class="text-purple-600 hover:text-purple-800 text-sm">Ver Painel</a>
+                            <div class="flex items-center gap-3">
+                                <a href="{{ route('admin.clientes.qrcode', $cliente->id) }}" class="text-blue-600 hover:text-blue-800 font-medium" title="Gerar QR Code">
+                                    🖼️ QR
+                                </a>
+                                <a href="{{ route('admin.clientes.edit', $cliente->id) }}" class="text-purple-600 hover:text-purple-800 font-medium" title="Editar Cliente">
+                                    ✏️ Editar
+                                </a>
+                                <form action="{{ route('admin.clientes.destroy', $cliente->id) }}" method="POST" onsubmit="return confirm('Tem certeza? Isso apagará todos os dados de avaliações deste cliente.')" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-red-600 hover:text-red-800 font-medium">
+                                        🗑️ Excluir
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                     @endforeach

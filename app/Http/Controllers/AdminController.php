@@ -108,4 +108,37 @@ class AdminController extends Controller
         
         return view('admin.transacoes', compact('transacoes'));
     }
+
+    public function editCliente(Cliente $cliente)
+    {
+        return view('admin.clientes-edit', compact('cliente'));
+    }
+
+    public function updateCliente(Request $request, Cliente $cliente)
+    {
+        $data = $request->validate([
+            'nome_empresa' => 'required|string|max:255',
+            'email' => 'nullable|email',
+            'telefone_whatsapp' => 'nullable|string',
+            'slug' => 'required|string|unique:clientes,slug,' . $cliente->id . ',id',
+            'plano' => 'required|string',
+            'google_maps_link' => 'nullable|url',
+            'ativo' => 'boolean'
+        ]);
+
+        $cliente->update($data);
+
+        return redirect()->route('admin.clientes')->with('success', 'Cliente atualizado com sucesso!');
+    }
+
+    public function destroyCliente(Cliente $cliente)
+    {
+        $cliente->delete();
+        return redirect()->route('admin.clientes')->with('success', 'Cliente removido!');
+    }
+
+    public function generateQrCode(Cliente $cliente)
+    {
+        return view('admin.clientes-qrcode', compact('cliente'));
+    }
 }

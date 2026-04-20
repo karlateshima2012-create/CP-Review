@@ -151,7 +151,7 @@
                     @forelse($ultimasAvaliacoes as $avaliacao)
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-4 text-sm text-gray-600">{{ $avaliacao->created_at->format('d/m/Y H:i') }}</td>
-                        <td class="px-6 py-4 font-medium text-gray-800">{{ $avaliacao->cliente->nome_empresa }}</td>
+                        <td class="px-6 py-4 font-medium text-gray-800">{{ $avaliacao->tenant ? $avaliacao->tenant->nome_empresa : 'Inexistente' }}</td>
                         <td class="px-6 py-4 text-lg">{{ $avaliacao->stars }}</td>
                         <td class="px-6 py-4 text-sm text-gray-600 max-w-xs truncate">{{ $avaliacao->feedback ?: '-' }}</td>
                         <td class="px-6 py-4 text-sm">
