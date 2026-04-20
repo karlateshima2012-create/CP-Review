@@ -12,6 +12,10 @@ class AdminController extends Controller
 {
     public function dashboard()
     {
+        $hasStatus = \Illuminate\Support\Facades\Schema::hasColumn('clientes', 'status');
+        $hasValue = \Illuminate\Support\Facades\Schema::hasColumn('clientes', 'valor_mensal');
+        $hasTrial = \Illuminate\Support\Facades\Schema::hasColumn('clientes', 'trial_ends_at');
+
         // KPIs Básicos
         $totalClientes = Cliente::count();
         $totalAvaliacoes = Avaliacao::count();
@@ -20,15 +24,15 @@ class AdminController extends Controller
             ->where('resolvido', false)
             ->count();
 
-        // 1. Status Breakdown
+        // 1. Status Breakdown (Com Fallback defensivo)
         $clientesStatus = [
-            'ativos' => Cliente::where('status', 'ativo')->count(),
-            'trial' => Cliente::where('status', 'trial')->count(),
-            'inativos' => Cliente::where('status', 'inativo')->count(),
+            'ativos' => $hasStatus ? Cliente::where('status', 'ativo')->count() : Cliente::where('ativo', true)->count(),
+            'trial' => $hasStatus ? Cliente::where('status', 'trial')->count() : 0,
+            'inativos' => $hasStatus ? Cliente::where('status', 'inativo')->count() : Cliente::where('ativo', false)->count(),
         ];
 
         // 2. MRR Consolidada (Baseado nos clientes ativos)
-        $mrr = Cliente::where('ativo', true)->sum('valor_mensal');
+        $mrr = ($hasValue && $hasStatus) ? Cliente::where('status', 'ativo')->sum('valor_mensal') : 0;
 
         // 3. Avaliações Hoje / Mês
         $avaliacoesHoje = Avaliacao::whereDate('created_at', now()->toDateString())->count();
@@ -36,11 +40,11 @@ class AdminController extends Controller
                                   ->whereYear('created_at', now()->year)
                                   ->count();
 
-        // 4. Tenants com Trial Expirando em 7 dias
-        $trialsExpirando = Cliente::where('status', 'trial')
+        // 4. Tenants com Trial Expirando em 7 dias (Defensivo)
+        $trialsExpirando = ($hasStatus && $hasTrial) ? Cliente::where('status', 'trial')
             ->whereNotNull('trial_ends_at')
             ->whereBetween('trial_ends_at', [now(), now()->addDays(7)])
-            ->get();
+            ->get() : collect();
 
         // 5. Gráfico de Novos Tenants (últimas 4 semanas)
         $chartTenants = Cliente::selectRaw('WEEK(created_at) as week, COUNT(*) as total')
@@ -48,7 +52,7 @@ class AdminController extends Controller
             ->groupBy('week')
             ->get();
 
-        // 6. Alertas de Falha (Mock por enquanto ou buscar em logs se existir)
+        // 6. Alertas de Falha
         $alertasFalha = []; 
 
         $transacoesPendentes = Transacao::where('status', 'pendente')
@@ -130,6 +134,7 @@ class AdminController extends Controller
 
     public function clientes(Request $request)
     {
+        $hasStatus = \Illuminate\Support\Facades\Schema::hasColumn('clientes', 'status');
         $query = Cliente::withCount('avaliacoes');
 
         // Busca
@@ -144,11 +149,11 @@ class AdminController extends Controller
         // Filtros
         if ($request->plano) $query->where('plano', $request->plano);
         if ($request->pais) $query->where('pais', $request->pais);
-        if ($request->status) $query->where('status', $request->status);
+        if ($request->status && $hasStatus) $query->where('status', $request->status);
 
         $clientes = $query->orderBy('created_at', 'desc')->paginate(30);
         
-        return view('admin.clientes', compact('clientes'));
+        return view('admin.clientes', compact('clientes', 'hasStatus'));
     }
 
     public function exportClientes()
