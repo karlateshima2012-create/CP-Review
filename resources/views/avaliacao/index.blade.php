@@ -319,8 +319,8 @@ body {
                 <div class="biz-name" id="header-biz-name">...</div>
                 <div class="biz-status">Online</div>
             </div>
-            <div style="font-size: 11px; background: rgba(255,255,255,0.2); color: #FFF; padding: 4px 8px; border-radius: 8px; font-weight: 600;">
-                PWA
+            <div onclick="showSuccessScreen()" style="font-size: 18px; color: #FFF; cursor: pointer; opacity: 0.8; padding: 4px 10px; border-radius: 50%; background: rgba(255,255,255,0.1); line-height: 1; transition: 0.2s;" onmouseover="this.style.opacity=1;this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.opacity=0.8;this.style.background='rgba(255,255,255,0.1)'">
+                ✕
             </div>
         </div>
 
