@@ -71,12 +71,6 @@
             </nav>
 
             <div class="px-8 py-10 space-y-6 border-t border-gray-100">
-                @if(session()->has('impersonate_tenant_id'))
-                <a href="{{ route('admin.stop-impersonation') }}" class="flex items-center gap-3 px-4 py-3 bg-red-50 text-red-600 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-red-100 transition-all">
-                    <span>🕵️ Parar Suporte</span>
-                </a>
-                @endif
-
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="w-full flex items-center px-4 py-2 text-gray-400 hover:text-[#7C3AED] transition-colors text-sm font-bold group">
@@ -84,11 +78,6 @@
                         Logout
                     </button>
                 </form>
-
-                <div class="p-5 bg-purple-50 rounded-3xl">
-                    <p class="text-[10px] font-black text-purple-400 uppercase tracking-widest mb-2">Suporte</p>
-                    <a href="#" class="text-xs font-bold text-purple-600 hover:underline">Central de Ajuda</a>
-                </div>
             </div>
         </aside>
 
