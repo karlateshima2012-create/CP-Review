@@ -39,7 +39,9 @@ class TenantMiddleware
         }
 
         if ($tenantId) {
-            app()->instance('tenant_id', $tenantId);
+            // Garante que armazenamos apenas o ID/UUID e não a instância do modelo
+            $id = $tenantId instanceof \Illuminate\Database\Eloquent\Model ? $tenantId->id : $tenantId;
+            app()->instance('tenant_id', $id);
         }
 
         return $next($request);
