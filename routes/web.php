@@ -56,6 +56,12 @@ Route::prefix('/admin')->middleware(['auth', 'admin.auth'])->group(function () {
     Route::get('/transacoes', [AdminController::class, 'transacoes'])->name('admin.transacoes');
     Route::get('/notificacoes', [AdminController::class, 'notifications'])->name('admin.notifications');
     Route::post('/notificacoes/{id}/retry', [AdminController::class, 'retryNotification'])->name('admin.notifications.retry');
+    
+    Route::get('/reports', [\App\Http\Controllers\AdminReportController::class, 'index'])->name('admin.reports.index');
+    Route::get('/reports/preview/{id}', [\App\Http\Controllers\AdminReportController::class, 'preview'])->name('admin.reports.preview');
+    Route::post('/reports/send', [\App\Http\Controllers\AdminReportController::class, 'send'])->name('admin.reports.send');
+    Route::get('/reports/track/{id}', [\App\Http\Controllers\AdminReportController::class, 'track'])->name('admin.reports.track');
+
     Route::post('/aprovar', [AdminController::class, 'aprovarCliente']);
     Route::post('/rejeitar', [AdminController::class, 'rejeitarCliente']);
 });
