@@ -23,6 +23,7 @@ Se a nota for baixa, o lojista é notificado instantaneamente via canal preferid
 
 ### 2. Painel do Lojista (Tenant Dashboard)
 - **Dashboard em Tempo Real:** Visualização de KPIs (Total de avaliações, NPS, Ciclos de resolução).
+- **Arquitetura Web SaaS B2B:** Estruturado e projetado como uma Aplicação Web Tradicional (não-PWA). Focado inteiramente em produtividade desktop/tablet, permitindo a exibição de matrizes complexas, DataTables, relatórios densos de BI (Mapas de Calor) e navegações em painéis laterais (Sidebars) de forma confortável, garantindo ciclos rápidos de deploy (atualizações chegam ao lojista com um simples F5).
 - **Gestão de Crise:** Ferramenta para responder ao cliente e "fechar o loop", disparando notificações de resolução.
 - **Configurações Personalizadas:** Mensagens de boas-vindas e agradecimento customizáveis.
 
