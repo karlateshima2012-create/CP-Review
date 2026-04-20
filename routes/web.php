@@ -11,6 +11,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [LandingController::class, 'index'])->name('landing');
 Route::post('/contratar', [LandingController::class, 'contratar']);
 
+// Link Curto Redirecionamento
+Route::get('/r/{slug}', function($slug) {
+    return redirect()->route('avaliacao.show', $slug);
+});
+
 // Avaliação (pública)
 Route::get('/avaliar/{slug}', [AvaliacaoController::class, 'show'])->name('avaliacao.show');
 Route::post('/avaliar/{slug}/salvar', [AvaliacaoController::class, 'salvar'])
@@ -46,6 +51,7 @@ Route::prefix('/admin')->middleware(['auth', 'admin.auth'])->group(function () {
     Route::post('/clientes/{cliente}/update', [AdminController::class, 'updateCliente'])->name('admin.clientes.update');
     Route::delete('/clientes/{cliente}', [AdminController::class, 'destroyCliente'])->name('admin.clientes.destroy');
     Route::get('/clientes/{cliente}/qrcode', [AdminController::class, 'generateQrCode'])->name('admin.clientes.qrcode');
+    Route::post('/clientes/{cliente}/qrcode/branding', [AdminController::class, 'updateQrBranding'])->name('admin.clientes.qrcode.branding');
     
     Route::get('/transacoes', [AdminController::class, 'transacoes'])->name('admin.transacoes');
     Route::post('/aprovar', [AdminController::class, 'aprovarCliente']);

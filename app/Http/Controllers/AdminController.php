@@ -246,6 +246,36 @@ class AdminController extends Controller
 
     public function generateQrCode(Cliente $cliente)
     {
-        return view('admin.clientes-qrcode', compact('cliente'));
+        $historico = \App\Models\AuditLog::where('details', 'like', "%QR%#{$cliente->id}%")
+            ->orderBy('created_at', 'desc')
+            ->limit(5)
+            ->get();
+
+        return view('admin.clientes-qrcode', compact('cliente', 'historico'));
+    }
+
+    public function updateQrBranding(Request $request, Cliente $cliente)
+    {
+        $data = $request->validate([
+            'qr_color' => 'required|string|size:7',
+            'qr_logo' => 'nullable|image|max:1024'
+        ]);
+
+        if ($request->hasFile('qr_logo')) {
+            $path = $request->file('qr_logo')->store('qr_logos', 'public');
+            $cliente->qr_logo_path = $path;
+        }
+
+        $cliente->qr_color = $request->qr_color;
+        $cliente->save();
+
+        \App\Models\AuditLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'qr_branding_update',
+            'details' => "Atualizado branding do QR Code para o tenant: {$cliente->nome_empresa} (#{$cliente->id})",
+            'ip_address' => request()->ip()
+        ]);
+
+        return back()->with('success', 'Branding do QR Code atualizado!');
     }
 }
