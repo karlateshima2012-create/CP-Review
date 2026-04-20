@@ -9,13 +9,13 @@ return new class extends Migration {
         if (Schema::hasTable('clientes')) {
             Schema::table('clientes', function (Blueprint $table) {
                 if (!Schema::hasColumn('clientes', 'valor_mensal')) {
-                    $table->decimal('valor_mensal', 10, 2)->default(0)->after('plano');
+                    $table->decimal('valor_mensal', 10, 2)->default(0);
                 }
                 if (!Schema::hasColumn('clientes', 'trial_ends_at')) {
-                    $table->timestamp('trial_ends_at')->nullable()->after('valor_mensal');
+                    $table->timestamp('trial_ends_at')->nullable();
                 }
                 if (!Schema::hasColumn('clientes', 'status')) {
-                    $table->string('status')->default('ativo')->after('trial_ends_at'); // ativo, trial, inativo
+                    $table->string('status')->default('ativo'); // ativo, trial, inativo
                 }
             });
         }

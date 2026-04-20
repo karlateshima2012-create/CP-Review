@@ -68,10 +68,13 @@ class AdminController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        $ultimasAvaliacoes = Avaliacao::with('tenant')
-            ->orderBy('created_at', 'desc')
-            ->limit(20)
-            ->get();
+        $ultimasAvaliacoes = [];
+        if (Schema::hasTable('avaliacoes')) {
+            $ultimasAvaliacoes = Avaliacao::with('tenant')
+                ->orderBy('created_at', 'desc')
+                ->limit(20)
+                ->get();
+        }
 
         return view('admin.dashboard', compact(
             'totalClientes', 'totalAvaliacoes', 'mediaNotas',

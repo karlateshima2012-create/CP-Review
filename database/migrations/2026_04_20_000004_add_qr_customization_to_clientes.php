@@ -9,10 +9,10 @@ return new class extends Migration {
         if (Schema::hasTable('clientes')) {
             Schema::table('clientes', function (Blueprint $table) {
                 if (!Schema::hasColumn('clientes', 'qr_logo_path')) {
-                    $table->string('qr_logo_path')->nullable()->after('status');
+                    $table->string('qr_logo_path')->nullable();
                 }
                 if (!Schema::hasColumn('clientes', 'qr_color')) {
-                    $table->string('qr_color', 7)->default('#7C3AED')->after('qr_logo_path');
+                    $table->string('qr_color', 7)->default('#7C3AED');
                 }
             });
         }

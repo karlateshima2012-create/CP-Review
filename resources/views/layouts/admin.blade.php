@@ -8,6 +8,16 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-gray-100">
+    @if(session()->has('impersonate_tenant_id'))
+    <div class="bg-red-600 text-white py-2 px-4 flex justify-between items-center text-xs font-bold uppercase tracking-widest sticky top-0 z-[9999] shadow-lg">
+        <div class="flex items-center gap-2">
+            <span>🕵️ MODO SUPORTE (SIMULANDO TENANT)</span>
+        </div>
+        <a href="{{ route('admin.stop-impersonation') }}" class="bg-white text-red-600 px-3 py-1 rounded-lg hover:bg-gray-100 transition">
+            PARAR E VOLTAR
+        </a>
+    </div>
+    @endif
     <div class="flex h-screen">
         <!-- Sidebar -->
         <aside class="w-64 bg-purple-800 text-white flex-shrink-0">
