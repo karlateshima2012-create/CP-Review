@@ -43,27 +43,18 @@ $stepsList = [
         'icon' => '<svg class="w-12 h-12 text-brand-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>',
         'keys' => [
             'welcome' => 'Como foi sua experiência hoje?',
-            'q_first_visit' => 'Primeira vez aqui? [Opcional]',
-            'first_visit_ack' => 'Reconhecimento (1ª Visita) [Opcional]',
-            'askRate' => 'Pergunta de Nota [Opcional]',
         ],
-        'options' => [
-            'q_first_visit' => ['pt' => ['👍 Sim', '🔄 Já conhecia'], 'ja' => ['👍 はい', '🔄 以前にも来た']],
-            'askRate' => ['pt' => ['⭐', '⭐⭐', '⭐⭐⭐', '⭐⭐⭐⭐', '⭐⭐⭐⭐⭐'], 'ja' => ['⭐', '⭐⭐', '⭐⭐⭐', '⭐⭐⭐⭐', '⭐⭐⭐⭐⭐']],
-        ]
+        'options' => []
     ],
     'positive' => [
         'title' => 'Fluxo positivo (4-5★)',
         'icon' => '<svg class="w-12 h-12 text-emerald-600" fill="currentColor" viewBox="0 0 20 20"><path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 00.458 1.258l2.9 3.5a1 1 0 001.536-1.246l-.884-2.783A1 1 0 0110.966 16h4.567a2 2 0 001.99-1.849l.5-8a2 2 0 00-1.99-2.151h-4.567a1 1 0 01-.966-.743l-.884-2.783a1 1 0 00-1.536-1.246l-2.9 3.5A2 2 0 006 10.333z"/></svg>',
         'keys' => [
             'highRate' => 'Agradecimento (Nota Alta)',
-            'q_period' => 'Pergunta: Horário da visita [Opcional]',
             'q_recommend' => 'Você pode deixar uma avaliação rápida no Google?',
-            'recommend_yes' => 'Mensagem Adicional (Recomendou) [Opcional]',
             'highFinalMsg' => 'Encerramento Positivo',
         ],
         'options' => [
-            'q_period' => ['pt' => ['🌅 Manhã', '🌤️ Tarde', '🌙 Noite'], 'ja' => ['🌅 朝', '🌤️ 昼', '🌙 夜']],
             'q_recommend' => ['pt' => ['⭐ Botão: Avaliar no Google'], 'ja' => ['⭐ ボタン: Googleで評価する']],
         ]
     ],
@@ -74,15 +65,12 @@ $stepsList = [
             'lowRate' => 'Agradecimento (Nota Baixa)',
             'lowRateQ' => 'Pergunta: O que mais impactou sua experiência?',
             'q_optional_text' => 'Pergunta: Gostaria de nos contar mais detalhes?',
-            'q_optional_photo' => 'Pergunta: Enviar foto? [Opcional]',
-            'photo_ack' => 'Agradecimento após foto [Opcional]',
             'q_contact' => 'Pergunta: Deseja que a empresa entre em contato?',
             'lowFinalMsg' => 'Encerramento Negativo',
         ],
         'options' => [
             'lowRateQ' => ['pt' => ['😕 Atendimento', '⚙️ Produto ou Serviço', '💸 Preço', '⏱️ Demora', '❗ Outro'], 'ja' => ['😕 接客', '⚙️ 商品またはサービス', '💸 価格', '⏱️ 待ち時間', '❗ その他']],
             'q_optional_text' => ['pt' => ['✍️ Digite sua mensagem...', '[Enviar]', '[Pular]'], 'ja' => ['✍️ メッセージを入力してください...', '[送信]', '[スキップ]']],
-            'q_optional_photo' => ['pt' => ['📷 Enviar foto', '⏭️ Pular'], 'ja' => ['📷 写真アップロード', '⏭️ スキップ']],
             'q_contact' => ['pt' => ['📱 Sim', '❌ Não', '📱 WhatsApp', '📧 E-mail'], 'ja' => ['📱 はい', '❌ いいえ', '💬 LINE', '📧 E-mail']],
         ]
     ]
@@ -174,6 +162,16 @@ $stepsList = [
                     </p>
                 </div>
             </div>
+
+            @php
+            $hiddenKeys = ['q_first_visit', 'first_visit_ack', 'askRate', 'q_period', 'recommend_yes', 'recommend_maybe', 'recommend_no', 'q_optional_photo', 'photo_ack'];
+            @endphp
+            @foreach($hiddenKeys as $hKey)
+                <input type="hidden" name="messages[pt][{{ $hKey }}][step]" value="{{ $messagesPt[$hKey]['step'] ?? '' }}">
+                <input type="hidden" name="messages[pt][{{ $hKey }}][text]" value="{{ $messagesPt[$hKey]['text'] ?? '' }}">
+                <input type="hidden" name="messages[ja][{{ $hKey }}][step]" value="{{ $messagesJp[$hKey]['step'] ?? '' }}">
+                <input type="hidden" name="messages[ja][{{ $hKey }}][text]" value="{{ $messagesJp[$hKey]['text'] ?? '' }}">
+            @endforeach
 
             <button type="submit" class="w-full bg-brand-600 text-white py-16 rounded-lg font-bold hover:bg-brand-700 transition">
                 ✓ Salvar alterações
