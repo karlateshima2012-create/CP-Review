@@ -80,7 +80,7 @@
     </aside>
 
     <!-- Main Workspace (Offsets left sidebar on desktop) -->
-    <div class="flex-1 flex flex-col md:pl-[260px] min-h-screen">en">
+    <div class="flex-1 flex flex-col md:pl-[260px] min-h-screen">
         
         <!-- Mobile Header (Hidden on Desktop) -->
         <header class="md:hidden bg-neutral-card border-b border-neutral-border sticky top-0 z-40">
