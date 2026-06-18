@@ -137,17 +137,36 @@ class ClienteController extends Controller
         $this->authorize('update', $cliente);
 
         $validated = $request->validate([
-            'msg_boas_vindas_br' => 'required|string|max:255',
-            'msg_pergunta_nota_br' => 'required|string|max:255',
-            'msg_agradecimento_alta_br' => 'required|string|max:255',
-            'msg_agradecimento_baixa_br' => 'required|string|max:255',
-            'msg_boas_vindas_jp' => 'required|string|max:255',
-            'msg_pergunta_nota_jp' => 'required|string|max:255',
-            'msg_agradecimento_alta_jp' => 'required|string|max:255',
-            'msg_agradecimento_baixa_jp' => 'required|string|max:255',
+            'messages' => 'required|array',
+            'messages.pt' => 'required|array',
+            'messages.ja' => 'required|array',
+            'messages.*.*.text' => 'nullable|string|max:1000',
+            'messages.*.*.step' => 'nullable|integer|min:1',
         ]);
 
-        $cliente->update($validated);
+        foreach ($validated['messages'] as $locale => $msgs) {
+            $botScript = \App\Models\BotScript::firstOrNew([
+                'tenant_id' => $cliente->id,
+                'locale' => $locale,
+            ]);
+            $botScript->messages = $msgs;
+            $botScript->save();
+        }
+
+        // Sincronizar colunas herdadas do cliente para compatibilidade retroativa
+        $ptMsgs = $validated['messages']['pt'] ?? [];
+        $jaMsgs = $validated['messages']['ja'] ?? [];
+
+        $cliente->update([
+            'msg_boas_vindas_br' => $ptMsgs['welcome']['text'] ?? $cliente->msg_boas_vindas_br,
+            'msg_pergunta_nota_br' => $ptMsgs['askRate']['text'] ?? $cliente->msg_pergunta_nota_br,
+            'msg_agradecimento_alta_br' => $ptMsgs['highRate']['text'] ?? $cliente->msg_agradecimento_alta_br,
+            'msg_agradecimento_baixa_br' => $ptMsgs['lowRate']['text'] ?? $cliente->msg_agradecimento_baixa_br,
+            'msg_boas_vindas_jp' => $jaMsgs['welcome']['text'] ?? $cliente->msg_boas_vindas_jp,
+            'msg_pergunta_nota_jp' => $jaMsgs['askRate']['text'] ?? $cliente->msg_pergunta_nota_jp,
+            'msg_agradecimento_alta_jp' => $jaMsgs['highRate']['text'] ?? $cliente->msg_agradecimento_alta_jp,
+            'msg_agradecimento_baixa_jp' => $jaMsgs['lowRate']['text'] ?? $cliente->msg_agradecimento_baixa_jp,
+        ]);
 
         return redirect()->back()->with('success', 'Perfil atualizado com sucesso!');
     }
@@ -207,6 +226,36 @@ class ClienteController extends Controller
     {
         $this->authorize('view', $cliente);
 
-        return view('cliente.bot', compact('cliente'));
+        $botScriptPt = \App\Models\BotScript::where('tenant_id', $cliente->id)
+            ->where('locale', 'pt')
+            ->first();
+
+        $botScriptJp = \App\Models\BotScript::where('tenant_id', $cliente->id)
+            ->where('locale', 'ja')
+            ->first();
+
+        $defaultsPt = \App\Models\BotScript::getDefaultMessages('pt');
+        $defaultsJp = \App\Models\BotScript::getDefaultMessages('ja');
+
+        $savedPt = $botScriptPt ? $botScriptPt->messages : [];
+        $savedJp = $botScriptJp ? $botScriptJp->messages : [];
+
+        $messagesPt = [];
+        foreach ($defaultsPt as $key => $defaultVal) {
+            $messagesPt[$key] = [
+                'text' => $savedPt[$key]['text'] ?? $defaultVal['text'],
+                'step' => isset($savedPt[$key]['step']) ? $savedPt[$key]['step'] : $defaultVal['step'],
+            ];
+        }
+
+        $messagesJp = [];
+        foreach ($defaultsJp as $key => $defaultVal) {
+            $messagesJp[$key] = [
+                'text' => $savedJp[$key]['text'] ?? $defaultVal['text'],
+                'step' => isset($savedJp[$key]['step']) ? $savedJp[$key]['step'] : $defaultVal['step'],
+            ];
+        }
+
+        return view('cliente.bot', compact('cliente', 'messagesPt', 'messagesJp'));
     }
 }

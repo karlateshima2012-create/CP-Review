@@ -399,13 +399,20 @@ async function init() {
 }
 
 async function startConversation() {
-    await addBotMsg(botConfig.lang.welcome);
-    await wait(400);
+    if (botConfig.lang.welcome && botConfig.lang.welcome.step !== null && botConfig.lang.welcome.step !== '') {
+        await addBotMsg(botConfig.lang.welcome.text);
+        await wait(400);
+    }
     await askFirstVisit();
 }
 
 async function askFirstVisit() {
-    await addBotMsg(botConfig.lang.q_first_visit);
+    if (!botConfig.lang.q_first_visit || botConfig.lang.q_first_visit.step === null || botConfig.lang.q_first_visit.step === '') {
+        state.first_visit = null;
+        await askRating();
+        return;
+    }
+    await addBotMsg(botConfig.lang.q_first_visit.text);
     const div = document.createElement('div');
     div.className = 'qr-row';
     div.innerHTML = `
@@ -418,19 +425,27 @@ async function askFirstVisit() {
 
 window.handleFirstVisit = async (val) => {
     state.first_visit = val;
-    event.target.closest('.qr-row').remove();
-    addUserMsg(val ? botConfig.lang.btn_yes : botConfig.lang.btn_no);
-    await wait(400);
-    await addBotMsg(botConfig.lang.first_visit_ack);
-    await wait(400);
+    if (event && event.target && event.target.closest('.qr-row')) {
+        event.target.closest('.qr-row').remove();
+    }
+    if (val !== null) {
+        addUserMsg(val ? botConfig.lang.btn_yes : botConfig.lang.btn_no);
+        await wait(400);
+    }
+    if (botConfig.lang.first_visit_ack && botConfig.lang.first_visit_ack.step !== null && botConfig.lang.first_visit_ack.step !== '') {
+        await addBotMsg(botConfig.lang.first_visit_ack.text);
+        await wait(400);
+    }
     await askRating();
 };
 
 async function askRating() {
-    const lines = botConfig.lang.askRate.split('\n');
-    for (const line of lines) {
-        await addBotMsg(line);
-        await wait(400);
+    if (botConfig.lang.askRate && botConfig.lang.askRate.step !== null && botConfig.lang.askRate.step !== '') {
+        const lines = botConfig.lang.askRate.text.split('\n');
+        for (const line of lines) {
+            await addBotMsg(line);
+            await wait(400);
+        }
     }
     const div = document.createElement('div');
     div.className = 'star-rating';
@@ -441,7 +456,9 @@ async function askRating() {
 
 window.handleRating = async (r) => {
     state.rating = r;
-    event.target.closest('.star-rating').remove();
+    if (event && event.target && event.target.closest('.star-rating')) {
+        event.target.closest('.star-rating').remove();
+    }
     addUserMsg("⭐".repeat(r));
 
     if (r >= 4) {
@@ -455,8 +472,10 @@ window.handleRating = async (r) => {
 // FLUXO POSITIVO 
 // ==========================================
 async function handlePositiveFlow() {
-    await addBotMsg(botConfig.lang.highRate);
-    await wait(300);
+    if (botConfig.lang.highRate && botConfig.lang.highRate.step !== null && botConfig.lang.highRate.step !== '') {
+        await addBotMsg(botConfig.lang.highRate.text);
+        await wait(300);
+    }
     await askPeriod(true);
 }
 
@@ -464,9 +483,13 @@ async function handlePositiveFlow() {
 // FLUXO NEGATIVO 
 // ==========================================
 async function handleNegativeFlow() {
-    await addBotMsg(botConfig.lang.lowRate);
-    await wait(300);
-    await addBotMsg(botConfig.lang.lowRateQ);
+    if (botConfig.lang.lowRate && botConfig.lang.lowRate.step !== null && botConfig.lang.lowRate.step !== '') {
+        await addBotMsg(botConfig.lang.lowRate.text);
+        await wait(300);
+    }
+    if (botConfig.lang.lowRateQ && botConfig.lang.lowRateQ.step !== null && botConfig.lang.lowRateQ.step !== '') {
+        await addBotMsg(botConfig.lang.lowRateQ.text);
+    }
 
     const div = document.createElement('div');
     div.className = 'problems-grid';
@@ -479,14 +502,20 @@ async function handleNegativeFlow() {
 
 window.handleProblem = async (opt) => {
     state.problem = opt;
-    event.target.closest('.problems-grid').remove();
+    if (event && event.target && event.target.closest('.problems-grid')) {
+        event.target.closest('.problems-grid').remove();
+    }
     addUserMsg(opt);
     await wait(300);
     await askFeedbackText();
 };
 
 async function askFeedbackText() {
-    await addBotMsg(botConfig.lang.q_optional_text);
+    if (!botConfig.lang.q_optional_text || botConfig.lang.q_optional_text.step === null || botConfig.lang.q_optional_text.step === '') {
+        await askPhoto();
+        return;
+    }
+    await addBotMsg(botConfig.lang.q_optional_text.text);
     const div = document.createElement('div');
     div.className = 'input-container';
     div.innerHTML = `
@@ -504,20 +533,27 @@ window.handleFeedbackSubmit = async (hasValue) => {
     if (hasValue) {
         state.feedback = document.getElementById('feedback-area').value;
         addUserMsg(state.feedback || "Enviado");
-        document.querySelector('.input-container').remove();
+        if (document.querySelector('.input-container')) {
+            document.querySelector('.input-container').remove();
+        }
         await wait(300);
         await askPhoto();
     } else {
-        // Pular texto -> Vai direto para passo 12 (finalizar)
         addUserMsg(botConfig.lang.btn_skip);
-        document.querySelector('.input-container').remove();
+        if (document.querySelector('.input-container')) {
+            document.querySelector('.input-container').remove();
+        }
         await wait(300);
         await finishChat(false);
     }
 };
 
 async function askPhoto() {
-    await addBotMsg(botConfig.lang.q_optional_photo);
+    if (!botConfig.lang.q_optional_photo || botConfig.lang.q_optional_photo.step === null || botConfig.lang.q_optional_photo.step === '') {
+        await askContact();
+        return;
+    }
+    await addBotMsg(botConfig.lang.q_optional_photo.text);
     const div = document.createElement('div');
     div.className = 'input-container';
     div.innerHTML = `
@@ -535,19 +571,6 @@ async function askPhoto() {
     scrollChat();
 }
 
-window.previewPhoto = (input) => {
-    if (input.files && input.files[0]) {
-        state.photo = input.files[0];
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const img = document.getElementById('photo-preview');
-            img.src = e.target.result;
-            img.style.display = 'block';
-        }
-        reader.readAsDataURL(input.files[0]);
-    }
-}
-
 window.handlePhotoSubmit = async (hasValue) => {
     if (hasValue && state.photo) {
         addUserMsg("🖼️ Foto anexada");
@@ -555,16 +578,28 @@ window.handlePhotoSubmit = async (hasValue) => {
         state.photo = null;
         addUserMsg(botConfig.lang.btn_skip);
     }
-    document.querySelector('.input-container').remove();
+    if (document.querySelector('.input-container')) {
+        document.querySelector('.input-container').remove();
+    }
     await wait(300);
-    await addBotMsg(botConfig.lang.photo_ack);
-    await wait(300);
-    // Pós foto vai pro contato
+    if (botConfig.lang.photo_ack && botConfig.lang.photo_ack.step !== null && botConfig.lang.photo_ack.step !== '') {
+        await addBotMsg(botConfig.lang.photo_ack.text);
+        await wait(300);
+    }
     await askContact();
 };
 
 async function askPeriod(isPos) {
-    await addBotMsg(botConfig.lang.q_period);
+    if (!botConfig.lang.q_period || botConfig.lang.q_period.step === null || botConfig.lang.q_period.step === '') {
+        state.period = null;
+        if (isPos) {
+            await askRecommend();
+        } else {
+            await askContact();
+        }
+        return;
+    }
+    await addBotMsg(botConfig.lang.q_period.text);
     const div = document.createElement('div');
     div.className = 'options-grid';
     div.innerHTML = `
@@ -578,7 +613,9 @@ async function askPeriod(isPos) {
 
 window.handlePeriod = async (p, isPos) => {
     state.period = p;
-    event.target.closest('.options-grid').remove();
+    if (event && event.target && event.target.closest('.options-grid')) {
+        event.target.closest('.options-grid').remove();
+    }
     const labels = { morning: botConfig.lang.btn_morning, afternoon: botConfig.lang.btn_afternoon, night: botConfig.lang.btn_night };
     addUserMsg(labels[p]);
     await wait(300);
@@ -594,7 +631,11 @@ window.handlePeriod = async (p, isPos) => {
 // FINALIZAÇÃO POSITIVA
 // ==========================================
 async function askRecommend() {
-    await addBotMsg(botConfig.lang.q_recommend);
+    if (!botConfig.lang.q_recommend || botConfig.lang.q_recommend.step === null || botConfig.lang.q_recommend.step === '') {
+        await finishChat(true);
+        return;
+    }
+    await addBotMsg(botConfig.lang.q_recommend.text);
     const div = document.createElement('div');
     div.className = 'options-grid';
     div.innerHTML = `
@@ -607,19 +648,23 @@ async function askRecommend() {
 }
 
 window.handleRecommend = async (rec) => {
-    event.target.closest('.options-grid').remove();
+    if (event && event.target && event.target.closest('.options-grid')) {
+        event.target.closest('.options-grid').remove();
+    }
     const map = { yes: botConfig.lang.btn_rec_yes, maybe: botConfig.lang.btn_rec_maybe, no: botConfig.lang.btn_rec_no };
     addUserMsg(map[rec]);
     await wait(400);
 
-    let msg = botConfig.lang.recommend_yes;
-    if (rec === 'maybe') msg = botConfig.lang.recommend_maybe;
-    if (rec === 'no') msg = botConfig.lang.recommend_no;
+    let msgConfig = botConfig.lang.recommend_yes;
+    if (rec === 'maybe') msgConfig = botConfig.lang.recommend_maybe;
+    if (rec === 'no') msgConfig = botConfig.lang.recommend_no;
 
-    const parts = msg.split('\n');
-    for (const part of parts) {
-        await addBotMsg(part);
-        await wait(500);
+    if (msgConfig && msgConfig.step !== null && msgConfig.step !== '') {
+        const parts = msgConfig.text.split('\n');
+        for (const part of parts) {
+            await addBotMsg(part);
+            await wait(500);
+        }
     }
     
     await finishChat(true);
@@ -629,11 +674,14 @@ window.handleRecommend = async (rec) => {
 // FINALIZAÇÃO NEGATIVA
 // ==========================================
 async function askContact() {
-    await addBotMsg(botConfig.lang.q_contact);
+    if (!botConfig.lang.q_contact || botConfig.lang.q_contact.step === null || botConfig.lang.q_contact.step === '') {
+        await finishChat(false);
+        return;
+    }
+    await addBotMsg(botConfig.lang.q_contact.text);
     const div = document.createElement('div');
     div.className = 'options-grid';
     
-    // Condicional de Idioma para as opções de contato
     if (botConfig.config.locale === 'pt') {
         div.innerHTML = `
             <button class="qr-btn" onclick="handleContactChoice('whatsapp')">${botConfig.lang.btn_contact_wa}</button>
@@ -653,7 +701,9 @@ async function askContact() {
 }
 
 window.handleContactChoice = async (c) => {
-    event.target.closest('.options-grid').remove();
+    if (event && event.target && event.target.closest('.options-grid')) {
+        event.target.closest('.options-grid').remove();
+    }
     const map = { 
         whatsapp: botConfig.lang.btn_contact_wa, 
         line: botConfig.lang.btn_contact_line, 
@@ -685,7 +735,9 @@ window.handleContactChoice = async (c) => {
 
 window.submitContact = async (c) => {
     state.contact = document.getElementById('contact-val').value;
-    document.querySelector('.input-container').remove();
+    if (document.querySelector('.input-container')) {
+        document.querySelector('.input-container').remove();
+    }
     addUserMsg(state.contact || 'Ok');
     await wait(300);
     await finishChat(false);
@@ -714,7 +766,6 @@ async function showGoogleBtn(msg, isPos) {
 }
 
 window.handleGoogleClick = () => {
-    // If they click Google, they leave the PWA tab, so we can transition to success and auto-close quickly
     setTimeout(() => {
         showSuccessScreen(true);
     }, 1500); 
@@ -725,19 +776,20 @@ async function finishChat(isPos) {
     if(isSubmitting) return;
     isSubmitting = true;
 
-    // Send payload quietly in background
     submitEvaluation().catch(e => console.error(e));
 
-    // IF positive (4-5 stars), we show Google Button FIRST as requested
     if (isPos) {
         await showGoogleBtn(null, true);
         await wait(800);
     }
 
-    const finalTexts = (isPos ? botConfig.lang.highFinalMsg : botConfig.lang.lowFinalMsg).split('\n');
-    for (const text of finalTexts) {
-        await addBotMsg(text);
-        await wait(600);
+    const finalConfig = isPos ? botConfig.lang.highFinalMsg : botConfig.lang.lowFinalMsg;
+    if (finalConfig && finalConfig.step !== null && finalConfig.step !== '') {
+        const finalTexts = finalConfig.text.split('\n');
+        for (const text of finalTexts) {
+            await addBotMsg(text);
+            await wait(600);
+        }
     }
 
     // Append a manual close button so they have time to click Google or just exit

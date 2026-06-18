@@ -109,81 +109,15 @@ class AvaliacaoController extends Controller
         });
     }
 
-    public function botScript($slug)
+    protected function getDefaultMessages($locale)
     {
-        $cliente = Cliente::where('slug', $slug)->firstOrFail();
-        
-        // Detect language from request or fallback to tenant country
-        $locale = request('locale');
-        if (!$locale || !in_array($locale, ['pt', 'ja'])) {
-            $locale = $cliente->pais === 'jp' ? 'ja' : 'pt';
-        }
+        return \App\Models\BotScript::getDefaultMessages($locale);
+    }
 
-        $translations = [
-            'pt' => [
-                'welcome' => "👋 Obrigado pela visita!",
-                'askRate' => "Como foi sua experiência hoje?\nClique nas estrelas e nos dê uma nota",
-                'highRate' => "💛 Que incrível! Isso significa muito pra gente.",
-                'lowRate' => "💛 Obrigado pela sinceridade. Isso nos ajuda a melhorar.",
-                'lowRateQ' => "O que te deixou insatisfeito?",
-                'q_first_visit' => "Primeira vez aqui?",
-                'first_visit_ack' => "Que bom saber disso!",
-                'first_visit_ack_low' => "Que bom saber disso!",
-                'q_period' => "Veio em qual horário?",
-                'period_ack' => "Excelente! 👍",
-                'q_recommend' => "Você nos indicaria para um amigo?",
-                'recommend_yes' => "💛 Ficamos muito felizes em saber disso!\nSe puder, compartilhe essa experiência no Google também",
-                'recommend_maybe' => "💛 Ficamos muito felizes em saber disso!\nSe puder, compartilhe essa experiência no Google também",
-                'recommend_no' => "Tudo bem! Ficamos felizes que sua experiência foi boa.\n👉 Sua avaliação no Google faz toda diferença para novos clientes",
-                'q_optional_text' => "Quer contar mais um pouquinho? (opcional)",
-                'q_optional_photo' => "Se quiser, pode enviar uma foto também",
-                'q_contact' => "Podemos te responder sobre isso?",
-                'contact_google' => "Se quiser, pode deixar sua avaliação no Google também",
-                'googleBtn' => "⭐ Avalie no Google",
-                'highFinalMsg' => "🙏 Agradecemos de verdade pelo seu tempo!\n🙌 Muito obrigado! Até a próxima.",
-                'lowFinalMsg' => "🙏 Muito obrigado! Sua opinião já foi enviada para quem precisa resolver.\n💛 Nosso compromisso é melhorar. Agradecemos demais pela sinceridade.",
-                'photo_ack' => "💛 Obrigado! 👍",
-                'btn_yes' => "👍 Sim",
-                'btn_no' => "🔄 Já conhecia",
-                'btn_morning' => "🌅 Manhã",
-                'btn_afternoon' => "🌤️ Tarde",
-                'btn_night' => "🌙 Noite",
-                'btn_rec_yes' => "✨ Com certeza!",
-                'btn_rec_maybe' => "👍 Sim",
-                'btn_rec_no' => "😶 Não",
-                'btn_contact_wa' => "📱 WhatsApp",
-                'btn_contact_email' => "📧 E-mail",
-                'btn_contact_no' => "❌ Não precisa",
-                'btn_skip' => "⏭️ Pular",
-                'btn_send' => "📷 Enviar",
-                'btn_send_txt' => "Enviar",
-                'btn_feedback_no' => "⏭️ Não",
-                'btn_feedback_send' => "👍 Enviar",
-                'optionsLow' => ['😕 Atendimento', '⚙️ Serviço/Produto', '🧼 Ambiente', '💸 Preço', '⏱️ Demora', '❗ Outro']
-            ],
-            'ja' => [
-                'welcome' => "👋 ご来店ありがとうございました！",
-                'askRate' => "本日の体験はいかがでしたか？\n星をタップして評価をお願いします",
-                'highRate' => "💛 素晴らしい！スタッフ一同、大変喜んでおります。",
-                'lowRate' => "💛 率直なご意見ありがとうございます。改善の参考にさせていただきます。",
-                'lowRateQ' => "ご不満に思われた点は何でしょうか？",
-                'q_first_visit' => "当店は初めてですか？",
-                'first_visit_ack' => "ご来店ありがとうございます！",
-                'first_visit_ack_low' => "ご来店ありがとうございます！",
-                'q_period' => "どの時間帯でしたか？",
-                'period_ack' => "素晴らしい！ 👍",
-                'q_recommend' => "お友達にもおすすめしたいですか？",
-                'recommend_yes' => "💛 そう言っていただけて光栄です！\nもしよろしければ、Googleでもこの体験を共有していただけませんか？",
-                'recommend_maybe' => "💛 そう言っていただけて光栄です！\nもしよろしければ、Googleでもこの体験を共有していただけませんか？",
-                'recommend_no' => "承知いたしました。良い体験をしていただけたようで何よりです。\n👉 Googleへの評価は、他のお客様の参考になりますので大変助かります。",
-                'q_optional_text' => "もう少し詳しく教えていただけますか？（任意）",
-                'q_optional_photo' => "よろしければ、写真も添付できます",
-                'q_contact' => "これについて、こちらの担当からご連絡させていただいてもよろしいでしょうか？",
-                'contact_google' => "よろしければ、Googleにも評価を残していただけますか",
-                'googleBtn' => "⭐ Googleで評価する",
-                'highFinalMsg' => "🙏 貴重なお時間をいただき、本当にありがとうございます！\n🙌 またのご来店を心よりお待ちしております。",
-                'lowFinalMsg' => "🙏 ありがとうございます。いただいたご意見は直近の課題として関係者に共有いたしました。\n💛 お客様により良い体験をご提供できるよう、改善に努めてまいります。貴重なご意見をありがとうございました。",
-                'photo_ack' => "💛 ありがとうございます！ 👍",
+    protected function getStaticTranslations($locale)
+    {
+        if ($locale === 'ja') {
+            return [
                 'btn_yes' => "👍 はい",
                 'btn_no' => "🔄 以前にも来た",
                 'btn_morning' => "🌅 朝",
@@ -201,8 +135,71 @@ class AvaliacaoController extends Controller
                 'btn_feedback_no' => "⏭️ いいえ",
                 'btn_feedback_send' => "👍 送信",
                 'optionsLow' => ['😕 接客', '⚙️ サービス/商品', '🧼 環境', '💸 価格', '⏱️ 待ち時間', '❗ その他']
-            ]
+            ];
+        }
+
+        return [
+            'btn_yes' => "👍 Sim",
+            'btn_no' => "🔄 Já conhecia",
+            'btn_morning' => "🌅 Manhã",
+            'btn_afternoon' => "🌤️ Tarde",
+            'btn_night' => "🌙 Noite",
+            'btn_rec_yes' => "✨ Com certeza!",
+            'btn_rec_maybe' => "👍 Sim",
+            'btn_rec_no' => "😶 Não",
+            'btn_contact_wa' => "📱 WhatsApp",
+            'btn_contact_email' => "📧 E-mail",
+            'btn_contact_no' => "❌ Não precisa",
+            'btn_skip' => "⏭️ Pular",
+            'btn_send' => "📷 Enviar",
+            'btn_send_txt' => "Enviar",
+            'btn_feedback_no' => "⏭️ Não",
+            'btn_feedback_send' => "👍 Enviar",
+            'optionsLow' => ['😕 Atendimento', '⚙️ Serviço/Produto', '🧼 Ambiente', '💸 Preço', '⏱️ Demora', '❗ Outro']
         ];
+    }
+
+    public function botScript($slug)
+    {
+        $cliente = Cliente::where('slug', $slug)->firstOrFail();
+        
+        // Detect language from request or fallback to tenant country
+        $locale = request('locale');
+        if (!$locale || !in_array($locale, ['pt', 'ja'])) {
+            $locale = $cliente->pais === 'jp' ? 'ja' : 'pt';
+        }
+
+        $botScript = \App\Models\BotScript::where('tenant_id', $cliente->id)
+            ->where('locale', $locale)
+            ->first();
+
+        $defaults = $this->getDefaultMessages($locale);
+        $savedMessages = $botScript ? $botScript->messages : [];
+
+        $messages = [];
+        foreach ($defaults as $key => $defaultVal) {
+            $savedText = $savedMessages[$key]['text'] ?? null;
+            $savedStep = $savedMessages[$key]['step'] ?? null;
+
+            // Handle step value casting/preservation
+            $step = null;
+            if ($savedStep !== null && $savedStep !== '') {
+                $step = (int) $savedStep;
+            } elseif ($savedStep === null && $botScript) {
+                // If it exists in DB but step is explicitly null/blank, keep it null to hide it
+                $step = null;
+            } else {
+                $step = $defaultVal['step'];
+            }
+
+            $messages[$key] = [
+                'text' => ($savedText !== null && $savedText !== '') ? $savedText : $defaultVal['text'],
+                'step' => $step,
+            ];
+        }
+
+        $static = $this->getStaticTranslations($locale);
+        $lang = array_merge($static, $messages);
 
         return response()->json([
             'tenant' => [
@@ -213,7 +210,7 @@ class AvaliacaoController extends Controller
                 'auto_close' => 4000,
                 'locale' => $locale
             ],
-            'lang' => $translations[$locale] ?? $translations['pt']
+            'lang' => $lang
         ]);
     }
 

@@ -36,104 +36,101 @@
         <!-- Left Side: Inputs -->
         <div class="lg:col-span-7 space-y-24">
             
+@php
+$stepsList = [
+    'general' => [
+        'title' => 'Fluxo Geral (Etapa Inicial)',
+        'icon' => '<svg class="w-12 h-12 text-brand-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>',
+        'keys' => [
+            'welcome' => 'Boas-vindas',
+            'q_first_visit' => 'Pergunta: Primeira vez aqui?',
+            'first_visit_ack' => 'Reconhecimento da resposta (1ª Visita)',
+            'askRate' => 'Reconhecimento / Pergunta de Nota',
+        ]
+    ],
+    'positive' => [
+        'title' => 'Fluxo positivo (4-5★)',
+        'icon' => '<svg class="w-12 h-12 text-emerald-600" fill="currentColor" viewBox="0 0 20 20"><path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 00.458 1.258l2.9 3.5a1 1 0 001.536-1.246l-.884-2.783A1 1 0 0110.966 16h4.567a2 2 0 001.99-1.849l.5-8a2 2 0 00-1.99-2.151h-4.567a1 1 0 01-.966-.743l-.884-2.783a1 1 0 00-1.536-1.246l-2.9 3.5A2 2 0 006 10.333z"/></svg>',
+        'keys' => [
+            'highRate' => 'Agradecimento Nota Alta',
+            'q_period' => 'Pergunta: Horário da visita',
+            'q_recommend' => 'Pergunta: Recomendaria a um amigo?',
+            'recommend_yes' => 'Convite Google (Recomendou)',
+            'highFinalMsg' => 'Encerramento Positivo',
+        ]
+    ],
+    'negative' => [
+        'title' => 'Fluxo negativo (1-3★)',
+        'icon' => '<svg class="w-12 h-12 text-red-600" fill="currentColor" viewBox="0 0 20 20"><path d="M18 9.5a1.5 1.5 0 11-3 0v-6a1.5 1.5 0 013 0v6zM14 9.667v-5.43a2 2 0 00-.458-1.258l-2.9-3.5a1 1 0 00-1.536 1.246l.884 2.783A1 1 0 019.034 4H4.467a2 2 0 00-1.99 1.849l-.5 8a2 2 0 001.99 2.151h4.567a1 1 0 01.966.743l.884 2.783a1 1 0 001.536 1.246l2.9-3.5a2 2 0 00.458-3.075z"/></svg>',
+        'keys' => [
+            'lowRate' => 'Agradecimento Nota Baixa',
+            'lowRateQ' => 'Pergunta: O que te deixou insatisfeito?',
+            'q_optional_text' => 'Pergunta: Quer contar mais? (opcional)',
+            'q_optional_photo' => 'Pergunta: Enviar foto? (opcional)',
+            'photo_ack' => 'Agradecimento após foto',
+            'q_contact' => 'Pergunta: Podemos responder sobre isso?',
+            'lowFinalMsg' => 'Encerramento Negativo',
+        ]
+    ]
+];
+@endphp
+
             <!-- PORTUGUESE FORM -->
             <div id="form-pt" class="space-y-24">
-                <!-- Fluxo Positivo -->
-                <div class="card p-24">
-                    <div class="flex items-center gap-8 mb-16">
-                        <div class="w-24 h-24 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
-                            <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 20 20"><path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 00.458 1.258l2.9 3.5a1 1 0 001.536-1.246l-.884-2.783A1 1 0 0110.966 16h4.567a2 2 0 001.99-1.849l.5-8a2 2 0 00-1.99-2.151h-4.567a1 1 0 01-.966-.743l-.884-2.783a1 1 0 00-1.536-1.246l-2.9 3.5A2 2 0 006 10.333z"/></svg>
+                @foreach($stepsList as $sectionKey => $section)
+                    <div class="card p-24">
+                        <div class="flex items-center gap-8 mb-16">
+                            <div class="w-24 h-24 rounded-full bg-neutral-bg flex items-center justify-center">
+                                {!! $section['icon'] !!}
+                            </div>
+                            <h3 class="text-body-g font-bold text-neutral-primary">{{ $section['title'] }}</h3>
                         </div>
-                        <h3 class="text-body-g font-bold text-neutral-primary">Fluxo positivo (4-5★)</h3>
-                        <span class="text-legend bg-emerald-50 text-emerald-600 px-8 py-2 rounded font-semibold ml-auto">Vai direto para o Google</span>
-                    </div>
 
-                    <div class="space-y-16">
-                        <div>
-                            <label class="block text-body-m font-bold text-neutral-secondary mb-4">Boas-vindas</label>
-                            <input type="text" id="in-pt-welcome" name="msg_boas_vindas_br" value="{{ old('msg_boas_vindas_br', $cliente->msg_boas_vindas_br) }}" class="w-full border border-neutral-border rounded-lg px-12 py-8 text-body-m focus:ring-2 focus:ring-brand-600 focus:outline-none" required>
-                        </div>
-                        <div>
-                            <label class="block text-body-m font-bold text-neutral-secondary mb-4">Convite Google</label>
-                            <input type="text" id="in-pt-high" name="msg_agradecimento_alta_br" value="{{ old('msg_agradecimento_alta_br', $cliente->msg_agradecimento_alta_br) }}" class="w-full border border-neutral-border rounded-lg px-12 py-8 text-body-m focus:ring-2 focus:ring-brand-600 focus:outline-none" required>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Fluxo Negativo -->
-                <div class="card p-24">
-                    <div class="flex items-center gap-8 mb-16">
-                        <div class="w-24 h-24 rounded-full bg-red-100 text-red-600 flex items-center justify-center">
-                            <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 20 20"><path d="M18 9.5a1.5 1.5 0 11-3 0v-6a1.5 1.5 0 013 0v6zM14 9.667v-5.43a2 2 0 00-.458-1.258l-2.9-3.5a1 1 0 00-1.536 1.246l.884 2.783A1 1 0 019.034 4H4.467a2 2 0 00-1.99 1.849l-.5 8a2 2 0 001.99 2.151h4.567a1 1 0 01.966.743l.884 2.783a1 1 0 001.536 1.246l2.9-3.5a2 2 0 00.458-3.075z"/></svg>
-                        </div>
-                        <h3 class="text-body-g font-bold text-neutral-primary">Fluxo negativo (1-3★)</h3>
-                        <span class="text-legend bg-red-50 text-red-600 px-8 py-2 rounded font-semibold ml-auto">Intercepta antes do Google</span>
-                    </div>
-
-                    <div class="space-y-16">
-                        <div>
-                            <label class="block text-body-m font-bold text-neutral-secondary mb-4">Reconhecimento</label>
-                            <input type="text" id="in-pt-recon" name="msg_pergunta_nota_br" value="{{ old('msg_pergunta_nota_br', $cliente->msg_pergunta_nota_br) }}" class="w-full border border-neutral-border rounded-lg px-12 py-8 text-body-m focus:ring-2 focus:ring-brand-600 focus:outline-none" required>
-                        </div>
-                        <div>
-                            <label class="block text-body-m font-bold text-neutral-secondary mb-4">Solicitação de contato (opcional)</label>
-                            <input type="text" id="in-pt-contact" value="Deixe seu contato para resolvermos? (Telefone ou WhatsApp)" class="w-full bg-gray-50 border border-neutral-border rounded-lg px-12 py-8 text-body-m text-neutral-secondary cursor-not-allowed" disabled>
-                        </div>
-                        <div>
-                            <label class="block text-body-m font-bold text-neutral-secondary mb-4">Encerramento</label>
-                            <input type="text" id="in-pt-low" name="msg_agradecimento_baixa_br" value="{{ old('msg_agradecimento_baixa_br', $cliente->msg_agradecimento_baixa_br) }}" class="w-full border border-neutral-border rounded-lg px-12 py-8 text-body-m focus:ring-2 focus:ring-brand-600 focus:outline-none" required>
+                        <div class="space-y-16">
+                            @foreach($section['keys'] as $key => $label)
+                                <div class="flex items-end gap-16">
+                                    <div class="flex-1">
+                                        <label class="block text-body-m font-bold text-neutral-secondary mb-4">{{ $label }}</label>
+                                        <input type="text" id="in-pt-{{ $key }}-text" name="messages[pt][{{ $key }}][text]" value="{{ old('messages.pt.'.$key.'.text', $messagesPt[$key]['text'] ?? '') }}" class="w-full border border-neutral-border rounded-lg px-12 py-8 text-body-m focus:ring-2 focus:ring-brand-600 focus:outline-none" required>
+                                    </div>
+                                    <div class="w-80">
+                                        <label class="block text-body-m font-bold text-neutral-secondary mb-4 text-center">Etapa</label>
+                                        <input type="number" min="1" id="in-pt-{{ $key }}-step" name="messages[pt][{{ $key }}][step]" value="{{ old('messages.pt.'.$key.'.step', $messagesPt[$key]['step'] ?? '') }}" class="w-full border border-neutral-border rounded-lg px-12 py-8 text-body-m text-center focus:ring-2 focus:ring-brand-600 focus:outline-none" placeholder="Off">
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
-                </div>
+                @endforeach
             </div>
 
             <!-- JAPANESE FORM -->
             <div id="form-jp" class="space-y-24 hidden">
-                <!-- Fluxo Positivo (JP) -->
-                <div class="card p-24">
-                    <div class="flex items-center gap-8 mb-16">
-                        <div class="w-24 h-24 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
-                            <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 20 20"><path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 00.458 1.258l2.9 3.5a1 1 0 001.536-1.246l-.884-2.783A1 1 0 0110.966 16h4.567a2 2 0 001.99-1.849l.5-8a2 2 0 00-1.99-2.151h-4.567a1 1 0 01-.966-.743l-.884-2.783a1 1 0 00-1.536-1.246l-2.9 3.5A2 2 0 006 10.333z"/></svg>
+                @foreach($stepsList as $sectionKey => $section)
+                    <div class="card p-24">
+                        <div class="flex items-center gap-8 mb-16">
+                            <div class="w-24 h-24 rounded-full bg-neutral-bg flex items-center justify-center">
+                                {!! $section['icon'] !!}
+                            </div>
+                            <h3 class="text-body-g font-bold text-neutral-primary">{{ $section['title'] }} (JP)</h3>
                         </div>
-                        <h3 class="text-body-g font-bold text-neutral-primary">Fluxo positivo (4-5★) (JP)</h3>
-                    </div>
 
-                    <div class="space-y-16">
-                        <div>
-                            <label class="block text-body-m font-bold text-neutral-secondary mb-4">Boas-vindas (Welcoming)</label>
-                            <input type="text" id="in-jp-welcome" name="msg_boas_vindas_jp" value="{{ old('msg_boas_vindas_jp', $cliente->msg_boas_vindas_jp) }}" class="w-full border border-neutral-border rounded-lg px-12 py-8 text-body-m focus:ring-2 focus:ring-brand-600 focus:outline-none" required>
-                        </div>
-                        <div>
-                            <label class="block text-body-m font-bold text-neutral-secondary mb-4">Convite Google (Google Offer)</label>
-                            <input type="text" id="in-jp-high" name="msg_agradecimento_alta_jp" value="{{ old('msg_agradecimento_alta_jp', $cliente->msg_agradecimento_alta_jp) }}" class="w-full border border-neutral-border rounded-lg px-12 py-8 text-body-m focus:ring-2 focus:ring-brand-600 focus:outline-none" required>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Fluxo Negativo (JP) -->
-                <div class="card p-24">
-                    <div class="flex items-center gap-8 mb-16">
-                        <div class="w-24 h-24 rounded-full bg-red-100 text-red-600 flex items-center justify-center">
-                            <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 20 20"><path d="M18 9.5a1.5 1.5 0 11-3 0v-6a1.5 1.5 0 013 0v6zM14 9.667v-5.43a2 2 0 00-.458-1.258l-2.9-3.5a1 1 0 00-1.536 1.246l.884 2.783A1 1 0 019.034 4H4.467a2 2 0 00-1.99 1.849l-.5 8a2 2 0 001.99 2.151h4.567a1 1 0 01.966.743l.884 2.783a1 1 0 001.536 1.246l2.9-3.5a2 2 0 00.458-3.075z"/></svg>
-                        </div>
-                        <h3 class="text-body-g font-bold text-neutral-primary">Fluxo negativo (1-3★) (JP)</h3>
-                    </div>
-
-                    <div class="space-y-16">
-                        <div>
-                            <label class="block text-body-m font-bold text-neutral-secondary mb-4">Reconhecimento (Rating Question)</label>
-                            <input type="text" id="in-jp-recon" name="msg_pergunta_nota_jp" value="{{ old('msg_pergunta_nota_jp', $cliente->msg_pergunta_nota_jp) }}" class="w-full border border-neutral-border rounded-lg px-12 py-8 text-body-m focus:ring-2 focus:ring-brand-600 focus:outline-none" required>
-                        </div>
-                        <div>
-                            <label class="block text-body-m font-bold text-neutral-secondary mb-4">Solicitação de contato (opcional)</label>
-                            <input type="text" id="in-jp-contact" value="連絡先を残していただけますか？ (電話番号など)" class="w-full bg-gray-50 border border-neutral-border rounded-lg px-12 py-8 text-body-m text-neutral-secondary cursor-not-allowed" disabled>
-                        </div>
-                        <div>
-                            <label class="block text-body-m font-bold text-neutral-secondary mb-4">Encerramento (Low Rating)</label>
-                            <input type="text" id="in-jp-low" name="msg_agradecimento_baixa_jp" value="{{ old('msg_agradecimento_baixa_jp', $cliente->msg_agradecimento_baixa_jp) }}" class="w-full border border-neutral-border rounded-lg px-12 py-8 text-body-m focus:ring-2 focus:ring-brand-600 focus:outline-none" required>
+                        <div class="space-y-16">
+                            @foreach($section['keys'] as $key => $label)
+                                <div class="flex items-end gap-16">
+                                    <div class="flex-1">
+                                        <label class="block text-body-m font-bold text-neutral-secondary mb-4">{{ $label }}</label>
+                                        <input type="text" id="in-jp-{{ $key }}-text" name="messages[ja][{{ $key }}][text]" value="{{ old('messages.ja.'.$key.'.text', $messagesJp[$key]['text'] ?? '') }}" class="w-full border border-neutral-border rounded-lg px-12 py-8 text-body-m focus:ring-2 focus:ring-brand-600 focus:outline-none" required>
+                                    </div>
+                                    <div class="w-80">
+                                        <label class="block text-body-m font-bold text-neutral-secondary mb-4 text-center">Etapa</label>
+                                        <input type="number" min="1" id="in-jp-{{ $key }}-step" name="messages[ja][{{ $key }}][step]" value="{{ old('messages.ja.'.$key.'.step', $messagesJp[$key]['step'] ?? '') }}" class="w-full border border-neutral-border rounded-lg px-12 py-8 text-body-m text-center focus:ring-2 focus:ring-brand-600 focus:outline-none" placeholder="Off">
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
-                </div>
+                @endforeach
             </div>
 
             <!-- Collapsible: Motivos de problema -->
@@ -280,15 +277,15 @@
     }
 
     function updatePreview() {
-        const welcomeText = document.getElementById(`in-${activeLang}-welcome`).value;
-        const highText = document.getElementById(`in-${activeLang}-high`).value;
+        const welcomeText = document.getElementById(`in-${activeLang}-welcome-text`).value;
+        const highText = document.getElementById(`in-${activeLang}-highRate-text`).value;
 
         document.getElementById('preview-msg-welcome').textContent = welcomeText;
         document.getElementById('preview-msg-high').textContent = highText;
     }
 
     // Attach real-time preview updates
-    const inputs = ['pt-welcome', 'pt-high', 'jp-welcome', 'jp-high'];
+    const inputs = ['pt-welcome-text', 'pt-highRate-text', 'jp-welcome-text', 'jp-highRate-text'];
     inputs.forEach(id => {
         document.getElementById(`in-${id}`).addEventListener('input', updatePreview);
     });
