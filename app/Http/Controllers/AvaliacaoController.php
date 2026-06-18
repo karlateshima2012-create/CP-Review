@@ -78,22 +78,27 @@ class AvaliacaoController extends Controller
         return DB::transaction(function() use ($validated, $cliente) {
             $token = Str::random(64);
 
+            $feedback = isset($validated['feedback']) ? htmlspecialchars(strip_tags($validated['feedback']), ENT_QUOTES, 'UTF-8') : null;
+            $problema = isset($validated['problema']) ? htmlspecialchars(strip_tags($validated['problema']), ENT_QUOTES, 'UTF-8') : null;
+            $nome_cliente = isset($validated['nome_cliente']) ? htmlspecialchars(strip_tags($validated['nome_cliente']), ENT_QUOTES, 'UTF-8') : 'Anônimo';
+            $contato_valor = isset($validated['contato_valor']) ? htmlspecialchars(strip_tags($validated['contato_valor']), ENT_QUOTES, 'UTF-8') : null;
+
             $avaliacao = Avaliacao::create([
                 'tenant_id' => $cliente->id,
                 'nota' => $validated['nota'],
-                'feedback' => $validated['feedback'] ?? null,
-                'problema' => $validated['problema'] ?? null,
-                'nome_cliente' => $validated['nome_cliente'] ?? 'Anônimo',
+                'feedback' => $feedback,
+                'problema' => $problema,
+                'nome_cliente' => $nome_cliente,
                 'tipo_contato' => $validated['tipo_contato'] ?? 'nao',
-                'contato_valor' => $validated['contato_valor'] ?? null,
+                'contato_valor' => $contato_valor,
                 'token_resposta' => $token,
                 'primeira_visita' => $validated['primeira_visita'] ?? false,
                 'periodo_visita' => $validated['periodo_visita'] ?? null
             ]);
 
-            // Se for nota baixa, enviar notificação pelo canal configurado
+            // Se for nota baixa, enviar notificação pelo canal configurado em segundo plano
             if ($avaliacao->nota <= 3) {
-                $this->notificationService->notifyLowRating($cliente, $avaliacao);
+                \App\Jobs\SendLowRatingNotification::dispatch($cliente, $avaliacao);
             }
 
             return response()->json([
@@ -215,7 +220,7 @@ class AvaliacaoController extends Controller
     public function uploadMedia(Request $request)
     {
         $request->validate([
-            'photo' => 'required|image|max:10240', // 10MB
+            'photo' => 'required|image|mimes:jpeg,jpg,png,webp|max:10240', // 10MB
             'review_token' => 'required|string',
         ]);
 

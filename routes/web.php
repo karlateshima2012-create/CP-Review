@@ -22,8 +22,9 @@ Route::post('/avaliar/{slug}/salvar', [AvaliacaoController::class, 'salvar'])
     ->name('avaliacao.salvar')
     ->middleware('throttle:avaliacoes');
 Route::get('/api/bot-script/{slug}', [AvaliacaoController::class, 'botScript'])->name('api.botScript');
-Route::post('/api/media/upload', [AvaliacaoController::class, 'uploadMedia'])->name('api.mediaUpload');
-
+Route::post('/api/media/upload', [AvaliacaoController::class, 'uploadMedia'])
+    ->name('api.mediaUpload')
+    ->middleware('throttle:avaliacoes');
 // Auth
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
@@ -34,6 +35,8 @@ Route::middleware(['auth'])->prefix('/cliente')->group(function () {
     Route::get('/{cliente}', [ClienteController::class, 'dashboard'])->name('cliente.dashboard');
     Route::post('/{cliente}/perfil', [ClienteController::class, 'updatePerfil'])->name('cliente.perfil.update');
     Route::get('/{cliente}/avaliacoes', [ClienteController::class, 'avaliacoes'])->name('cliente.avaliacoes');
+    Route::get('/{cliente}/conta', [ClienteController::class, 'showConta'])->name('cliente.conta');
+    Route::post('/{cliente}/conta', [ClienteController::class, 'updateConta'])->name('cliente.conta.update');
     Route::post('/avaliacao/{avaliacao}/responder', [ClienteController::class, 'responder']);
     Route::get('/qrcode/{cliente}', [ClienteController::class, 'qrcode']);
     Route::get('/qrcode/{cliente}/download', [ClienteController::class, 'downloadQrCode']);

@@ -1,7 +1,10 @@
 const CACHE_NAME = 'cp-review-cache-v1';
 const ASSETS = [
     '/pwa/offline-queue.js',
-    '/pwa/photo-upload.js'
+    '/pwa/photo-upload.js',
+    '/manifest.json',
+    '/favicon.png',
+    '/logo.png'
 ];
 
 self.addEventListener('install', event => {
@@ -19,10 +22,47 @@ self.addEventListener('fetch', event => {
     // Only cache GET requests
     if (event.request.method !== 'GET') return;
 
-    // Cache bot-scripts API? No, the frontend does it via Redis or we can just let it fetch normally.
-    // For now we just implement simple network-first for GET requests to serve PWA shell
+    const url = new URL(event.request.url);
+
+    // Dynamic Network-First strategy for PWA bot evaluation and script configurations
+    if (url.pathname.startsWith('/avaliar/') || url.pathname.startsWith('/api/bot-script/')) {
+        event.respondWith(
+            fetch(event.request)
+                .then(response => {
+                    if (response.status === 200) {
+                        const responseClone = response.clone();
+                        caches.open(CACHE_NAME).then(cache => {
+                            cache.put(event.request, responseClone);
+                        });
+                    }
+                    return response;
+                })
+                .catch(() => {
+                    return caches.match(event.request);
+                })
+        );
+        return;
+    }
+
+    // Default network-first falling back to cache for other assets
     event.respondWith(
-        fetch(event.request).catch(() => caches.match(event.request))
+        fetch(event.request)
+            .then(response => {
+                // Cache dynamic JS, CSS, and fonts on-the-fly to support complete offline capability
+                if (response.status === 200 && (
+                    url.pathname.endsWith('.css') || 
+                    url.pathname.endsWith('.js') || 
+                    url.pathname.includes('/fonts/') ||
+                    url.pathname.includes('/build/')
+                )) {
+                    const responseClone = response.clone();
+                    caches.open(CACHE_NAME).then(cache => {
+                        cache.put(event.request, responseClone);
+                    });
+                }
+                return response;
+            })
+            .catch(() => caches.match(event.request))
     );
 });
 

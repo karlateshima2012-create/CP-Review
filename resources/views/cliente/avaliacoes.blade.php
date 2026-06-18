@@ -10,6 +10,10 @@
             <div class="flex gap-4 items-center">
                 <a href="{{ route('cliente.dashboard', $cliente->id) }}" class="text-gray-600 hover:text-purple-600">Dashboard</a>
                 <span class="text-gray-400">|</span>
+                <span class="text-gray-900 font-bold">Avaliações</span>
+                <span class="text-gray-400">|</span>
+                <a href="{{ route('cliente.conta', $cliente->id) }}" class="text-gray-600 hover:text-purple-600">Minha Conta</a>
+                <span class="text-gray-400">|</span>
                 <span class="text-gray-600">{{ $cliente->nome_empresa }}</span>
             </div>
         </div>

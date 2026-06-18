@@ -72,8 +72,8 @@ class ClienteController extends Controller
             'resolvido' => true
         ]);
 
-        // Fecha o loop com o cliente informando sobre a resolução
-        $this->notificationService->closeLoop($avaliacao);
+        // Fecha o loop com o cliente informando sobre a resolução em segundo plano
+        \App\Jobs\SendCloseLoopNotification::dispatch($avaliacao);
 
         return redirect()->back()->with('success', 'Ciclo encerrado e cliente notificado!');
     }
@@ -130,5 +130,49 @@ class ClienteController extends Controller
         $cliente->update($validated);
 
         return redirect()->back()->with('success', 'Perfil atualizado com sucesso!');
+    }
+
+    public function showConta(Cliente $cliente)
+    {
+        $this->authorize('view', $cliente);
+
+        return view('cliente.conta', compact('cliente'));
+    }
+
+    public function updateConta(Request $request, Cliente $cliente)
+    {
+        $this->authorize('update', $cliente);
+
+        $validated = $request->validate([
+            'nome_empresa' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $cliente->user_id . ',id',
+            'telefone_whatsapp' => 'nullable|string|max:30',
+            'line_user_id' => 'nullable|string|max:255',
+            'google_maps_link' => 'nullable|url|max:1000',
+            'password' => 'nullable|string|min:8|confirmed',
+        ]);
+
+        // Atualizar Cliente
+        $cliente->update([
+            'nome_empresa' => $validated['nome_empresa'],
+            'email' => $validated['email'],
+            'telefone_whatsapp' => $validated['telefone_whatsapp'] ?? null,
+            'line_user_id' => $validated['line_user_id'] ?? null,
+            'google_maps_link' => $validated['google_maps_link'] ?? null,
+        ]);
+
+        // Atualizar User
+        $userUpdate = [
+            'name' => $validated['nome_empresa'] . " Admin",
+            'email' => $validated['email'],
+        ];
+
+        if (!empty($validated['password'])) {
+            $userUpdate['password'] = \Illuminate\Support\Facades\Hash::make($validated['password']);
+        }
+
+        $cliente->user()->update($userUpdate);
+
+        return redirect()->back()->with('success', 'Dados da conta atualizados com sucesso!');
     }
 }

@@ -7,7 +7,15 @@
     <nav class="bg-white shadow-sm">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <h1 class="text-xl font-bold text-purple-600">CP Review Care</h1>
-            <span class="text-gray-600">{{ $cliente->nome_empresa }}</span>
+            <div class="flex gap-4 items-center">
+                <span class="text-gray-900 font-bold">Dashboard</span>
+                <span class="text-gray-400">|</span>
+                <a href="{{ route('cliente.avaliacoes', $cliente->id) }}" class="text-gray-600 hover:text-purple-600">Avaliações</a>
+                <span class="text-gray-400">|</span>
+                <a href="{{ route('cliente.conta', $cliente->id) }}" class="text-gray-600 hover:text-purple-600">Minha Conta</a>
+                <span class="text-gray-400">|</span>
+                <span class="text-gray-600">{{ $cliente->nome_empresa }}</span>
+            </div>
         </div>
     </nav>
 
