@@ -113,16 +113,16 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             if (Auth::user()->isAdmin()) {
-                return redirect()->intended('/admin');
+                return redirect('/admin');
             }
 
             // Para lojistas, redireciona para o dashboard deles
             $tenantId = Auth::user()->tenant_id;
             if ($tenantId) {
-                return redirect()->intended(route('cliente.dashboard', ['cliente' => $tenantId]));
+                return redirect(route('cliente.dashboard', ['cliente' => $tenantId]));
             }
 
-            return redirect()->intended('/');
+            return redirect('/');
         }
 
         return back()->withErrors([
