@@ -10,11 +10,11 @@ use Illuminate\Support\Facades\Route;
 // Landing Page
 Route::get('/temp-reset-db-9f2bc', function() {
     try {
-        \Illuminate\Support\Facades\Artisan::call('migrate:status');
+        $exitCode = \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
         $output = \Illuminate\Support\Facades\Artisan::output();
-        return response("<pre>Migrations Status:\n" . htmlspecialchars($output) . "</pre>");
+        return response("<pre>Migrate Exit Code: {$exitCode}\nOutput:\n" . htmlspecialchars($output) . "</pre>");
     } catch (\Exception $e) {
-        return response("<pre>Error checking migrations: " . htmlspecialchars($e->getMessage()) . "\n" . htmlspecialchars($e->getTraceAsString()) . "</pre>");
+        return response("<pre>Migration Error: " . htmlspecialchars($e->getMessage()) . "\n" . htmlspecialchars($e->getTraceAsString()) . "</pre>");
     }
 });
 
