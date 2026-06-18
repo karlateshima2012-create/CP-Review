@@ -47,15 +47,35 @@ class ClienteController extends Controller
         ));
     }
 
-    public function avaliacoes(Cliente $cliente)
+    public function avaliacoes(Request $request, Cliente $cliente)
     {
         $this->authorize('view', $cliente);
 
-        $avaliacoes = $cliente->avaliacoes()
-            ->orderBy('created_at', 'desc')
-            ->paginate(20);
+        $query = $cliente->avaliacoes()->where('nota', '<=', 3);
 
-        return view('cliente.avaliacoes', compact('cliente', 'avaliacoes'));
+        $filter = $request->query('filter', 'todas');
+        if ($filter === 'pendentes') {
+            $query->where('resolvido', false);
+        } elseif ($filter === 'resolvidas') {
+            $query->where('resolvido', true);
+        } elseif ($filter === 'com_contato') {
+            $query->where('tipo_contato', '!=', 'nao')->whereNotNull('contato_valor');
+        } elseif ($filter === 'sem_contato') {
+            $query->where(function($q) {
+                $q->where('tipo_contato', 'nao')->orWhereNull('contato_valor');
+            });
+        }
+
+        $avaliacoes = $query->orderBy('created_at', 'desc')->paginate(20);
+
+        // Counts for occurrences tabs
+        $totalNegativas = $cliente->avaliacoes()->where('nota', '<=', 3)->count();
+        $negativasPendentes = $cliente->avaliacoes()->where('nota', '<=', 3)->where('resolvido', false)->count();
+        $negativasResolvidas = $cliente->avaliacoes()->where('nota', '<=', 3)->where('resolvido', true)->count();
+
+        return view('cliente.avaliacoes', compact(
+            'cliente', 'avaliacoes', 'filter', 'totalNegativas', 'negativasPendentes', 'negativasResolvidas'
+        ));
     }
 
     public function responder(Request $request, Avaliacao $avaliacao)
@@ -174,5 +194,19 @@ class ClienteController extends Controller
         $cliente->user()->update($userUpdate);
 
         return redirect()->back()->with('success', 'Dados da conta atualizados com sucesso!');
+    }
+
+    public function showQrCodeLink(Cliente $cliente)
+    {
+        $this->authorize('view', $cliente);
+
+        return view('cliente.qrcode', compact('cliente'));
+    }
+
+    public function showBotSettings(Cliente $cliente)
+    {
+        $this->authorize('view', $cliente);
+
+        return view('cliente.bot', compact('cliente'));
     }
 }
