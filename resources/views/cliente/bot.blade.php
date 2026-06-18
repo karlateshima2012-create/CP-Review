@@ -46,6 +46,10 @@ $stepsList = [
             'q_first_visit' => 'Pergunta: Primeira vez aqui?',
             'first_visit_ack' => 'Reconhecimento da resposta (1ª Visita)',
             'askRate' => 'Reconhecimento / Pergunta de Nota',
+        ],
+        'options' => [
+            'q_first_visit' => ['pt' => ['👍 Sim', '🔄 Já conhecia'], 'ja' => ['👍 はい', '🔄 以前にも来た']],
+            'askRate' => ['pt' => ['⭐', '⭐⭐', '⭐⭐⭐', '⭐⭐⭐⭐', '⭐⭐⭐⭐⭐'], 'ja' => ['⭐', '⭐⭐', '⭐⭐⭐', '⭐⭐⭐⭐', '⭐⭐⭐⭐⭐']],
         ]
     ],
     'positive' => [
@@ -57,6 +61,10 @@ $stepsList = [
             'q_recommend' => 'Pergunta: Recomendaria a um amigo?',
             'recommend_yes' => 'Convite Google (Recomendou)',
             'highFinalMsg' => 'Encerramento Positivo',
+        ],
+        'options' => [
+            'q_period' => ['pt' => ['🌅 Manhã', '🌤️ Tarde', '🌙 Noite'], 'ja' => ['🌅 朝', '🌤️ 昼', '🌙 夜']],
+            'q_recommend' => ['pt' => ['✨ Com certeza!', '👍 Sim', '😶 Não'], 'ja' => ['✨ もちろんです！', '👍 はい', '😶 いいえ']],
         ]
     ],
     'negative' => [
@@ -70,6 +78,12 @@ $stepsList = [
             'photo_ack' => 'Agradecimento após foto',
             'q_contact' => 'Pergunta: Podemos responder sobre isso?',
             'lowFinalMsg' => 'Encerramento Negativo',
+        ],
+        'options' => [
+            'lowRateQ' => ['pt' => ['😕 Atendimento', '⚙️ Serviço/Produto', '🧼 Ambiente', '💸 Preço', '⏱️ Demora', '❗ Outro'], 'ja' => ['😕 接客', '⚙️ サービス/商品', '🧼 环境', '💸 価格', '⏱️ 待ち時間', '❗ その他']],
+            'q_optional_text' => ['pt' => ['📝 Campo de texto', '⏭️ Pular', '👍 Enviar'], 'ja' => ['📝 テキストエリア', '⏭️ スキップ', '👍 送信']],
+            'q_optional_photo' => ['pt' => ['📷 Enviar foto', '⏭️ Pular'], 'ja' => ['📷 写真アップロード', '⏭️ スキップ']],
+            'q_contact' => ['pt' => ['📱 WhatsApp', '📧 E-mail', '❌ Não precisa'], 'ja' => ['💬 LINE', '📧 E-mail', '❌ 必要ない']],
         ]
     ]
 ];
@@ -86,17 +100,23 @@ $stepsList = [
                             <h3 class="text-body-g font-bold text-neutral-primary">{{ $section['title'] }}</h3>
                         </div>
 
-                        <div class="space-y-16">
+                        <div class="space-y-20">
                             @foreach($section['keys'] as $key => $label)
-                                <div class="flex items-end gap-16">
-                                    <div class="flex-1">
-                                        <label class="block text-body-m font-bold text-neutral-secondary mb-4">{{ $label }}</label>
-                                        <input type="text" id="in-pt-{{ $key }}-text" name="messages[pt][{{ $key }}][text]" value="{{ old('messages.pt.'.$key.'.text', $messagesPt[$key]['text'] ?? '') }}" class="w-full border border-neutral-border rounded-lg px-12 py-8 text-body-m focus:ring-2 focus:ring-brand-600 focus:outline-none" required>
+                                <div class="space-y-6">
+                                    <div class="flex items-center gap-12">
+                                        <input type="number" min="1" id="in-pt-{{ $key }}-step" name="messages[pt][{{ $key }}][step]" value="{{ old('messages.pt.'.$key.'.step', $messagesPt[$key]['step'] ?? '') }}" class="w-48 border border-neutral-border rounded-lg py-8 text-body-m text-center font-bold focus:ring-2 focus:ring-brand-600 focus:outline-none" placeholder="Off">
+                                        <span class="text-neutral-secondary font-bold">-</span>
+                                        <input type="text" id="in-pt-{{ $key }}-text" name="messages[pt][{{ $key }}][text]" value="{{ old('messages.pt.'.$key.'.text', $messagesPt[$key]['text'] ?? '') }}" class="flex-1 border border-neutral-border rounded-lg px-12 py-8 text-body-m focus:ring-2 focus:ring-brand-600 focus:outline-none" placeholder="{{ $label }}" required>
                                     </div>
-                                    <div class="w-80">
-                                        <label class="block text-body-m font-bold text-neutral-secondary mb-4 text-center">Etapa</label>
-                                        <input type="number" min="1" id="in-pt-{{ $key }}-step" name="messages[pt][{{ $key }}][step]" value="{{ old('messages.pt.'.$key.'.step', $messagesPt[$key]['step'] ?? '') }}" class="w-full border border-neutral-border rounded-lg px-12 py-8 text-body-m text-center focus:ring-2 focus:ring-brand-600 focus:outline-none" placeholder="Off">
-                                    </div>
+                                    
+                                    @if(isset($section['options'][$key]))
+                                        <div class="pl-60 flex flex-wrap gap-8 items-center">
+                                            <span class="text-[11px] text-neutral-secondary font-bold uppercase tracking-wider">Opções de resposta:</span>
+                                            @foreach($section['options'][$key]['pt'] as $opt)
+                                                <span class="text-legend bg-neutral-bg border border-neutral-border px-8 py-2 rounded text-neutral-secondary font-semibold">{{ $opt }}</span>
+                                            @endforeach
+                                        </div>
+                                    @endif
                                 </div>
                             @endforeach
                         </div>
@@ -115,17 +135,23 @@ $stepsList = [
                             <h3 class="text-body-g font-bold text-neutral-primary">{{ $section['title'] }} (JP)</h3>
                         </div>
 
-                        <div class="space-y-16">
+                        <div class="space-y-20">
                             @foreach($section['keys'] as $key => $label)
-                                <div class="flex items-end gap-16">
-                                    <div class="flex-1">
-                                        <label class="block text-body-m font-bold text-neutral-secondary mb-4">{{ $label }}</label>
-                                        <input type="text" id="in-jp-{{ $key }}-text" name="messages[ja][{{ $key }}][text]" value="{{ old('messages.ja.'.$key.'.text', $messagesJp[$key]['text'] ?? '') }}" class="w-full border border-neutral-border rounded-lg px-12 py-8 text-body-m focus:ring-2 focus:ring-brand-600 focus:outline-none" required>
+                                <div class="space-y-6">
+                                    <div class="flex items-center gap-12">
+                                        <input type="number" min="1" id="in-jp-{{ $key }}-step" name="messages[ja][{{ $key }}][step]" value="{{ old('messages.ja.'.$key.'.step', $messagesJp[$key]['step'] ?? '') }}" class="w-48 border border-neutral-border rounded-lg py-8 text-body-m text-center font-bold focus:ring-2 focus:ring-brand-600 focus:outline-none" placeholder="Off">
+                                        <span class="text-neutral-secondary font-bold">-</span>
+                                        <input type="text" id="in-jp-{{ $key }}-text" name="messages[ja][{{ $key }}][text]" value="{{ old('messages.ja.'.$key.'.text', $messagesJp[$key]['text'] ?? '') }}" class="flex-1 border border-neutral-border rounded-lg px-12 py-8 text-body-m focus:ring-2 focus:ring-brand-600 focus:outline-none" placeholder="{{ $label }}" required>
                                     </div>
-                                    <div class="w-80">
-                                        <label class="block text-body-m font-bold text-neutral-secondary mb-4 text-center">Etapa</label>
-                                        <input type="number" min="1" id="in-jp-{{ $key }}-step" name="messages[ja][{{ $key }}][step]" value="{{ old('messages.ja.'.$key.'.step', $messagesJp[$key]['step'] ?? '') }}" class="w-full border border-neutral-border rounded-lg px-12 py-8 text-body-m text-center focus:ring-2 focus:ring-brand-600 focus:outline-none" placeholder="Off">
-                                    </div>
+                                    
+                                    @if(isset($section['options'][$key]))
+                                        <div class="pl-60 flex flex-wrap gap-8 items-center">
+                                            <span class="text-[11px] text-neutral-secondary font-bold uppercase tracking-wider">返答オプション:</span>
+                                            @foreach($section['options'][$key]['ja'] as $opt)
+                                                <span class="text-legend bg-neutral-bg border border-neutral-border px-8 py-2 rounded text-neutral-secondary font-semibold">{{ $opt }}</span>
+                                            @endforeach
+                                        </div>
+                                    @endif
                                 </div>
                             @endforeach
                         </div>
