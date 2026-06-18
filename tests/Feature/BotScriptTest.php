@@ -47,9 +47,9 @@ class BotScriptTest extends TestCase
         $response = $this->get("/api/bot-script/loja-teste");
 
         $response->assertStatus(200);
-        $response->assertJsonPath('lang.welcome.text', '👋 Obrigado pela visita!');
+        $response->assertJsonPath('lang.welcome.text', 'Como foi sua experiência hoje?');
         $response->assertJsonPath('lang.welcome.step', 1);
-        $response->assertJsonPath('lang.q_first_visit.step', 2);
+        $response->assertJsonPath('lang.q_first_visit.step', null);
     }
 
     public function test_lojista_pode_atualizar_configuracao_do_bot_com_etapa_nula(): void

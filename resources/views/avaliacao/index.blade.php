@@ -519,7 +519,7 @@ async function askFeedbackText() {
     const div = document.createElement('div');
     div.className = 'input-container';
     div.innerHTML = `
-        <textarea id="feedback-area" class="f-input" rows="2" placeholder="Sua opinião..."></textarea>
+        <textarea id="feedback-area" class="f-input" rows="2" placeholder="${botConfig.lang.feedback_placeholder || 'Sua opinião...'}"></textarea>
         <div style="display:flex; gap:10px; margin-top:10px">
             <button class="confirm-btn" style="background:var(--surface2); color:var(--text)" onclick="handleFeedbackSubmit(false)">${botConfig.lang.btn_feedback_no}</button>
             <button class="confirm-btn" onclick="handleFeedbackSubmit(true)">${botConfig.lang.btn_feedback_send}</button>
@@ -636,17 +636,23 @@ async function askRecommend() {
         return;
     }
     await addBotMsg(botConfig.lang.q_recommend.text);
-    const div = document.createElement('div');
-    div.className = 'options-grid';
-    div.innerHTML = `
-        <button class="qr-btn" onclick="handleRecommend('yes')">${botConfig.lang.btn_rec_yes}</button>
-        <button class="qr-btn" onclick="handleRecommend('maybe')">${botConfig.lang.btn_rec_maybe}</button>
-        <button class="qr-btn" onclick="handleRecommend('no')">${botConfig.lang.btn_rec_no}</button>
+    await wait(300);
+
+    const gDiv = document.createElement('div');
+    gDiv.style.padding = '5px 0';
+    gDiv.innerHTML = `
+        <a href="${botConfig.tenant.google_link}" target="_blank" onclick="handleGoogleClick()" class="confirm-btn" style="background:#4285F4; text-decoration:none">
+            ${botConfig.lang.googleBtn || '⭐ Avaliar no Google'}
+        </a>
     `;
-    chat.appendChild(div);
+    chat.appendChild(gDiv);
     scrollChat();
+    await wait(800);
+
+    await finishChat(true, true);
 }
 
+// Legacy compatibility
 window.handleRecommend = async (rec) => {
     if (event && event.target && event.target.closest('.options-grid')) {
         event.target.closest('.options-grid').remove();
@@ -654,19 +660,6 @@ window.handleRecommend = async (rec) => {
     const map = { yes: botConfig.lang.btn_rec_yes, maybe: botConfig.lang.btn_rec_maybe, no: botConfig.lang.btn_rec_no };
     addUserMsg(map[rec]);
     await wait(400);
-
-    let msgConfig = botConfig.lang.recommend_yes;
-    if (rec === 'maybe') msgConfig = botConfig.lang.recommend_maybe;
-    if (rec === 'no') msgConfig = botConfig.lang.recommend_no;
-
-    if (msgConfig && msgConfig.step !== null && msgConfig.step !== '') {
-        const parts = msgConfig.text.split('\n');
-        for (const part of parts) {
-            await addBotMsg(part);
-            await wait(500);
-        }
-    }
-    
     await finishChat(true);
 };
 
@@ -680,67 +673,100 @@ async function askContact() {
     }
     await addBotMsg(botConfig.lang.q_contact.text);
     const div = document.createElement('div');
-    div.className = 'options-grid';
-    
-    if (botConfig.config.locale === 'pt') {
-        div.innerHTML = `
-            <button class="qr-btn" onclick="handleContactChoice('whatsapp')">${botConfig.lang.btn_contact_wa}</button>
-            <button class="qr-btn" onclick="handleContactChoice('email')">${botConfig.lang.btn_contact_email}</button>
-            <button class="qr-btn" onclick="handleContactChoice('no')">${botConfig.lang.btn_contact_no}</button>
-        `;
-    } else {
-        div.innerHTML = `
-            <button class="qr-btn" onclick="handleContactChoice('line')">${botConfig.lang.btn_contact_line}</button>
-            <button class="qr-btn" onclick="handleContactChoice('email')">${botConfig.lang.btn_contact_email}</button>
-            <button class="qr-btn" onclick="handleContactChoice('no')">${botConfig.lang.btn_contact_no}</button>
-        `;
-    }
-    
+    div.className = 'qr-row';
+    div.innerHTML = `
+        <button class="qr-btn" onclick="handleContactStep(true)">${botConfig.lang.btn_contact_yes}</button>
+        <button class="qr-btn" onclick="handleContactStep(false)">${botConfig.lang.btn_contact_no}</button>
+    `;
     chat.appendChild(div);
     scrollChat();
 }
 
-window.handleContactChoice = async (c) => {
-    if (event && event.target && event.target.closest('.options-grid')) {
-        event.target.closest('.options-grid').remove();
+window.handleContactStep = async (wantsContact) => {
+    if (event && event.target && event.target.closest('.qr-row')) {
+        event.target.closest('.qr-row').remove();
     }
-    const map = { 
-        whatsapp: botConfig.lang.btn_contact_wa, 
-        line: botConfig.lang.btn_contact_line, 
-        email: botConfig.lang.btn_contact_email,
-        no: botConfig.lang.btn_contact_no 
-    };
-    addUserMsg(map[c]);
-    
-    if (c === 'no') {
+    addUserMsg(wantsContact ? botConfig.lang.btn_contact_yes : botConfig.lang.btn_contact_no);
+    await wait(400);
+
+    if (!wantsContact) {
         state.contact = '';
+        state.tipo_contato = 'nao';
         await finishChat(false);
     } else {
-        const div = document.createElement('div');
-        div.className = 'input-container';
-        
-        let placeholder = "Seu contato...";
-        if (c === 'email') placeholder = botConfig.config.locale === 'pt' ? "Seu melhor e-mail..." : "メールアドレスを入力してください...";
-        else if (c === 'whatsapp') placeholder = "DDD + Número...";
-        else if (c === 'line') placeholder = "LINE ID...";
-
-        div.innerHTML = `
-            <input type="text" id="contact-val" class="f-input" placeholder="${placeholder}">
-            <button class="confirm-btn" onclick="submitContact('${c}')">${botConfig.lang.btn_send_txt} ➔</button>
-        `;
-        document.querySelector('.phone').appendChild(div);
-        scrollChat();
+        await askContactChannel();
     }
 };
 
-window.submitContact = async (c) => {
+async function askContactChannel() {
+    const div = document.createElement('div');
+    div.className = 'options-grid';
+    if (botConfig.config.locale === 'pt') {
+        div.innerHTML = `
+            <button class="qr-btn" onclick="handleContactChannel('whatsapp')">${botConfig.lang.btn_choose_wa}</button>
+            <button class="qr-btn" onclick="handleContactChannel('email')">${botConfig.lang.btn_choose_email}</button>
+        `;
+    } else {
+        div.innerHTML = `
+            <button class="qr-btn" onclick="handleContactChannel('line')">${botConfig.lang.btn_choose_line}</button>
+            <button class="qr-btn" onclick="handleContactChannel('email')">${botConfig.lang.btn_choose_email}</button>
+        `;
+    }
+    chat.appendChild(div);
+    scrollChat();
+}
+
+window.handleContactChannel = async (channel) => {
+    if (event && event.target && event.target.closest('.options-grid')) {
+        event.target.closest('.options-grid').remove();
+    }
+    const labelMap = {
+        whatsapp: botConfig.lang.btn_choose_wa,
+        line: botConfig.lang.btn_choose_line,
+        email: botConfig.lang.btn_choose_email
+    };
+    addUserMsg(labelMap[channel]);
+    await wait(400);
+
+    const div = document.createElement('div');
+    div.className = 'input-container';
+    
+    let placeholder = "Seu contato...";
+    if (channel === 'email') {
+        placeholder = botConfig.config.locale === 'pt' ? "Seu melhor e-mail..." : "メールアドレスを入力してください...";
+    } else if (channel === 'whatsapp') {
+        placeholder = "DDD + Número...";
+    } else if (channel === 'line') {
+        placeholder = "LINE ID...";
+    }
+
+    div.innerHTML = `
+        <input type="text" id="contact-val" class="f-input" placeholder="${placeholder}">
+        <button class="confirm-btn" onclick="submitContact('${channel}')">${botConfig.lang.btn_send_txt} ➔</button>
+    `;
+    document.querySelector('.phone').appendChild(div);
+    scrollChat();
+};
+
+window.submitContact = async (channel) => {
     state.contact = document.getElementById('contact-val').value;
+    state.tipo_contato = channel;
     if (document.querySelector('.input-container')) {
         document.querySelector('.input-container').remove();
     }
     addUserMsg(state.contact || 'Ok');
     await wait(300);
     await finishChat(false);
+};
+
+// Legacy compatibility
+window.handleContactChoice = async (c) => {
+    if (c === 'no') {
+        await handleContactStep(false);
+    } else {
+        await handleContactStep(true);
+        await handleContactChannel(c);
+    }
 };
 
 // ==========================================
@@ -772,13 +798,13 @@ window.handleGoogleClick = () => {
 };
 
 let isSubmitting = false;
-async function finishChat(isPos) {
+async function finishChat(isPos, googleBtnShown = false) {
     if(isSubmitting) return;
     isSubmitting = true;
 
     submitEvaluation().catch(e => console.error(e));
 
-    if (isPos) {
+    if (isPos && !googleBtnShown) {
         await showGoogleBtn(null, true);
         await wait(800);
     }
@@ -810,7 +836,7 @@ async function submitEvaluation() {
         nota: state.rating,
         feedback: state.feedback,
         problema: state.problem || state.aspect,
-        tipo_contato: state.contact ? 'whatsapp' : 'nao', // Simplificado
+        tipo_contato: state.tipo_contato || (state.contact ? 'whatsapp' : 'nao'),
         contato_valor: state.contact,
         nome_cliente: state.nome_cliente || 'Anônimo',
         primeira_visita: state.first_visit,

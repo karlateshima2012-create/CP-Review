@@ -80,10 +80,10 @@ $stepsList = [
             'lowFinalMsg' => 'Encerramento Negativo',
         ],
         'options' => [
-            'lowRateQ' => ['pt' => ['😕 Atendimento', '⚙️ Serviço/Produto', '🧼 Ambiente', '💸 Preço', '⏱️ Demora', '❗ Outro'], 'ja' => ['😕 接客', '⚙️ サービス/商品', '🧼 环境', '💸 価格', '⏱️ 待ち時間', '❗ その他']],
+            'lowRateQ' => ['pt' => ['😕 Atendimento', '⚙️ Produto ou Serviço', '💸 Preço', '⏱️ Demora', '❗ Outro'], 'ja' => ['😕 接客', '⚙️ 商品またはサービス', '💸 価格', '⏱️ 待ち時間', '❗ その他']],
             'q_optional_text' => ['pt' => ['📝 Campo de texto', '⏭️ Pular', '👍 Enviar'], 'ja' => ['📝 テキストエリア', '⏭️ スキップ', '👍 送信']],
             'q_optional_photo' => ['pt' => ['📷 Enviar foto', '⏭️ Pular'], 'ja' => ['📷 写真アップロード', '⏭️ スキップ']],
-            'q_contact' => ['pt' => ['📱 WhatsApp', '📧 E-mail', '❌ Não precisa'], 'ja' => ['💬 LINE', '📧 E-mail', '❌ 必要ない']],
+            'q_contact' => ['pt' => ['📱 Sim', '❌ Não', '📱 WhatsApp', '📧 E-mail'], 'ja' => ['📱 はい', '❌ いいえ', '💬 LINE', '📧 E-mail']],
         ]
     ]
 ];

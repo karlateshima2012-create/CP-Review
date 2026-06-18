@@ -67,7 +67,7 @@ class AvaliacaoController extends Controller
             'nota' => 'required|integer|min:1|max:5',
             'feedback' => 'nullable|string',
             'problema' => 'nullable|string',
-            'tipo_contato' => 'nullable|in:whatsapp,line,nao',
+            'tipo_contato' => 'nullable|in:whatsapp,line,email,nao',
             'contato_valor' => 'nullable|string',
             'nome_cliente' => 'nullable|string|max:255',
             'primeira_visita' => 'nullable|boolean',
@@ -126,15 +126,21 @@ class AvaliacaoController extends Controller
                 'btn_rec_yes' => "✨ もちろんです！",
                 'btn_rec_maybe' => "👍 はい",
                 'btn_rec_no' => "😶 いいえ",
+                'btn_contact_yes' => "📱 はい",
+                'btn_contact_no' => "❌ いいえ",
+                'btn_choose_line' => "💬 LINE",
+                'btn_choose_email' => "📧 メールアドレス",
                 'btn_contact_line' => "💬 LINE",
                 'btn_contact_email' => "📧 E-mail",
                 'btn_contact_no' => "❌ 必要ない",
                 'btn_skip' => "⏭️ スキップ",
-                'btn_send' => "📷 送信する",
+                'btn_send' => "📸 送信する",
                 'btn_send_txt' => "送信",
-                'btn_feedback_no' => "⏭️ いいえ",
-                'btn_feedback_send' => "👍 送信",
-                'optionsLow' => ['😕 接客', '⚙️ サービス/商品', '🧼 環境', '💸 価格', '⏱️ 待ち時間', '❗ その他']
+                'btn_feedback_no' => "スキップ",
+                'btn_feedback_send' => "送信",
+                'feedback_placeholder' => "✍️ メッセージを入力してください...",
+                'googleBtn' => "⭐ Googleで評価する",
+                'optionsLow' => ['😕 接客', '⚙️ 商品またはサービス', '💸 価格', '⏱️ 待ち時間', '❗ その他']
             ];
         }
 
@@ -147,15 +153,21 @@ class AvaliacaoController extends Controller
             'btn_rec_yes' => "✨ Com certeza!",
             'btn_rec_maybe' => "👍 Sim",
             'btn_rec_no' => "😶 Não",
+            'btn_contact_yes' => "📱 Sim",
+            'btn_contact_no' => "❌ Não",
+            'btn_choose_wa' => "📱 Informar WhatsApp",
+            'btn_choose_email' => "📧 Informar E-mail",
             'btn_contact_wa' => "📱 WhatsApp",
             'btn_contact_email' => "📧 E-mail",
             'btn_contact_no' => "❌ Não precisa",
             'btn_skip' => "⏭️ Pular",
-            'btn_send' => "📷 Enviar",
+            'btn_send' => "📸 Enviar",
             'btn_send_txt' => "Enviar",
-            'btn_feedback_no' => "⏭️ Não",
-            'btn_feedback_send' => "👍 Enviar",
-            'optionsLow' => ['😕 Atendimento', '⚙️ Serviço/Produto', '🧼 Ambiente', '💸 Preço', '⏱️ Demora', '❗ Outro']
+            'btn_feedback_no' => "Pular",
+            'btn_feedback_send' => "Enviar",
+            'feedback_placeholder' => "✍️ Digite sua mensagem...",
+            'googleBtn' => "⭐ Avaliar no Google",
+            'optionsLow' => ['😕 Atendimento', '⚙️ Produto ou Serviço', '💸 Preço', '⏱️ Demora', '❗ Outro']
         ];
     }
 

@@ -220,6 +220,8 @@
                                 📱 WhatsApp
                             @elseif($avaliacao->tipo_contato == 'line')
                                 💬 LINE
+                            @elseif($avaliacao->tipo_contato == 'email')
+                                📧 E-mail
                             @else
                                 ❌ Não
                             @endif
