@@ -48,7 +48,7 @@ class Cliente extends Model
 
     public function getUrlAvaliacaoAttribute(): string
     {
-        return url("/avaliacao/{$this->slug}");
+        return route('avaliacao.show', ['slug' => $this->slug]);
     }
 
     public function getQrCodeUrlAttribute(): string
