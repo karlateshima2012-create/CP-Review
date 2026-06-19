@@ -214,8 +214,16 @@ class ClienteController extends Controller
             'telefone_whatsapp' => 'nullable|string|max:30',
             'line_user_id' => 'nullable|string|max:255',
             'google_maps_link' => 'nullable|url|max:1000',
+            'current_password' => 'required_with:password|nullable|string',
             'password' => 'nullable|string|min:8|confirmed',
         ]);
+
+        if (!empty($validated['password'])) {
+            $user = $cliente->user;
+            if (!\Illuminate\Support\Facades\Hash::check($validated['current_password'], $user->password)) {
+                return back()->withErrors(['current_password' => 'A senha atual está incorreta.'])->withInput();
+            }
+        }
 
         // Atualizar Cliente
         $cliente->update([
