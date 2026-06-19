@@ -21,13 +21,13 @@ Route::get('/avaliar/{slug}', [AvaliacaoController::class, 'show'])->name('avali
 Route::post('/avaliar/{slug}/salvar', [AvaliacaoController::class, 'salvar'])
     ->name('avaliacao.salvar')
     ->middleware('throttle:avaliacoes');
-Route::get('/api/bot-script/{slug}', [AvaliacaoController::class, 'botScript'])->name('api.botScript');
+Route::get('/api/bot-script/{slug}', [AvaliacaoController::class, 'botScript'])->name('api.botScript')->middleware('throttle:60,1');
 Route::post('/api/media/upload', [AvaliacaoController::class, 'uploadMedia'])
     ->name('api.mediaUpload')
     ->middleware('throttle:avaliacoes');
 // Auth
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Painel do Cliente (Protegido por login)
@@ -51,8 +51,8 @@ Route::prefix('/admin')->middleware(['auth', 'admin.auth'])->group(function () {
     Route::get('/clientes/create', [AdminController::class, 'createCliente'])->name('admin.clientes.create');
     Route::post('/clientes/store', [AdminController::class, 'storeCliente'])->name('admin.clientes.store');
     Route::get('/clientes/export', [AdminController::class, 'exportClientes'])->name('admin.clientes.export');
-    Route::get('/clientes/{cliente}/impersonate', [AdminController::class, 'impersonate'])->name('admin.clientes.impersonate');
-    Route::get('/stop-impersonation', [AdminController::class, 'stopImpersonation'])->name('admin.stop-impersonation');
+    Route::post('/clientes/{cliente}/impersonate', [AdminController::class, 'impersonate'])->name('admin.clientes.impersonate');
+    Route::post('/stop-impersonation', [AdminController::class, 'stopImpersonation'])->name('admin.stop-impersonation');
     
     Route::get('/clientes/{cliente}/edit', [AdminController::class, 'editCliente'])->name('admin.clientes.edit');
     Route::post('/clientes/{cliente}/update', [AdminController::class, 'updateCliente'])->name('admin.clientes.update');

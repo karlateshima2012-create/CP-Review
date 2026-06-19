@@ -115,22 +115,31 @@ class ClienteController extends Controller
 
     public function responder(Request $request, Avaliacao $avaliacao)
     {
-        $this->authorize('update', $avaliacao->cliente);
-        
+        $this->authorize('update', $avaliacao->tenant);
+
         $request->validate([
-            'resposta' => 'nullable|string|max:1000'
+            'resposta' => 'nullable|string|max:1000',
+            'reabrir'  => 'nullable|boolean',
         ]);
+
+        if ($request->boolean('reabrir')) {
+            $avaliacao->update([
+                'resolvido'     => false,
+                'resposta_dono' => null,
+                'respondida_em' => null,
+            ]);
+            return response()->json(['success' => true, 'acao' => 'reaberta']);
+        }
 
         $avaliacao->update([
-            'resposta_dono' => $request->resposta,
+            'resposta_dono' => $request->input('resposta'),
             'respondida_em' => now(),
-            'resolvido' => true
+            'resolvido'     => true,
         ]);
 
-        // Fecha o loop com o cliente informando sobre a resolução em segundo plano
         \App\Jobs\SendCloseLoopNotification::dispatch($avaliacao);
 
-        return redirect()->back()->with('success', 'Ciclo encerrado e cliente notificado!');
+        return response()->json(['success' => true, 'acao' => 'resolvida']);
     }
 
     public function qrcode(Cliente $cliente)

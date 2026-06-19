@@ -38,6 +38,6 @@ class User extends Authenticatable
 
     public function isAdmin(): bool
     {
-        return $this->role === 'super_admin' || $this->email === 'admin@cpreview.com';
+        return $this->role === 'super_admin';
     }
 }

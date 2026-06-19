@@ -34,10 +34,10 @@
 </div>
 
 <!-- Occurrences List -->
-<div class="space-y-16">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
     @forelse($avaliacoes as $avaliacao)
-        <div class="card overflow-hidden">
-            <div class="p-24">
+        <div class="card overflow-hidden flex flex-col">
+            <div class="p-24 flex flex-col flex-1">
                 <!-- Header Card Info -->
                 <div class="flex justify-between items-start mb-16">
                     <!-- Stars & Problem tag -->
@@ -102,16 +102,26 @@
 
                 <!-- Internal Note / Actions Box -->
                 @if($avaliacao->resolvido)
-                    <div class="mt-12 bg-emerald-50 border border-emerald-200 rounded-lg p-16">
-                        <h4 class="text-body-m font-bold text-emerald-800 mb-4">Anotação Interna</h4>
-                        <p class="text-body-m text-emerald-700">{{ $avaliacao->resposta_dono ?: 'Resolvido sem anotação.' }}</p>
+                    <div class="mt-auto pt-12 bg-emerald-50 border border-emerald-200 rounded-lg p-16">
+                        <div class="flex justify-between items-start gap-12">
+                            <div class="flex-1">
+                                <h4 class="text-body-m font-bold text-emerald-800 mb-4">Anotação Interna</h4>
+                                <p class="text-body-m text-emerald-700">{{ $avaliacao->resposta_dono ?: 'Resolvido sem anotação.' }}</p>
+                                @if($avaliacao->respondida_em)
+                                    <p class="text-legend text-emerald-600 mt-8">Resolvido em {{ $avaliacao->respondida_em->format('d/m/Y \à\s H:i') }}</p>
+                                @endif
+                            </div>
+                            <button onclick="reabrirOcorrencia('{{ $avaliacao->id }}')" class="text-legend text-neutral-secondary hover:text-red-600 border border-neutral-border hover:border-red-300 px-12 py-6 rounded-lg transition whitespace-nowrap">
+                                Reabrir
+                            </button>
+                        </div>
                     </div>
                 @else
-                    <div class="mt-16 flex gap-12 border-t border-neutral-border pt-16">
-                        <button onclick="abrirResolverModal({{ $avaliacao->id }})" class="border border-brand-600 text-brand-600 hover:bg-brand-50 px-16 py-8 rounded-lg text-body-m font-bold transition flex items-center gap-4">
+                    <div class="mt-auto flex gap-12 border-t border-neutral-border pt-16">
+                        <button onclick="abrirResolverModal('{{ $avaliacao->id }}')" class="border border-brand-600 text-brand-600 hover:bg-brand-50 px-16 py-8 rounded-lg text-body-m font-bold transition flex items-center gap-4">
                             Anotação interna
                         </button>
-                        <button onclick="marcarResolvidoDireto({{ $avaliacao->id }})" class="bg-success-base text-white hover:bg-success-dark px-16 py-8 rounded-lg text-body-m font-bold transition flex items-center gap-4">
+                        <button onclick="marcarResolvidoDireto('{{ $avaliacao->id }}')" class="bg-success-base text-white hover:bg-success-dark px-16 py-8 rounded-lg text-body-m font-bold transition flex items-center gap-4">
                             <svg class="w-16 h-16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"></path></svg>
                             Marcar resolvido
                         </button>
@@ -120,7 +130,7 @@
             </div>
         </div>
     @empty
-        <div class="card p-48 text-center text-neutral-secondary">
+        <div class="card p-48 text-center text-neutral-secondary lg:col-span-2">
             Nenhuma ocorrência encontrada para este filtro.
         </div>
     @endforelse
@@ -153,6 +163,21 @@
 </div>
 
 <script>
+    const CSRF = '{{ csrf_token() }}';
+
+    async function chamarResponder(id, body) {
+        const res = await fetch(`/cliente/avaliacao/${id}/responder`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF },
+            body: JSON.stringify(body),
+        });
+        if (res.ok) {
+            location.reload();
+        } else {
+            alert('Ocorreu um erro. Tente novamente.');
+        }
+    }
+
     function abrirResolverModal(id) {
         document.getElementById('modal_avaliacao_id').value = id;
         document.getElementById('modal_anotacao').value = '';
@@ -165,38 +190,21 @@
         document.getElementById('resolverModal').classList.remove('flex');
     }
 
-    async function marcarResolvidoDireto(id) {
-        const response = await fetch(`/cliente/avaliacao/${id}/responder`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({ resposta: 'Resolvido diretamente pelo painel.' })
-        });
-        
-        if (response.ok) {
-            location.reload();
-        }
+    function marcarResolvidoDireto(id) {
+        chamarResponder(id, { resposta: null });
     }
 
-    document.getElementById('resolverForm').addEventListener('submit', async (e) => {
+    function reabrirOcorrencia(id) {
+        if (!confirm('Reabrir esta ocorrência?')) return;
+        chamarResponder(id, { reabrir: true });
+    }
+
+    document.getElementById('resolverForm').addEventListener('submit', (e) => {
         e.preventDefault();
         const id = document.getElementById('modal_avaliacao_id').value;
-        const resposta = document.getElementById('modal_anotacao').value;
-        
-        const response = await fetch(`/cliente/avaliacao/${id}/responder`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({ resposta })
-        });
-        
-        if (response.ok) {
-            location.reload();
-        }
+        const resposta = document.getElementById('modal_anotacao').value.trim();
+        fecharResolverModal();
+        chamarResponder(id, { resposta });
     });
 </script>
 @endsection

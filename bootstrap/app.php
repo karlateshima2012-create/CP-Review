@@ -18,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         
         $middleware->appendToGroup('web', [
             \App\Http\Middleware\TenantMiddleware::class,
+            \App\Http\Middleware\SecurityHeadersMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
@@ -40,8 +41,8 @@ return Application::configure(basePath: dirname(__DIR__))
             }
 
             try {
-                $botToken = env('TELEGRAM_BOT_TOKEN');
-                $chatId = env('TELEGRAM_CHAT_ID');
+                $botToken = config('services.telegram.bot_token');
+                $chatId = config('services.telegram.chat_id');
 
                 if ($botToken && $chatId) {
                     $url = "https://api.telegram.org/bot{$botToken}/sendMessage";
@@ -66,8 +67,7 @@ return Application::configure(basePath: dirname(__DIR__))
                     $message .= "💥 <b>Impacto Estimado:</b>\n" . $impacto . "\n\n";
                     $message .= "<b>Mensagem:</b> <code>" . htmlspecialchars($e->getMessage()) . "</code>\n";
                     $message .= "<b>Arquivo:</b> <code>" . htmlspecialchars($e->getFile()) . ":" . $e->getLine() . "</code>\n";
-                    $message .= "<b>URL:</b> <code>" . request()->fullUrl() . "</code>\n";
-                    $message .= "<b>IP Cliente:</b> <code>" . request()->ip() . "</code>\n";
+                    $message .= "<b>URL:</b> <code>" . htmlspecialchars(request()->url()) . "</code>\n";
 
                     $ch = curl_init();
                     curl_setopt($ch, CURLOPT_URL, $url);

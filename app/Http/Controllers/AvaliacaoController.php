@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Cliente;
 use App\Models\Avaliacao;
-use App\Models\User;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -23,36 +22,6 @@ class AvaliacaoController extends Controller
     public function show($slug)
     {
         $cliente = Cliente::where('slug', $slug)->first();
-
-        // Fallback Emergencial para garantir que a CREATIVE PRINT sempre funcione no teste
-        if (!$cliente && $slug === 'creative-print') {
-            $user = User::firstOrCreate(
-                ['email' => 'admin@cpreview.com'],
-                ['name' => 'Admin CP Review', 'password' => \Illuminate\Support\Facades\Hash::make('admin123')]
-            );
-
-            $data = [
-                'user_id' => $user->id,
-                'nome_empresa' => 'CREATIVE PRINT',
-                'email' => 'contato@creativeprint.com',
-                'slug' => 'creative-print',
-                'telefone_whatsapp' => '09011886491',
-                'plano' => 'elite',
-                'ativo' => true,
-                'data_ativacao' => now(),
-            ];
-
-            if (\Schema::hasColumn('clientes', 'google_maps_link')) {
-                $data['google_maps_link'] = 'https://g.page/r/CT0IMW6LPFnnEBM/review';
-            }
-
-            $cliente = Cliente::create($data);
-        }
-
-        // Força a atualização do número se já existir (para garantir o teste da usuária)
-        if ($cliente && $slug === 'creative-print' && $cliente->telefone_whatsapp !== '09011886491') {
-            $cliente->update(['telefone_whatsapp' => '09011886491']);
-        }
 
         if (!$cliente) abort(404);
 
