@@ -117,15 +117,15 @@
                                     </svg>
                                 </a>
                                 <!-- Delete -->
-                                <form action="{{ route('admin.clientes.destroy', $cliente->id) }}" method="POST" onsubmit="return confirm('ATENÇÃO: Isso apagará TODOS os dados deste lojista. Confirmar?')" class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="p-2 bg-gray-100 hover:bg-red-100 hover:text-red-700 rounded-lg transition flex items-center justify-center text-gray-500">
-                                        <svg class="w-16 h-16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                                        </svg>
-                                    </button>
-                                </form>
+                                <button
+                                    type="button"
+                                    onclick="openDeleteModal('{{ route('admin.clientes.destroy', $cliente->id) }}', '{{ addslashes($cliente->nome_empresa) }}')"
+                                    class="p-2 bg-gray-100 hover:bg-red-100 hover:text-red-700 rounded-lg transition flex items-center justify-center text-gray-500"
+                                    title="Excluir cliente">
+                                    <svg class="w-16 h-16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                    </svg>
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -144,4 +144,83 @@
         </div>
     </div>
 </div>
+<!-- Modal de confirmação de exclusão -->
+<div id="delete-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm hidden" aria-modal="true" role="dialog">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
+        <div class="bg-red-600 px-6 py-5 flex items-center gap-3">
+            <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/>
+                </svg>
+            </div>
+            <div>
+                <h3 class="text-white font-bold text-base">Excluir cliente permanentemente</h3>
+                <p class="text-red-100 text-xs mt-0.5">Esta ação não pode ser desfeita</p>
+            </div>
+        </div>
+
+        <div class="px-6 py-5 space-y-4">
+            <p class="text-sm text-gray-600 leading-relaxed">
+                Você está prestes a excluir <span id="modal-nome" class="font-bold text-gray-900"></span> e todos os seus dados — avaliações, configurações e histórico serão apagados para sempre.
+            </p>
+
+            <div class="bg-red-50 border border-red-200 rounded-xl px-4 py-3">
+                <p class="text-xs font-bold text-red-700 mb-2">Para confirmar, digite <span class="font-mono bg-red-100 px-1.5 py-0.5 rounded">excluir</span> abaixo:</p>
+                <input
+                    id="delete-confirm-input"
+                    type="text"
+                    autocomplete="off"
+                    placeholder="excluir"
+                    oninput="onDeleteInput(this)"
+                    class="w-full border border-red-300 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-red-400 placeholder-red-300"
+                >
+            </div>
+
+            <form id="delete-form" method="POST">
+                @csrf
+                @method('DELETE')
+                <div class="flex gap-3 pt-1">
+                    <button type="button" onclick="closeDeleteModal()" class="flex-1 border border-gray-200 text-gray-600 font-bold py-2.5 rounded-xl text-sm hover:bg-gray-50 transition">
+                        Cancelar
+                    </button>
+                    <button
+                        id="delete-confirm-btn"
+                        type="submit"
+                        disabled
+                        class="flex-1 bg-red-600 text-white font-bold py-2.5 rounded-xl text-sm transition disabled:opacity-40 disabled:cursor-not-allowed hover:bg-red-700 enabled:hover:bg-red-700">
+                        Excluir permanentemente
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function openDeleteModal(action, nome) {
+    document.getElementById('delete-form').action = action;
+    document.getElementById('modal-nome').textContent = nome;
+    document.getElementById('delete-confirm-input').value = '';
+    document.getElementById('delete-confirm-btn').disabled = true;
+    document.getElementById('delete-modal').classList.remove('hidden');
+    document.getElementById('delete-confirm-input').focus();
+}
+
+function closeDeleteModal() {
+    document.getElementById('delete-modal').classList.add('hidden');
+}
+
+function onDeleteInput(input) {
+    document.getElementById('delete-confirm-btn').disabled = input.value !== 'excluir';
+}
+
+document.getElementById('delete-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeDeleteModal();
+});
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeDeleteModal();
+});
+</script>
+
 @endsection
