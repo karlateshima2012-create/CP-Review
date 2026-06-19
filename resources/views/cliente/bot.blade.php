@@ -245,7 +245,7 @@
                         <div class="space-y-8 flex flex-col h-full">
                             <label class="block text-body-m font-bold text-neutral-secondary">Logotipo da Empresa</label>
                             <input type="file" id="logo-file-input" name="logo" accept="image/jpeg,image/png,image/webp" class="hidden">
-                            <div onclick="document.getElementById('logo-file-input').click()" class="flex-1 group cursor-pointer border-2 border-dashed border-neutral-border hover:border-brand-500 bg-neutral-bg/30 hover:bg-brand-50/10 rounded-xl p-16 flex items-center gap-16 transition-all duration-200 shadow-sm">
+                            <div onclick="document.getElementById('logo-file-input').click()" class="flex-1 group cursor-pointer border border-neutral-border hover:border-brand-500 bg-neutral-bg/30 hover:bg-brand-50/10 rounded-xl p-16 flex items-center gap-16 transition-all duration-200 shadow-sm">
                                 <div class="w-64 h-64 border border-neutral-border rounded-lg flex items-center justify-center bg-white overflow-hidden shadow-inner flex-shrink-0" id="logo-preview-box">
                                     @if($cliente->logo_path)
                                         <img src="{{ asset('storage/' . $cliente->logo_path) }}" alt="Logo" class="w-full h-full object-contain">
@@ -253,38 +253,38 @@
                                         <span class="text-title-2" id="logo-preview-emoji">🏢</span>
                                     @endif
                                 </div>
-                                <div class="flex-1 text-left min-w-0">
-                                    <span class="text-body-m font-bold text-neutral-primary group-hover:text-brand-600 transition flex items-center gap-8">
-                                        <svg class="w-16 h-16 text-neutral-secondary group-hover:text-brand-600 transition-colors" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"/>
-                                        </svg>
+                                <div class="flex-1 text-left min-w-0 flex flex-col gap-4">
+                                    <svg class="w-16 h-16 text-neutral-secondary group-hover:text-brand-600 transition-colors" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"/>
+                                    </svg>
+                                    <span class="text-body-m font-bold text-neutral-primary group-hover:text-brand-600 transition">
                                         {{ $cliente->logo_path ? 'Substituir Logotipo' : 'Enviar Logotipo' }}
                                     </span>
-                                    <p class="text-[10px] text-neutral-secondary/60 mt-4">PNG, JPG ou WEBP. Quadrada (máx. 2MB)</p>
                                 </div>
                             </div>
+                            <p class="text-[10px] text-neutral-secondary/60 mt-4">PNG, JPG ou WEBP. Quadrada (máx. 2MB)</p>
                         </div>
 
                         <!-- Cover Upload -->
                         <div class="space-y-8 flex flex-col h-full">
                             <label class="block text-body-m font-bold text-neutral-secondary">Banner de Capa</label>
                             <input type="file" id="cover-file-input" name="cover" accept="image/jpeg,image/png,image/webp" class="hidden">
-                            <div onclick="document.getElementById('cover-file-input').click()" class="flex-1 group cursor-pointer border-2 border-dashed border-neutral-border hover:border-brand-500 bg-neutral-bg/30 hover:bg-brand-50/10 rounded-xl p-16 flex items-center gap-16 transition-all duration-200 shadow-sm">
+                            <div onclick="document.getElementById('cover-file-input').click()" class="flex-1 group cursor-pointer border border-neutral-border hover:border-brand-500 bg-neutral-bg/30 hover:bg-brand-50/10 rounded-xl p-16 flex items-center gap-16 transition-all duration-200 shadow-sm">
                                 <div class="w-[96px] h-64 border border-neutral-border rounded-lg flex items-center justify-center bg-white overflow-hidden shadow-inner flex-shrink-0 bg-cover bg-center" id="cover-preview-box" style="{{ $cliente->cover_path ? 'background-image: url(' . asset('storage/' . $cliente->cover_path) . ')' : '' }}">
                                     @if(!$cliente->cover_path)
                                         <span class="text-legend text-neutral-secondary/40 font-bold" id="cover-preview-text">Sem Capa</span>
                                     @endif
                                 </div>
-                                <div class="flex-1 text-left min-w-0">
-                                    <span class="text-body-m font-bold text-neutral-primary group-hover:text-brand-600 transition flex items-center gap-8">
-                                        <svg class="w-16 h-16 text-neutral-secondary group-hover:text-brand-600 transition-colors" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"/>
-                                        </svg>
+                                <div class="flex-1 text-left min-w-0 flex flex-col gap-4">
+                                    <svg class="w-16 h-16 text-neutral-secondary group-hover:text-brand-600 transition-colors" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"/>
+                                    </svg>
+                                    <span class="text-body-m font-bold text-neutral-primary group-hover:text-brand-600 transition">
                                         {{ $cliente->cover_path ? 'Substituir Banner' : 'Enviar Banner' }}
                                     </span>
-                                    <p class="text-[10px] text-neutral-secondary/60 mt-4">PNG, JPG ou WEBP. Retangular (máx. 5MB)</p>
                                 </div>
                             </div>
+                            <p class="text-[10px] text-neutral-secondary/60 mt-4">PNG, JPG ou WEBP. Retangular (máx. 5MB)</p>
                         </div>
                     </div>
 
