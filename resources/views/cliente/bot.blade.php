@@ -242,10 +242,10 @@
                     <!-- File Uploads (Logo & Cover) -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-24">
                         <!-- Logo Upload -->
-                        <div class="space-y-8">
+                        <div class="space-y-8 flex flex-col h-full">
                             <label class="block text-body-m font-bold text-neutral-secondary">Logotipo da Empresa</label>
                             <input type="file" id="logo-file-input" name="logo" accept="image/jpeg,image/png,image/webp" class="hidden">
-                            <div onclick="document.getElementById('logo-file-input').click()" class="group cursor-pointer border-2 border-dashed border-neutral-border hover:border-brand-500 bg-neutral-bg/30 hover:bg-brand-50/10 rounded-xl p-16 flex items-center gap-16 transition-all duration-200 shadow-sm">
+                            <div onclick="document.getElementById('logo-file-input').click()" class="flex-1 group cursor-pointer border-2 border-dashed border-neutral-border hover:border-brand-500 bg-neutral-bg/30 hover:bg-brand-50/10 rounded-xl p-16 flex items-center gap-16 transition-all duration-200 shadow-sm">
                                 <div class="w-64 h-64 border border-neutral-border rounded-lg flex items-center justify-center bg-white overflow-hidden shadow-inner flex-shrink-0" id="logo-preview-box">
                                     @if($cliente->logo_path)
                                         <img src="{{ asset('storage/' . $cliente->logo_path) }}" alt="Logo" class="w-full h-full object-contain">
@@ -266,10 +266,10 @@
                         </div>
 
                         <!-- Cover Upload -->
-                        <div class="space-y-8">
+                        <div class="space-y-8 flex flex-col h-full">
                             <label class="block text-body-m font-bold text-neutral-secondary">Banner de Capa</label>
                             <input type="file" id="cover-file-input" name="cover" accept="image/jpeg,image/png,image/webp" class="hidden">
-                            <div onclick="document.getElementById('cover-file-input').click()" class="group cursor-pointer border-2 border-dashed border-neutral-border hover:border-brand-500 bg-neutral-bg/30 hover:bg-brand-50/10 rounded-xl p-16 flex items-center gap-16 transition-all duration-200 shadow-sm">
+                            <div onclick="document.getElementById('cover-file-input').click()" class="flex-1 group cursor-pointer border-2 border-dashed border-neutral-border hover:border-brand-500 bg-neutral-bg/30 hover:bg-brand-50/10 rounded-xl p-16 flex items-center gap-16 transition-all duration-200 shadow-sm">
                                 <div class="w-[96px] h-64 border border-neutral-border rounded-lg flex items-center justify-center bg-white overflow-hidden shadow-inner flex-shrink-0 bg-cover bg-center" id="cover-preview-box" style="{{ $cliente->cover_path ? 'background-image: url(' . asset('storage/' . $cliente->cover_path) . ')' : '' }}">
                                     @if(!$cliente->cover_path)
                                         <span class="text-legend text-neutral-secondary/40 font-bold" id="cover-preview-text">Sem Capa</span>
