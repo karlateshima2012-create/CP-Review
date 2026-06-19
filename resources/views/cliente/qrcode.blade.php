@@ -20,9 +20,12 @@
         <!-- Evaluation link display -->
         <div class="bg-neutral-bg border border-neutral-border rounded-lg px-16 py-12 mb-24 w-full text-center">
             <span class="text-legend text-neutral-secondary font-bold uppercase tracking-wider block mb-4">Link de avaliação</span>
-            <a href="{{ route('avaliacao.show', $cliente->slug) }}" id="eval-link" class="text-body-m font-bold text-brand-600 break-all hover:underline" target="_blank">
-                {{ route('avaliacao.show', $cliente->slug) }}
-            </a>
+            <div id="eval-message" class="text-body-m text-neutral-primary leading-relaxed break-all">
+                Olá! Por favor, deixe sua avaliação sobre nós em: 
+                <a href="{{ route('avaliacao.show', $cliente->slug) }}" id="eval-link" class="font-bold text-brand-600 hover:underline" target="_blank">
+                    {{ route('avaliacao.show', $cliente->slug) }}
+                </a>
+            </div>
         </div>
 
         <div class="w-full space-y-12">
@@ -82,9 +85,10 @@
 
 <script>
     function copyToClipboard() {
-        const linkText = document.getElementById('eval-link').href;
-        navigator.clipboard.writeText(linkText).then(() => {
+        const messageText = "Olá! Por favor, deixe sua avaliação sobre nós em: " + document.getElementById('eval-link').href;
+        navigator.clipboard.writeText(messageText).then(() => {
             const toast = document.getElementById('toast');
+            toast.innerText = "Mensagem copiada com sucesso!";
             toast.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-8');
             toast.classList.add('opacity-100', 'translate-y-0');
             

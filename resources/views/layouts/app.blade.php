@@ -10,8 +10,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="CP Review">
-    <link rel="apple-touch-icon" href="/icon-512.png">
+    <link rel="apple-touch-icon" href="/icon-512.png?v={{ file_exists(public_path('icon-512.png')) ? filemtime(public_path('icon-512.png')) : time() }}">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v={{ file_exists(public_path('favicon.svg')) ? filemtime(public_path('favicon.svg')) : time() }}">
+    @yield('meta')
 
     <title>CP Review Care - @yield('title')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -22,9 +23,12 @@
         <div class="flex items-center gap-2">
             <span>🕵️ MODO SUPORTE (SIMULANDO TENANT)</span>
         </div>
-        <a href="{{ route('admin.stop-impersonation') }}" class="bg-white text-red-600 px-3 py-1 rounded-lg hover:bg-gray-100 transition">
-            PARAR E VOLTAR
-        </a>
+        <form method="POST" action="{{ route('admin.stop-impersonation') }}" style="display:inline;">
+            @csrf
+            <button type="submit" class="bg-white text-red-600 px-3 py-1 rounded-lg hover:bg-gray-100 transition">
+                PARAR E VOLTAR
+            </button>
+        </form>
     </div>
     @endif
     @yield('content')

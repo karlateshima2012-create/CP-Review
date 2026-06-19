@@ -2,6 +2,15 @@
 
 @section('title', 'Como foi sua visita?')
 
+@section('meta')
+    <!-- Open Graph / WhatsApp Preview Meta Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="CP Review Care - Como foi sua visita?">
+    <meta property="og:description" content="Olá! Por favor, deixe sua avaliação sobre nós em: {{ route('avaliacao.show', $cliente->slug) }}">
+    <meta property="og:image" content="{{ asset('icon-512.png') }}?v={{ file_exists(public_path('icon-512.png')) ? filemtime(public_path('icon-512.png')) : time() }}">
+    <meta property="og:url" content="{{ route('avaliacao.show', $cliente->slug) }}">
+@endsection
+
 @section('content')
 @php
     $cor = $cliente->cor_principal ?? '#7C3AED';
