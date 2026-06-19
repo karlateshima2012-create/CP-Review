@@ -132,7 +132,7 @@
                                             </div>
                                             
                                             @if(isset($section['options'][$key]))
-                                                <div class="pl-60 flex flex-wrap gap-8 items-center">
+                                                <div class="pl-[80px] flex flex-wrap gap-8 items-center">
                                                     <span class="text-[11px] text-neutral-secondary font-bold uppercase tracking-wider">Opções:</span>
                                                     @foreach($section['options'][$key]['pt'] as $opt)
                                                         <span class="text-legend bg-neutral-bg border border-neutral-border px-8 py-2 rounded text-neutral-secondary font-semibold">{{ $opt }}</span>
@@ -167,7 +167,7 @@
                                             </div>
                                             
                                             @if(isset($section['options'][$key]))
-                                                <div class="pl-60 flex flex-wrap gap-8 items-center">
+                                                <div class="pl-[80px] flex flex-wrap gap-8 items-center">
                                                     <span class="text-[11px] text-neutral-secondary font-bold uppercase tracking-wider">返答オプション:</span>
                                                     @foreach($section['options'][$key]['ja'] as $opt)
                                                         <span class="text-legend bg-neutral-bg border border-neutral-border px-8 py-2 rounded text-neutral-secondary font-semibold">{{ $opt }}</span>
