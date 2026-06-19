@@ -732,6 +732,12 @@ window.handleRecommend = async (rec) => {
 // FINALIZAÇÃO NEGATIVA
 // ==========================================
 async function askContact() {
+    // Mensagem informativa: "feedback encaminhado" (antes da pergunta de contato)
+    if (botConfig.lang.feedback_sent && botConfig.lang.feedback_sent.step !== null && botConfig.lang.feedback_sent.step !== '') {
+        await addBotMsg(botConfig.lang.feedback_sent.text);
+        await wait(600);
+    }
+
     if (!botConfig.lang.q_contact || botConfig.lang.q_contact.step === null || botConfig.lang.q_contact.step === '') {
         await finishChat(false);
         return;

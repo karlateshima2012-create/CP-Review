@@ -103,7 +103,8 @@
                                 'lowRate'          => 'Reconhecimento (Nota Baixa)',
                                 'lowRateQ'         => 'Pergunta: O que poderia melhorar?',
                                 'q_optional_text'  => 'Pergunta: Gostaria de dar mais detalhes?',
-                                'q_contact'        => 'Pergunta: Deseja que entrem em contato?',
+                                'feedback_sent'    => 'Confirmação: Feedback encaminhado ao responsável',
+                                'q_contact'        => 'Pergunta: Deseja que a empresa entre em contato?',
                                 'lowFinalMsg'      => 'Encerramento Negativo',
                             ],
                             'options' => [

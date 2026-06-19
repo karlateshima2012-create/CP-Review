@@ -40,8 +40,9 @@ class BotScript extends Model
                 'q_optional_text' => ['text' => "Would you like to share more details?", 'step' => 4],
                 'q_optional_photo'=> ['text' => "Feel free to attach a photo if you'd like.", 'step' => null],
                 'photo_ack'       => ['text' => "Thank you! 👍", 'step' => null],
-                'q_contact'       => ['text' => "We truly appreciate your feedback and have shared it with our team. Would you like us to reach out to discuss this further and find a solution?", 'step' => 5],
-                'lowFinalMsg'     => ['text' => "Thank you for sharing your experience with us.", 'step' => 6],
+                'feedback_sent'   => ['text' => "We truly appreciate your feedback and have shared it with our team.", 'step' => 5],
+                'q_contact'       => ['text' => "Would you like us to reach out to discuss this further and find a solution?", 'step' => 6],
+                'lowFinalMsg'     => ['text' => "Thank you for sharing your experience with us.", 'step' => 7],
             ];
         }
 
@@ -63,8 +64,9 @@ class BotScript extends Model
                 'q_optional_text' => ['text' => "詳細を教えていただけますでしょうか？", 'step' => 4],
                 'q_optional_photo' => ['text' => "よろしければ、写真も添付できます", 'step' => null],
                 'photo_ack' => ['text' => "ありがとうございます！ 👍", 'step' => null],
-                'q_contact' => ['text' => "いただいたご意見は改善のため担当者に共有いたしました。より詳しいお話を伺い解決策をご提案するため、担当者よりご連絡させていただいてもよろしいでしょうか？", 'step' => 5],
-                'lowFinalMsg' => ['text' => "ご意見を共有していただき、誠にありがとうございました。", 'step' => 6],
+                'feedback_sent' => ['text' => "いただいたご意見は改善のため担当者に共有いたしました。", 'step' => 5],
+                'q_contact' => ['text' => "より詳しいお話を伺い解決策をご提案するため、担当者よりご連絡させていただいてもよろしいでしょうか？", 'step' => 6],
+                'lowFinalMsg' => ['text' => "ご意見を共有していただき、誠にありがとうございました。", 'step' => 7],
             ];
         }
 
@@ -85,8 +87,9 @@ class BotScript extends Model
             'q_optional_text' => ['text' => "Gostaria de nos contar mais detalhes?", 'step' => 4],
             'q_optional_photo' => ['text' => "Se quiser, pode enviar uma foto também", 'step' => null],
             'photo_ack' => ['text' => "Obrigado! 👍", 'step' => null],
-            'q_contact' => ['text' => "Entendemos sua insatisfação e seu feedback foi encaminhado ao responsável para análise e melhoria dos nossos serviços. Deseja que a empresa entre em contato para entender melhor o ocorrido e buscar uma solução?", 'step' => 5],
-            'lowFinalMsg' => ['text' => "Obrigado por compartilhar sua experiência conosco.", 'step' => 6],
+            'feedback_sent' => ['text' => "Entendemos sua insatisfação e seu feedback foi encaminhado ao responsável para análise e melhoria dos nossos serviços.", 'step' => 5],
+            'q_contact' => ['text' => "Deseja que a empresa entre em contato para entender melhor o ocorrido e buscar uma solução?", 'step' => 6],
+            'lowFinalMsg' => ['text' => "Obrigado por compartilhar sua experiência conosco.", 'step' => 7],
         ];
     }
 }
