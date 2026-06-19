@@ -1,73 +1,67 @@
 # 🚢 Guia de Deploy — CP REVIEW CARE
 
-Este guia documenta o fluxo de CI/CD (Integração e Entrega Contínua) utilizando **GitHub Actions**. O sistema foi configurado para que cada alteração aprovada seja enviada ao servidor de produção de forma segura e automatizada.
+Este guia documenta as duas formas de realizar o deploy do projeto **CP REVIEW** para o servidor VPS da **Hostinger**: 
+
+1. **Deploy Automatizado (CI/CD)** via **GitHub Actions** usando chaves SSH.
+2. **Deploy Local Rápido** via script local `deploy.sh` usando `rsync`.
 
 ---
 
-## 🏗️ Fluxo de Deploy
+## 🏗️ 1. Deploy via GitHub Actions
 
-O deploy é acionado automaticamente em toda **`push`** ou **`merge`** na branch **`main`**.
+O deploy é disparado automaticamente a cada **`push`** ou **`merge`** na branch **`main`**.
 
-1.  **Build Local (GitHub):** O GitHub prepara o ambiente com PHP 8.4 e Node.js 20.
+### Fluxo do Pipeline:
+1.  **Build Local (GitHub):** O GitHub prepara a máquina virtual com PHP 8.4 e Node.js 24.
 2.  **Dependências:** Instala dependências do Composer (`--no-dev`) e do NPM.
-3.  **Vite Build:** Compila os ativos de frontend (CSS/JS).
-4.  **Transferência (SCP):** Os arquivos são transferidos via SCP para o servidor.
+3.  **Vite Build:** Compila os ativos de frontend (CSS/JS) e gera a pasta `public/build`.
+4.  **Transferência (SCP):** Transfere os arquivos compilados e códigos de forma segura para a VPS.
 5.  **Comandos Remotos (SSH):**
-    *   Executa as migrações (`artisan migrate --force`).
+    *   Executa as migrações no banco de dados (`php artisan migrate --force`).
     *   Limpa e gera os caches de config, rotas e views.
-    *   Ajusta permissões de pastas.
+    *   Ajusta as permissões de pastas (`chown -R www-data:www-data storage bootstrap/cache`).
 
----
-
-## 🔑 Configuração de Secrets
-
+### 🔑 Configuração de Secrets no GitHub
 Para que o deploy funcione, o repositório no GitHub deve ter as seguintes **Secrets** configuradas em *Settings -> Secrets and variables -> Actions*:
 
-| Nome | Descrição | Exemplo |
+| Nome | Descrição | Valor Configurado |
 | :--- | :--- | :--- |
-| `SSH_HOST` | IP ou Hostname do Servidor | `cpreview.creativeprintjp.com` |
-| `SSH_USER` | Usuário de acesso SSH | `admin_user` |
-| `SSH_PASSWORD` | Senha do usuário SSH | `********` |
-| `SSH_PORT` | Porta SSH | `22` |
-| `PROD_PATH` | Caminho absoluto da pasta do projeto | `/domains/creativeprintjp.com/...` |
+| `SSH_HOST` | IP público da sua VPS | `76.13.209.192` |
+| `SSH_USER` | Usuário de acesso SSH | `root` |
+| `SSH_PORT` | Porta do SSH da VPS | `22` |
+| `PROD_PATH` | Pasta de instalação do projeto | `/var/www/cpreview` |
+| `SSH_PRIVATE_KEY` | Conteúdo da chave privada Ed25519 | *Chave SSH criada em `./github_actions_key`* |
 
 ---
 
-## 🚀 Como Disparar o Deploy Corretamente
+## 💻 2. Deploy Rápido Local (`deploy.sh`)
 
-Para garantir um deploy sem interrupções e com segurança, siga este workflow:
+Muitas vezes o firewall da Hostinger bloqueia requisições vindas dos IPs dinâmicos do GitHub Actions, gerando timeouts de conexão. Para contornar isso, configurei um script local de deploy direto da sua máquina que ignora esse bloqueio.
 
-1.  **Desenvolvimento Local:** Faça suas alterações em branches separadas ou diretamente na `main` (se for o único desenvolvedor).
-2.  **Validação de Banco:** Antes de subir, certifique-se de que as migrações não têm conflitos. O deploy executará `migrate --force` automaticamente.
-3.  **Commit:** Tente agrupar alterações lógicas em um único commit.
+### Como usar:
+1.  No seu terminal local, execute:
     ```bash
-    git add .
-    git commit -m "feat: implementacao de bi pre-agregado"
+    ./deploy.sh
     ```
-4.  **Push:** Envie para a branch principal.
-    ```bash
-    git push origin main
-    ```
-5.  **Monitoramento:**
-    *   Vá até a aba **"Actions"** no seu repositório no GitHub.
-    *   Acompanhe o workflow "Deploy CP Review to Production".
-    *   Se algum passo ficar vermelho (erro), verifique os logs clicando no job.
+2.  O script fará de forma automatizada:
+    *   Compilação local dos assets (Vite).
+    *   Sincronização incremental inteligente dos arquivos via `rsync` (transferindo apenas arquivos modificados e ignorando logs, temporários e `node_modules`).
+    *   Acesso SSH seguro usando a chave privada local `./github_actions_key`.
+    *   Limpeza e regeneração de caches de produção.
+    *   Execução de migrações (`migrate --force`) e correção de permissões no servidor.
 
 ---
 
-## ⚠️ Cuidados Importantes
+## ⚠️ Cuidados e Boas Práticas
 
-### Mudanças no `.env`
-O GitHub Actions não gerencia o seu arquivo `.env` de produção. Se você adicionar uma nova chave (ex: `LINE_CHANNEL_TOKEN`), você deve:
-1.  Acessar o servidor via SSH ou FTP.
-2.  Editar o arquivo `.env` manualmente na pasta do projeto.
-3.  Rodar `php artisan config:cache` no servidor (ou aguardar o próximo deploy).
+### Alterações no `.env`
+O deploy automático não gerencia o seu arquivo `.env` de produção (que já está criado e configurado na VPS). Se você adicionar uma nova variável de ambiente (como credenciais de APIs ou chaves de webhook):
+1.  Acesse o servidor via SSH: `ssh -i ./github_actions_key root@76.13.209.192`
+2.  Edite o arquivo manualmente: `nano /var/www/cpreview/.env`
+3.  Execute a limpeza de cache: `php artisan config:cache` no diretório do projeto.
 
-### Conflitos de Permissão
-Se o deploy falhar no passo de SCP, verifique se o usuário SSH tem permissão de escrita na pasta de destino (`domains/creativeprintjp.com/public_html/cpreview`).
-
-### Migrações Destrutivas
-O comando `--force` no migrate não pede confirmação. Tenha cuidado ao excluir colunas que contenham dados importantes. Sempre faça backup do banco antes de mudanças drásticas de schema.
+### Migrações de Banco de Dados
+A execução de migrações com o comando `--force` é direta e não solicita confirmação. Caso vá realizar alterações destrutivas (excluir tabelas ou colunas), certifique-se de realizar um backup (dump) do banco MySQL da VPS previamente.
 
 ---
-*Gerado por Antigravity AI - Protocolo de Deployment v1.0*
+*Atualizado por Antigravity AI - Protocolo de Deployment v1.1*
