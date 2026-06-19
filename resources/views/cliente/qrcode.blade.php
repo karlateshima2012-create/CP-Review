@@ -11,13 +11,17 @@
 
 <div class="grid lg:grid-cols-12 gap-32 lg:items-stretch">
 
-    <!-- Left Column: QR Code + dica -->
-    <div class="lg:col-span-6 flex flex-col gap-16">
-    <div class="card p-24 flex flex-col items-center text-center flex-1">
+    <!-- Left Column: QR Code -->
+    <div class="lg:col-span-6 card p-24 flex flex-col items-center text-center">
         <!-- QR Code Image Box -->
-        <div class="border border-neutral-border rounded-xl p-16 bg-white shadow-sm mb-24 flex items-center justify-center w-[220px] h-[220px]">
+        <div class="border border-neutral-border rounded-xl p-16 bg-white shadow-sm mb-12 flex items-center justify-center w-[220px] h-[220px]">
             <img src="{{ url("/cliente/qrcode/{$cliente->id}") }}" alt="QR Code" class="w-full h-full object-contain">
         </div>
+
+        <!-- Dica logo abaixo do QR -->
+        <p class="text-body-m text-neutral-secondary leading-relaxed mb-24 px-8">
+            Imprima e cole na mesa, balcão ou cardápio. O cliente escaneia, avalia — satisfeito vai ao Google, insatisfeito fica em Ocorrências.
+        </p>
 
         <!-- Evaluation link display -->
         <div class="bg-neutral-bg border border-neutral-border rounded-lg px-16 py-12 mb-24 w-full text-center">
@@ -31,7 +35,6 @@
         </div>
 
         <div class="w-full space-y-12 mt-auto">
-            <!-- Download Button -->
             <a href="{{ url("/cliente/qrcode/{$cliente->id}/download") }}" class="w-full bg-brand-600 text-white py-12 rounded-lg font-bold hover:bg-brand-700 transition flex items-center justify-center gap-8 shadow-sm">
                 <svg class="w-16 h-16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"></path></svg>
                 Baixar QR Code
@@ -45,21 +48,11 @@
         </div>
     </div>
 
-    <!-- Como usar Card -->
-    <div class="card p-16">
-        <p class="text-body-m text-neutral-secondary leading-relaxed">
-            Imprima e cole na mesa, balcão ou cardápio. O cliente escaneia, avalia — satisfeito vai ao Google, insatisfeito fica em Ocorrências.
-        </p>
-    </div>
-
-    </div>{{-- fim left column --}}
-
-    <!-- Right Column: two cards that fill the same height as the left -->
+    <!-- Right Column -->
     <div class="lg:col-span-6 flex flex-col gap-16">
 
         <!-- Google Reviews Card -->
         <div class="card p-16 flex flex-col flex-1">
-            <!-- Header -->
             <div class="flex items-center gap-10 mb-12">
                 <svg class="w-20 h-20 flex-shrink-0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.4-1.04 2.58-2.23 3.37v2.79h3.61c2.11-1.95 3.26-4.82 3.26-8.17z" fill="#4285F4"/>
@@ -73,7 +66,6 @@
                 </div>
             </div>
 
-            <!-- Buttons pushed to bottom -->
             <div class="mt-auto space-y-8">
                 <a href="https://business.google.com/reviews" target="_blank"
                    class="w-full flex items-center justify-center gap-8 py-10 px-14 rounded-lg font-bold text-white text-body-m transition shadow-sm"
@@ -104,7 +96,7 @@
         <div class="card p-16 flex flex-col flex-1">
             <span class="text-legend text-neutral-secondary font-bold uppercase tracking-wider block mb-12">Compartilhar link de avaliação</span>
 
-            <div class="grid grid-cols-3 gap-10 mt-auto">
+            <div class="grid grid-cols-3 gap-10">
                 <a href="https://api.whatsapp.com/send?text=Olá!%20Por%20favor,%20deixe%20sua%20avaliação%20sobre%20nós%20em:%20{{ urlencode(route('avaliacao.show', ['slug' => $cliente->slug, 'v' => 5])) }}" target="_blank"
                    class="border border-neutral-border bg-white hover:bg-neutral-bg py-12 px-8 rounded-lg text-body-m font-bold text-neutral-primary flex items-center justify-center transition text-center">
                     WhatsApp
@@ -118,7 +110,6 @@
                     E-mail
                 </a>
             </div>
-
         </div>
 
     </div>
