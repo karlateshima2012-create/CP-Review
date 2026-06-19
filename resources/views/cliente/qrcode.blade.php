@@ -67,6 +67,9 @@
             </div>
 
             <div class="space-y-8">
+                <p class="text-legend text-neutral-secondary leading-relaxed">
+                    ⚠️ Você precisa estar logado com a conta Google associada ao seu negócio.
+                </p>
                 <a href="https://business.google.com/reviews" target="_blank"
                    class="w-full flex items-center justify-center gap-8 py-10 px-14 rounded-lg font-bold text-white text-body-m transition shadow-sm"
                    style="background: linear-gradient(135deg, #4285F4 0%, #34A853 100%);">
