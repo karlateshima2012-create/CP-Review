@@ -12,6 +12,6 @@ class Transacao extends Model
 
     protected $fillable = [
         'transacao_id', 'empresa', 'email', 'telefone', 'line_id',
-        'plano', 'valor', 'slug', 'pais', 'canal', 'tenant_id', 'status'
+        'plano', 'valor', 'slug', 'pais', 'pack_idioma', 'canal', 'tenant_id', 'status'
     ];
 }

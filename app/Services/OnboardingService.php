@@ -20,13 +20,17 @@ class OnboardingService
     {
         return \DB::transaction(function() use ($data) {
             // 01 & 02: Create Tenant
+            $pack = $data['pack_idioma'] ?? 'pt_ja';
+
             $cliente = Cliente::create([
                 'nome_empresa' => $data['nome_empresa'],
                 'email' => $data['email'],
                 'slug' => Str::slug($data['slug'] ?? $data['nome_empresa']),
                 'telefone_whatsapp' => $data['telefone_whatsapp'] ?? null,
-                'pais' => $data['pais'] ?? 'br',
-                'canal_notificacao' => $data['canal_notificacao'] ?? 'whatsapp',
+                'line_user_id' => $data['line_user_id'] ?? null,
+                'pack_idioma' => $pack,
+                'pais' => $pack === 'ja_en' ? 'jp' : 'br',
+                'canal_notificacao' => $data['canal_notificacao'] ?? ($pack === 'ja_en' ? 'line' : 'whatsapp'),
                 'plano' => $data['plano'] ?? 'standard',
                 'google_maps_link' => $data['google_maps_link'] ?? null,
                 'status' => 'ativo',
@@ -77,12 +81,15 @@ class OnboardingService
 
     protected function generateDefaultBotScript(Cliente $cliente)
     {
-        $locale = $cliente->pais === 'jp' ? 'ja' : 'pt';
-        
-        BotScript::create([
-            'tenant_id' => $cliente->id,
-            'locale' => $locale,
-            'messages' => BotScript::getDefaultMessages($locale)
-        ]);
+        $pack = $cliente->pack_idioma ?? 'pt_ja';
+        $locales = $pack === 'ja_en' ? ['ja', 'en'] : ['pt', 'ja'];
+
+        foreach ($locales as $locale) {
+            BotScript::create([
+                'tenant_id' => $cliente->id,
+                'locale' => $locale,
+                'messages' => BotScript::getDefaultMessages($locale),
+            ]);
+        }
     }
 }

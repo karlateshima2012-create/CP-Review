@@ -58,83 +58,112 @@
                 
                 <!-- Accordion Body -->
                 <div id="accordion-bot" class="p-24 space-y-24 hidden">
-                    <!-- Language Selector Tabs -->
+                    <!-- Language Selector Tabs (dynamic based on pack_idioma) -->
                     <div class="flex gap-8 mb-16">
-                        <button type="button" id="tab-pt" onclick="switchLanguage('pt')" class="px-16 py-8 rounded-lg text-body-m font-bold border transition flex items-center gap-8 bg-brand-50 text-brand-600 border-brand-200">
-                            <span>🇧🇷 Português</span>
-                            <span class="text-legend bg-brand-100 px-8 py-2 rounded text-brand-700">Idioma 1</span>
+                        @foreach($localeData as $i => $tab)
+                        <button type="button"
+                                id="tab-{{ $tab['key'] }}"
+                                onclick="switchLanguage('{{ $tab['key'] }}')"
+                                class="px-16 py-8 rounded-lg text-body-m font-bold border transition flex items-center gap-8
+                                       {{ $i === 0 ? 'bg-brand-50 text-brand-600 border-brand-200' : 'bg-white text-neutral-secondary border-neutral-border hover:bg-neutral-bg' }}">
+                            <span>{{ $tab['flag'] }} {{ $tab['label'] }}</span>
+                            <span class="text-legend px-8 py-2 rounded {{ $i === 0 ? 'bg-brand-100 text-brand-700' : 'bg-gray-100 text-neutral-secondary' }}">Idioma {{ $i + 1 }}</span>
                         </button>
-                        <button type="button" id="tab-jp" onclick="switchLanguage('jp')" class="px-16 py-8 rounded-lg text-body-m font-bold border transition flex items-center gap-8 bg-white text-neutral-secondary border-neutral-border hover:bg-neutral-bg">
-                            <span>🇯🇵 Japonês</span>
-                            <span class="text-legend bg-gray-100 px-8 py-2 rounded text-neutral-secondary">Idioma 2</span>
-                        </button>
+                        @endforeach
                     </div>
 
                     @php
                     $stepsList = [
                         'general' => [
                             'title' => 'Fluxo Geral (Etapa Inicial)',
-                            'icon' => '<svg class="w-12 h-12 text-brand-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>',
-                            'keys' => [
-                                'welcome' => 'Como foi sua experiência hoje?',
-                            ],
-                            'options' => []
+                            'icon'  => '<svg class="w-12 h-12 text-brand-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>',
+                            'keys'  => ['welcome' => 'Mensagem de boas-vindas'],
+                            'options' => [],
                         ],
                         'positive' => [
                             'title' => 'Fluxo positivo (4-5★)',
-                            'icon' => '<svg class="w-12 h-12 text-emerald-600" fill="currentColor" viewBox="0 0 20 20"><path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 00.458 1.258l2.9 3.5a1 1 0 001.536-1.246l-.884-2.783A1 1 0 0110.966 16h4.567a2 2 0 001.99-1.849l.5-8a2 2 0 00-1.99-2.151h-4.567a1 1 0 01-.966-.743l-.884-2.783a1 1 0 00-1.536-1.246l-2.9 3.5A2 2 0 006 10.333z"/></svg>',
-                            'keys' => [
-                                'highRate' => 'Agradecimento (Nota Alta)',
-                                'q_recommend' => 'Você pode deixar uma avaliação rápida no Google?',
+                            'icon'  => '<svg class="w-12 h-12 text-emerald-600" fill="currentColor" viewBox="0 0 20 20"><path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 00.458 1.258l2.9 3.5a1 1 0 001.536-1.246l-.884-2.783A1 1 0 0110.966 16h4.567a2 2 0 001.99-1.849l.5-8a2 2 0 00-1.99-2.151h-4.567a1 1 0 01-.966-.743l-.884-2.783a1 1 0 00-1.536-1.246l-2.9 3.5A2 2 0 006 10.333z"/></svg>',
+                            'keys'  => [
+                                'highRate'     => 'Agradecimento (Nota Alta)',
+                                'q_recommend'  => 'Convite para avaliação no Google',
                                 'highFinalMsg' => 'Encerramento Positivo',
                             ],
                             'options' => [
-                                'q_recommend' => ['pt' => ['⭐ Botão: Avaliar no Google'], 'ja' => ['⭐ ボタン: Googleで評価する']],
-                            ]
+                                'q_recommend' => [
+                                    'pt' => ['⭐ Botão: Avaliar no Google'],
+                                    'ja' => ['⭐ ボタン: Googleで評価する'],
+                                    'en' => ['⭐ Button: Review on Google'],
+                                ],
+                            ],
                         ],
                         'negative' => [
                             'title' => 'Fluxo negativo (1-3★)',
-                            'icon' => '<svg class="w-12 h-12 text-red-600" fill="currentColor" viewBox="0 0 20 20"><path d="M18 9.5a1.5 1.5 0 11-3 0v-6a1.5 1.5 0 013 0v6zM14 9.667v-5.43a2 2 0 00-.458-1.258l-2.9-3.5a1 1 0 00-1.536 1.246l.884 2.783A1 1 0 019.034 4H4.467a2 2 0 00-1.99 1.849l-.5 8a2 2 0 001.99 2.151h4.567a1 1 0 01.966.743l.884 2.783a1 1 0 001.536 1.246l2.9-3.5a2 2 0 00.458-3.075z"/></svg>',
-                            'keys' => [
-                                'lowRate' => 'Agradecimento (Nota Baixa)',
-                                'lowRateQ' => 'Pergunta: O que mais impactou sua experiência?',
-                                'q_optional_text' => 'Pergunta: Gostaria de nos contar mais detalhes?',
-                                'q_contact' => 'Pergunta: Deseja que a empresa entre em contato?',
-                                'lowFinalMsg' => 'Encerramento Negativo',
+                            'icon'  => '<svg class="w-12 h-12 text-red-600" fill="currentColor" viewBox="0 0 20 20"><path d="M18 9.5a1.5 1.5 0 11-3 0v-6a1.5 1.5 0 013 0v6zM14 9.667v-5.43a2 2 0 00-.458-1.258l-2.9-3.5a1 1 0 00-1.536 1.246l.884 2.783A1 1 0 019.034 4H4.467a2 2 0 00-1.99 1.849l-.5 8a2 2 0 001.99 2.151h4.567a1 1 0 01.966.743l.884 2.783a1 1 0 001.536 1.246l2.9-3.5a2 2 0 00.458-3.075z"/></svg>',
+                            'keys'  => [
+                                'lowRate'          => 'Reconhecimento (Nota Baixa)',
+                                'lowRateQ'         => 'Pergunta: O que poderia melhorar?',
+                                'q_optional_text'  => 'Pergunta: Gostaria de dar mais detalhes?',
+                                'q_contact'        => 'Pergunta: Deseja que entrem em contato?',
+                                'lowFinalMsg'      => 'Encerramento Negativo',
                             ],
                             'options' => [
-                                'lowRateQ' => ['pt' => ['😕 Atendimento', '⚙️ Produto ou Serviço', '💸 Preço', '⏱️ Demora', '❗ Outro'], 'ja' => ['😕 接客', '⚙️ 商品またはサービス', '💸 価格', '⏱️ 待ち時間', '❗ その他']],
-                                'q_optional_text' => ['pt' => ['✍️ Digite sua mensagem...', '[Enviar]', '[Pular]'], 'ja' => ['✍️ メッセージを入力してください...', '[送信]', '[スキップ]']],
-                                'q_contact' => ['pt' => ['📱 Sim', '❌ Não', '📱 WhatsApp', '📧 E-mail'], 'ja' => ['📱 はい', '❌ いいえ', '💬 LINE', '📧 E-mail']],
-                            ]
-                        ]
+                                'lowRateQ' => [
+                                    'pt' => ['😕 Atendimento', '⚙️ Produto ou Serviço', '💸 Preço', '⏱️ Demora', '❗ Outro'],
+                                    'ja' => ['😕 接客', '⚙️ 商品またはサービス', '💸 価格', '⏱️ 待ち時間', '❗ その他'],
+                                    'en' => ['😕 Service', '⚙️ Product or Service', '💸 Price', '⏱️ Wait time', '❗ Other'],
+                                ],
+                                'q_optional_text' => [
+                                    'pt' => ['✍️ Digite sua mensagem...', '[Enviar]', '[Pular]'],
+                                    'ja' => ['✍️ メッセージを入力してください...', '[送信]', '[スキップ]'],
+                                    'en' => ['✍️ Type your message...', '[Send]', '[Skip]'],
+                                ],
+                                'q_contact' => [
+                                    'pt' => ['📱 Sim', '❌ Não', '📱 WhatsApp', '📧 E-mail'],
+                                    'ja' => ['📱 はい', '❌ いいえ', '💬 LINE', '📧 E-mail'],
+                                    'en' => ['📱 Yes', '❌ No', '💬 LINE', '📧 E-mail'],
+                                ],
+                            ],
+                        ],
                     ];
                     @endphp
 
-                    <!-- PORTUGUESE FORM -->
-                    <div id="form-pt" class="space-y-16">
+                    {{-- Forms dinâmicos: um por idioma do pack --}}
+                    @foreach($localeData as $i => $tab)
+                    <div id="form-{{ $tab['key'] }}" class="space-y-16 {{ $i > 0 ? 'hidden' : '' }}">
                         @foreach($stepsList as $sectionKey => $section)
                             <div class="bg-gray-50 border border-neutral-border p-16 rounded-xl">
                                 <div class="flex items-center gap-8 mb-16">
                                     <div class="w-24 h-24 rounded-full bg-neutral-bg flex items-center justify-center flex-shrink-0">
                                         {!! $section['icon'] !!}
                                     </div>
-                                    <h3 class="text-body-m font-bold text-neutral-primary">{{ $section['title'] }}</h3>
+                                    <h3 class="text-body-m font-bold text-neutral-primary">
+                                        {{ $section['title'] }}
+                                        <span class="text-legend font-normal text-neutral-secondary ml-4">{{ $tab['flag'] }}</span>
+                                    </h3>
                                 </div>
 
                                 <div class="space-y-16">
                                     @foreach($section['keys'] as $key => $label)
                                         <div class="space-y-6">
                                             <div class="flex items-center gap-12">
-                                                <input type="number" min="1" id="in-pt-{{ $key }}-step" name="messages[pt][{{ $key }}][step]" value="{{ old('messages.pt.'.$key.'.step', $messagesPt[$key]['step'] ?? '') }}" class="w-48 border border-neutral-border rounded-lg py-8 text-body-m text-center font-bold focus:ring-2 focus:ring-brand-600 focus:outline-none" placeholder="Off">
+                                                <input type="number" min="1"
+                                                       name="messages[{{ $tab['locale'] }}][{{ $key }}][step]"
+                                                       value="{{ old('messages.'.$tab['locale'].'.'.$key.'.step', $tab['messages'][$key]['step'] ?? '') }}"
+                                                       class="w-48 border border-neutral-border rounded-lg py-8 text-body-m text-center font-bold focus:ring-2 focus:ring-brand-600 focus:outline-none"
+                                                       placeholder="Off">
                                                 <span class="text-neutral-secondary font-bold">-</span>
-                                                <input type="text" id="in-pt-{{ $key }}-text" name="messages[pt][{{ $key }}][text]" value="{{ old('messages.pt.'.$key.'.text', $messagesPt[$key]['text'] ?? '') }}" class="flex-1 border border-neutral-border rounded-lg px-12 py-8 text-body-m focus:ring-2 focus:ring-brand-600 focus:outline-none" placeholder="{{ $label }}" required>
+                                                <input type="text"
+                                                       name="messages[{{ $tab['locale'] }}][{{ $key }}][text]"
+                                                       value="{{ old('messages.'.$tab['locale'].'.'.$key.'.text', $tab['messages'][$key]['text'] ?? '') }}"
+                                                       class="flex-1 border border-neutral-border rounded-lg px-12 py-8 text-body-m focus:ring-2 focus:ring-brand-600 focus:outline-none"
+                                                       placeholder="{{ $label }}"
+                                                       required>
                                             </div>
-                                            
-                                            @if(isset($section['options'][$key]))
+
+                                            @if(isset($section['options'][$key][$tab['locale']]))
                                                 <div class="pl-[80px] flex flex-wrap gap-8 items-center">
                                                     <span class="text-[11px] text-neutral-secondary font-bold uppercase tracking-wider">Opções:</span>
-                                                    @foreach($section['options'][$key]['pt'] as $opt)
+                                                    @foreach($section['options'][$key][$tab['locale']] as $opt)
                                                         <span class="text-legend bg-neutral-bg border border-neutral-border px-8 py-2 rounded text-neutral-secondary font-semibold">{{ $opt }}</span>
                                                     @endforeach
                                                 </div>
@@ -145,41 +174,7 @@
                             </div>
                         @endforeach
                     </div>
-
-                    <!-- JAPANESE FORM -->
-                    <div id="form-jp" class="space-y-16 hidden">
-                        @foreach($stepsList as $sectionKey => $section)
-                            <div class="bg-gray-50 border border-neutral-border p-16 rounded-xl">
-                                <div class="flex items-center gap-8 mb-16">
-                                    <div class="w-24 h-24 rounded-full bg-neutral-bg flex items-center justify-center flex-shrink-0">
-                                        {!! $section['icon'] !!}
-                                    </div>
-                                    <h3 class="text-body-m font-bold text-neutral-primary">{{ $section['title'] }} (JP)</h3>
-                                </div>
-
-                                <div class="space-y-16">
-                                    @foreach($section['keys'] as $key => $label)
-                                        <div class="space-y-6">
-                                            <div class="flex items-center gap-12">
-                                                <input type="number" min="1" id="in-jp-{{ $key }}-step" name="messages[ja][{{ $key }}][step]" value="{{ old('messages.ja.'.$key.'.step', $messagesJp[$key]['step'] ?? '') }}" class="w-48 border border-neutral-border rounded-lg py-8 text-body-m text-center font-bold focus:ring-2 focus:ring-brand-600 focus:outline-none" placeholder="Off">
-                                                <span class="text-neutral-secondary font-bold">-</span>
-                                                <input type="text" id="in-jp-{{ $key }}-text" name="messages[ja][{{ $key }}][text]" value="{{ old('messages.ja.'.$key.'.text', $messagesJp[$key]['text'] ?? '') }}" class="flex-1 border border-neutral-border rounded-lg px-12 py-8 text-body-m focus:ring-2 focus:ring-brand-600 focus:outline-none" placeholder="{{ $label }}" required>
-                                            </div>
-                                            
-                                            @if(isset($section['options'][$key]))
-                                                <div class="pl-[80px] flex flex-wrap gap-8 items-center">
-                                                    <span class="text-[11px] text-neutral-secondary font-bold uppercase tracking-wider">返答オプション:</span>
-                                                    @foreach($section['options'][$key]['ja'] as $opt)
-                                                        <span class="text-legend bg-neutral-bg border border-neutral-border px-8 py-2 rounded text-neutral-secondary font-semibold">{{ $opt }}</span>
-                                                    @endforeach
-                                                </div>
-                                            @endif
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
+                    @endforeach
 
                     <!-- Collapsible: Motivos de problema -->
                     <div class="border border-neutral-border rounded-xl p-16">
@@ -291,11 +286,11 @@
             @php
             $hiddenKeys = ['q_first_visit', 'first_visit_ack', 'askRate', 'q_period', 'recommend_yes', 'recommend_maybe', 'recommend_no', 'q_optional_photo', 'photo_ack'];
             @endphp
-            @foreach($hiddenKeys as $hKey)
-                <input type="hidden" name="messages[pt][{{ $hKey }}][step]" value="{{ $messagesPt[$hKey]['step'] ?? '' }}">
-                <input type="hidden" name="messages[pt][{{ $hKey }}][text]" value="{{ $messagesPt[$hKey]['text'] ?? '' }}">
-                <input type="hidden" name="messages[ja][{{ $hKey }}][step]" value="{{ $messagesJp[$hKey]['step'] ?? '' }}">
-                <input type="hidden" name="messages[ja][{{ $hKey }}][text]" value="{{ $messagesJp[$hKey]['text'] ?? '' }}">
+            @foreach($localeData as $tab)
+                @foreach($hiddenKeys as $hKey)
+                    <input type="hidden" name="messages[{{ $tab['locale'] }}][{{ $hKey }}][step]" value="{{ $tab['messages'][$hKey]['step'] ?? '' }}">
+                    <input type="hidden" name="messages[{{ $tab['locale'] }}][{{ $hKey }}][text]" value="{{ $tab['messages'][$hKey]['text'] ?? '' }}">
+                @endforeach
             @endforeach
 
             <!-- Action Button -->
@@ -406,13 +401,13 @@
 </form>
 
 <script>
-    let activeLang = 'pt';
+    const OB_LOCALE_DATA = @json($localeData);
+    const OB_LOCALE_KEYS = OB_LOCALE_DATA.map(t => t.key);
+    let activeLang = OB_LOCALE_KEYS[0] ?? 'locale1';
 
-    // Accordion handler
     function toggleAccordion(id) {
         const target = document.getElementById(id);
         const chevron = document.getElementById(id + '-chevron');
-        
         if (target.classList.contains('hidden')) {
             target.classList.remove('hidden');
             chevron.classList.add('rotate-180');
@@ -424,17 +419,14 @@
 
     function switchLanguage(lang) {
         activeLang = lang;
-        if (lang === 'pt') {
-            document.getElementById('form-pt').classList.remove('hidden');
-            document.getElementById('form-jp').classList.add('hidden');
-            document.getElementById('tab-pt').className = 'px-16 py-8 rounded-lg text-body-m font-bold border transition flex items-center gap-8 bg-brand-50 text-brand-600 border-brand-200';
-            document.getElementById('tab-jp').className = 'px-16 py-8 rounded-lg text-body-m font-bold border transition flex items-center gap-8 bg-white text-neutral-secondary border-neutral-border hover:bg-neutral-bg';
-        } else {
-            document.getElementById('form-pt').classList.add('hidden');
-            document.getElementById('form-jp').classList.remove('hidden');
-            document.getElementById('tab-pt').className = 'px-16 py-8 rounded-lg text-body-m font-bold border transition flex items-center gap-8 bg-white text-neutral-secondary border-neutral-border hover:bg-neutral-bg';
-            document.getElementById('tab-jp').className = 'px-16 py-8 rounded-lg text-body-m font-bold border transition flex items-center gap-8 bg-brand-50 text-brand-600 border-brand-200';
-        }
+        const activeClass   = 'px-16 py-8 rounded-lg text-body-m font-bold border transition flex items-center gap-8 bg-brand-50 text-brand-600 border-brand-200';
+        const inactiveClass = 'px-16 py-8 rounded-lg text-body-m font-bold border transition flex items-center gap-8 bg-white text-neutral-secondary border-neutral-border hover:bg-neutral-bg';
+        OB_LOCALE_KEYS.forEach(key => {
+            const form = document.getElementById('form-' + key);
+            const tab  = document.getElementById('tab-' + key);
+            if (form) form.classList.toggle('hidden', key !== lang);
+            if (tab)  tab.className = key === lang ? activeClass : inactiveClass;
+        });
         updatePreview();
     }
 
@@ -451,20 +443,17 @@
     }
 
     function updatePreview() {
-        const welcomeText = document.getElementById(`in-${activeLang}-welcome-text`).value;
-        const highText = document.getElementById(`in-${activeLang}-highRate-text`).value;
-
-        document.getElementById('preview-msg-welcome').textContent = welcomeText;
-        document.getElementById('preview-msg-high').textContent = highText;
+        const idx    = OB_LOCALE_KEYS.indexOf(activeLang);
+        const locale = idx >= 0 ? OB_LOCALE_DATA[idx].locale : null;
+        if (!locale) return;
+        const welcomeEl  = document.querySelector(`[name="messages[${locale}][welcome][text]"]`);
+        const highRateEl = document.querySelector(`[name="messages[${locale}][highRate][text]"]`);
+        if (welcomeEl)  document.getElementById('preview-msg-welcome').textContent = welcomeEl.value;
+        if (highRateEl) document.getElementById('preview-msg-high').textContent    = highRateEl.value;
     }
 
-    // Attach real-time preview updates for text inputs
-    const textInputIds = ['pt-welcome-text', 'pt-highRate-text', 'jp-welcome-text', 'jp-highRate-text'];
-    textInputIds.forEach(id => {
-        const el = document.getElementById(`in-${id}`);
-        if (el) {
-            el.addEventListener('input', updatePreview);
-        }
+    document.querySelectorAll('[name$="[welcome][text]"], [name$="[highRate][text]"]').forEach(el => {
+        el.addEventListener('input', updatePreview);
     });
 
     // Real-time Preview for Logo File Upload

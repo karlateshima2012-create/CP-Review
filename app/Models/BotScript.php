@@ -22,6 +22,29 @@ class BotScript extends Model
 
     public static function getDefaultMessages($locale)
     {
+        if ($locale === 'en') {
+            return [
+                'welcome'         => ['text' => "How was your experience today?", 'step' => 1],
+                'q_first_visit'   => ['text' => "Is this your first time here?", 'step' => null],
+                'first_visit_ack' => ['text' => "Welcome! We're so glad to have you!", 'step' => null],
+                'askRate'         => ['text' => "", 'step' => null],
+                'highRate'        => ['text' => "Thank you so much! We're delighted to hear that! 😊", 'step' => 2],
+                'q_period'        => ['text' => "What time did you visit us?", 'step' => null],
+                'q_recommend'     => ['text' => "Would you mind sharing a quick review on Google?", 'step' => 3],
+                'recommend_yes'   => ['text' => "", 'step' => null],
+                'recommend_maybe' => ['text' => "", 'step' => null],
+                'recommend_no'    => ['text' => "", 'step' => null],
+                'highFinalMsg'    => ['text' => "Thank you for your support and for taking a moment to share your experience. ❤️\n\nHave a wonderful day!", 'step' => 4],
+                'lowRate'         => ['text' => "😔 We're truly sorry your experience wasn't ideal.", 'step' => 2],
+                'lowRateQ'        => ['text' => "What could we have done better?", 'step' => 3],
+                'q_optional_text' => ['text' => "Would you like to share more details?", 'step' => 4],
+                'q_optional_photo'=> ['text' => "Feel free to attach a photo if you'd like.", 'step' => null],
+                'photo_ack'       => ['text' => "Thank you! 👍", 'step' => null],
+                'q_contact'       => ['text' => "We truly appreciate your feedback and have shared it with our team. Would you like us to reach out to discuss this further and find a solution?", 'step' => 5],
+                'lowFinalMsg'     => ['text' => "Thank you for sharing your experience with us.", 'step' => 6],
+            ];
+        }
+
         if ($locale === 'ja') {
             return [
                 'welcome' => ['text' => "本日の体験はいかがでしたでしょうか？", 'step' => 1],

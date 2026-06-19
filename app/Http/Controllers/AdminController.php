@@ -152,14 +152,15 @@ class AdminController extends Controller
     public function storeCliente(Request $request, \App\Services\OnboardingService $onboarding)
     {
         $data = $request->validate([
-            'nome_empresa' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'pais' => 'required|in:br,jp',
+            'nome_empresa'      => 'required|string|max:255',
+            'email'             => 'required|email|unique:users,email',
+            'pack_idioma'       => 'required|in:pt_ja,ja_en',
             'canal_notificacao' => 'required|in:whatsapp,line',
             'telefone_whatsapp' => 'nullable|string',
-            'plano' => 'required|string',
-            'valor_mensal' => 'required|numeric',
-            'google_maps_link' => 'nullable|url'
+            'line_user_id'      => 'nullable|string',
+            'plano'             => 'required|string',
+            'valor_mensal'      => 'required|numeric',
+            'google_maps_link'  => 'nullable|url',
         ]);
 
         $cliente = $onboarding->onboard($data);

@@ -138,8 +138,6 @@ class ClienteController extends Controller
 
         $validated = $request->validate([
             'messages' => 'required|array',
-            'messages.pt' => 'required|array',
-            'messages.ja' => 'required|array',
             'messages.*.*.text' => 'nullable|string|max:1000',
             'messages.*.*.step' => 'nullable|integer|min:1',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
@@ -260,36 +258,40 @@ class ClienteController extends Controller
     {
         $this->authorize('view', $cliente);
 
-        $botScriptPt = \App\Models\BotScript::where('tenant_id', $cliente->id)
-            ->where('locale', 'pt')
-            ->first();
+        $pack = $cliente->pack_idioma ?? 'pt_ja';
+        $localesMeta = [
+            'pt' => ['flag' => '🇧🇷', 'label' => 'Português'],
+            'ja' => ['flag' => '🇯🇵', 'label' => '日本語'],
+            'en' => ['flag' => '🇺🇸', 'label' => 'English'],
+        ];
+        $activeLocales = $pack === 'ja_en' ? ['ja', 'en'] : ['pt', 'ja'];
 
-        $botScriptJp = \App\Models\BotScript::where('tenant_id', $cliente->id)
-            ->where('locale', 'ja')
-            ->first();
+        $localeData = [];
+        foreach ($activeLocales as $i => $locale) {
+            $saved = \App\Models\BotScript::where('tenant_id', $cliente->id)
+                ->where('locale', $locale)
+                ->first();
 
-        $defaultsPt = \App\Models\BotScript::getDefaultMessages('pt');
-        $defaultsJp = \App\Models\BotScript::getDefaultMessages('ja');
+            $defaults = \App\Models\BotScript::getDefaultMessages($locale);
+            $savedMessages = $saved ? ($saved->messages ?? []) : [];
 
-        $savedPt = $botScriptPt ? $botScriptPt->messages : [];
-        $savedJp = $botScriptJp ? $botScriptJp->messages : [];
+            $messages = [];
+            foreach ($defaults as $key => $defaultVal) {
+                $messages[$key] = [
+                    'text' => $savedMessages[$key]['text'] ?? $defaultVal['text'],
+                    'step' => $savedMessages[$key]['step'] ?? $defaultVal['step'],
+                ];
+            }
 
-        $messagesPt = [];
-        foreach ($defaultsPt as $key => $defaultVal) {
-            $messagesPt[$key] = [
-                'text' => $savedPt[$key]['text'] ?? $defaultVal['text'],
-                'step' => isset($savedPt[$key]['step']) ? $savedPt[$key]['step'] : $defaultVal['step'],
+            $localeData[] = [
+                'key'      => 'locale' . ($i + 1),
+                'locale'   => $locale,
+                'flag'     => $localesMeta[$locale]['flag'],
+                'label'    => $localesMeta[$locale]['label'],
+                'messages' => $messages,
             ];
         }
 
-        $messagesJp = [];
-        foreach ($defaultsJp as $key => $defaultVal) {
-            $messagesJp[$key] = [
-                'text' => $savedJp[$key]['text'] ?? $defaultVal['text'],
-                'step' => isset($savedJp[$key]['step']) ? $savedJp[$key]['step'] : $defaultVal['step'],
-            ];
-        }
-
-        return view('cliente.bot', compact('cliente', 'messagesPt', 'messagesJp'));
+        return view('cliente.bot', compact('cliente', 'pack', 'localeData'));
     }
 }

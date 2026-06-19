@@ -16,38 +16,39 @@ class LandingController extends Controller
     public function contratar(Request $request)
     {
         $validated = $request->validate([
-            'plano' => 'required|in:lite,standard,premium',
-            'empresa' => 'required|string|max:100',
-            'email' => 'required|email',
-            'telefone' => 'required|string',
-            'line_id' => 'nullable|string',
-            'canal' => 'required|in:email,whatsapp,line',
-            'pais' => 'required|in:br,jp'
+            'pack_idioma' => 'required|in:pt_ja,ja_en',
+            'plano'       => 'required|in:standard,pro,elite',
+            'empresa'     => 'required|string|max:100',
+            'email'       => 'required|email',
+            'telefone'    => 'nullable|string',
+            'line_id'     => 'nullable|string',
+            'canal'       => 'required|in:whatsapp,line',
+            'google_maps_link' => 'nullable|url',
         ]);
 
-        // Gerar slug único
         $slug = Str::slug($validated['empresa']) . '-' . rand(100, 999);
-        
-        // Verificar slug único
         while (\App\Models\Cliente::where('slug', $slug)->exists()) {
             $slug = Str::slug($validated['empresa']) . '-' . rand(100, 999);
         }
 
-        $precos = ['lite' => 49, 'standard' => 97, 'premium' => 197];
-        $valor = $precos[$validated['plano']] ?? 97;
+        $precos = ['standard' => 4800, 'pro' => 7800, 'elite' => 12000];
+        $valor = $precos[$validated['plano']] ?? 4800;
+
+        $pack = $validated['pack_idioma'];
 
         $transacao = Transacao::create([
             'transacao_id' => 'CP_' . uniqid(),
-            'empresa' => $validated['empresa'],
-            'email' => $validated['email'],
-            'telefone' => $validated['telefone'],
-            'line_id' => $validated['line_id'] ?? null,
-            'plano' => $validated['plano'],
-            'valor' => $valor,
-            'slug' => $slug,
-            'pais' => $validated['pais'],
-            'canal' => $validated['canal'],
-            'status' => 'pendente'
+            'empresa'      => $validated['empresa'],
+            'email'        => $validated['email'],
+            'telefone'     => $validated['telefone'] ?? '',
+            'line_id'      => $validated['line_id'] ?? null,
+            'plano'        => $validated['plano'],
+            'valor'        => $valor,
+            'slug'         => $slug,
+            'pack_idioma'  => $pack,
+            'pais'         => $pack === 'ja_en' ? 'jp' : 'br',
+            'canal'        => $validated['canal'],
+            'status'       => 'pendente',
         ]);
 
         // Gerar código PIX (simulado - integrar com Asaas/Mercado Pago)
