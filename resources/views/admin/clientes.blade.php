@@ -4,46 +4,61 @@
 
 @section('content')
 <div class="px-4 sm:px-6 lg:px-8 py-8">
-    <!-- Header with Export -->
+    <!-- Header with Action -->
     <div class="flex justify-between items-center mb-8">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Gestão de Clientes</h1>
-            <p class="text-sm text-gray-500">Gerencie todos os lojistas ativos na plataforma</p>
+            <h1 class="text-3xl font-black text-gray-900 tracking-tight">Gestão de Clientes</h1>
+            <p class="text-sm text-gray-500 font-medium">Gerencie todos os lojistas ativos na plataforma</p>
         </div>
-        <div class="flex gap-3">
-            <a href="{{ route('admin.clientes.export') }}" class="bg-white text-gray-700 px-4 py-2 rounded-xl text-sm font-bold border border-gray-200 hover:bg-gray-50 transition flex items-center gap-2">
-                📥 Exportar CSV
-            </a>
-            <a href="{{ route('admin.clientes.create') }}" class="bg-purple-600 text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-purple-700 transition shadow-lg shadow-purple-200">
-                + Novo Cliente
+        <div>
+            <a href="{{ route('admin.clientes.create') }}" class="bg-[#7C3AED] text-white px-6 py-4 rounded-2xl text-base font-bold hover:bg-[#6D28D9] transition duration-200 shadow-md hover:shadow-lg flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+                Novo Cliente
             </a>
         </div>
     </div>
 
-    <!-- Filters Bar -->
-    <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 mb-6">
-        <form action="{{ route('admin.clientes') }}" method="GET" class="grid grid-cols-1 md:grid-cols-5 gap-4">
-            <div class="md:col-span-2">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="🔍 Buscar por empresa, e-mail ou slug..." class="w-full rounded-xl border-gray-200 text-sm focus:ring-purple-500 focus:border-purple-500">
+    <!-- Search & Filters -->
+    <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm mb-8">
+        <form action="{{ route('admin.clientes') }}" method="GET" class="flex flex-col md:flex-row gap-4 items-center">
+            <!-- Search Box -->
+            <div class="relative w-full md:flex-1">
+                <span class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.602 10.602z" />
+                    </svg>
+                </span>
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Buscar por empresa, e-mail ou slug..." class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-medium text-gray-700 placeholder-gray-400 focus:bg-white focus:border-purple-300 focus:ring focus:ring-purple-200/50 transition duration-200">
             </div>
-            <div>
-                <select name="plano" class="w-full rounded-xl border-gray-200 text-sm focus:ring-purple-500 focus:border-purple-500">
+            
+            <!-- Select Plan -->
+            <div class="w-full md:w-48">
+                <select name="plano" class="w-full py-3 px-4 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold text-gray-600 focus:bg-white focus:border-purple-300 focus:ring focus:ring-purple-200/50 transition duration-200 cursor-pointer">
                     <option value="">Todos os Planos</option>
                     <option value="standard" {{ request('plano') == 'standard' ? 'selected' : '' }}>Standard</option>
                     <option value="premium" {{ request('plano') == 'premium' ? 'selected' : '' }}>Premium</option>
                     <option value="elite" {{ request('plano') == 'elite' ? 'selected' : '' }}>Elite</option>
                 </select>
             </div>
-            <div>
-                <select name="status" class="w-full rounded-xl border-gray-200 text-sm focus:ring-purple-500 focus:border-purple-500">
+
+            <!-- Select Status -->
+            <div class="w-full md:w-48">
+                <select name="status" class="w-full py-3 px-4 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold text-gray-600 focus:bg-white focus:border-purple-300 focus:ring focus:ring-purple-200/50 transition duration-200 cursor-pointer">
                     <option value="">Qualquer Status</option>
                     <option value="ativo" {{ request('status') == 'ativo' ? 'selected' : '' }}>Ativo</option>
                     <option value="trial" {{ request('status') == 'trial' ? 'selected' : '' }}>Trial</option>
                     <option value="inativo" {{ request('status') == 'inativo' ? 'selected' : '' }}>Inativo</option>
                 </select>
             </div>
-            <button type="submit" class="bg-gray-900 text-white rounded-xl text-sm font-bold hover:bg-gray-800 transition">
-                Filtrar Resultados
+
+            <!-- Submit Button -->
+            <button type="submit" class="w-full md:w-auto px-6 py-3 bg-gray-900 text-white rounded-2xl text-sm font-bold hover:bg-gray-800 transition duration-200 flex items-center justify-center gap-2 shadow-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591l.04 3.061M3.75 6h16.5M3 10h18M3 14h18M3 18h18" />
+                </svg>
+                Filtrar
             </button>
         </form>
     </div>

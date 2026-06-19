@@ -6,6 +6,22 @@
 
 @section('content')
 <div class="p-8 space-y-8">
+    <!-- Header with Action -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-gray-100 pb-6">
+        <div>
+            <h1 class="text-3xl font-black text-gray-900 tracking-tight">Relatórios</h1>
+            <p class="text-sm text-gray-500 font-medium">Consolide dados de NPS e exporte informações de clientes</p>
+        </div>
+        <div>
+            <a href="{{ route('admin.clientes.export') }}" class="bg-white text-gray-700 px-6 py-4 rounded-2xl text-sm font-bold border border-gray-200 hover:bg-gray-50 hover:shadow-sm transition flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                </svg>
+                Exportar CSV de Clientes
+            </a>
+        </div>
+    </div>
+
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Dashboard de Envio -->
         <div class="lg:col-span-2 space-y-6">
