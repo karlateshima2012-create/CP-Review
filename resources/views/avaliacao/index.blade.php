@@ -64,14 +64,14 @@ body {
   flex-direction: column;
   box-shadow: 0 0 100px rgba(0,0,0,0.5);
   overflow: hidden;
-  border: 4px solid #000000;
+  border: 4px solid #FFFFFF;
 }
 
 @media (min-width: 500px) {
     .phone {
         height: 844px;
         border-radius: 40px;
-        border: 12px solid #000000;
+        border: 12px solid #FFFFFF;
         box-shadow: 0 30px 60px -10px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,0,0,0.2);
     }
 }

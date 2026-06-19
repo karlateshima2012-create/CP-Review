@@ -327,7 +327,7 @@
             <span class="text-body-m font-bold text-neutral-secondary mb-16 self-start uppercase tracking-wider">Preview do Chatbot (PWA)</span>
             
             <!-- Mobile body frame -->
-            <div class="w-[305px] h-[550px] border-[8px] border-[#000000] rounded-[36px] overflow-hidden shadow-2xl flex flex-col bg-gray-50 relative select-none">
+            <div class="w-[305px] h-[550px] border-[8px] border-[#FFFFFF] rounded-[36px] overflow-hidden shadow-2xl flex flex-col bg-gray-50 relative select-none">
                 <!-- Camera Notch -->
                 <div class="absolute top-4 left-1/2 -translate-x-1/2 w-48 h-12 bg-neutral-primary rounded-full z-50"></div>
 
