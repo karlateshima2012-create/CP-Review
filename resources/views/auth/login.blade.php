@@ -7,7 +7,7 @@
     <div class="max-w-md w-full space-y-8 bg-white p-10 rounded-3xl border border-gray-100 shadow-xl">
         <div>
             <div class="mx-auto flex items-center justify-center">
-                <img src="/logo.png" alt="CP Review" class="h-16 w-auto">
+                <img src="/logo.png?v={{ file_exists(public_path('logo.png')) ? filemtime(public_path('logo.png')) : time() }}" alt="CP Review" class="h-16 w-auto">
             </div>
             <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900 tracking-tight">
                 Bem-vindo de volta
