@@ -21,21 +21,21 @@
     </div>
 
     <!-- Search & Filters -->
-    <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm mb-8">
-        <form action="{{ route('admin.clientes') }}" method="GET" class="flex flex-col md:flex-row gap-4 items-center">
+    <div class="bg-white p-24 rounded-3xl border border-gray-100 shadow-sm mb-8">
+        <form action="{{ route('admin.clientes') }}" method="GET" class="flex flex-col md:flex-row gap-16 items-center flex-wrap">
             <!-- Search Box -->
-            <div class="relative w-full md:flex-1">
-                <span class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <div class="relative w-full md:w-[320px]">
+                <span class="absolute inset-y-0 left-0 pl-16 flex items-center pointer-events-none text-gray-400">
+                    <svg class="w-16 h-16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.602 10.602z" />
                     </svg>
                 </span>
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Buscar por empresa, e-mail ou slug..." class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-medium text-gray-700 placeholder-gray-400 focus:bg-white focus:border-purple-300 focus:ring focus:ring-purple-200/50 transition duration-200">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Buscar por empresa, e-mail..." class="w-full pl-48 pr-12 py-12 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-medium text-gray-700 placeholder-gray-400 focus:bg-white focus:border-purple-300 focus:ring focus:ring-purple-200/50 transition duration-200">
             </div>
             
             <!-- Select Plan -->
-            <div class="w-full md:w-48">
-                <select name="plano" class="w-full py-3 px-4 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold text-gray-600 focus:bg-white focus:border-purple-300 focus:ring focus:ring-purple-200/50 transition duration-200 cursor-pointer">
+            <div class="w-full md:w-[180px]">
+                <select name="plano" class="w-full py-12 px-16 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold text-gray-600 focus:bg-white focus:border-purple-300 focus:ring focus:ring-purple-200/50 transition duration-200 cursor-pointer">
                     <option value="">Todos os Planos</option>
                     <option value="standard" {{ request('plano') == 'standard' ? 'selected' : '' }}>Standard</option>
                     <option value="premium" {{ request('plano') == 'premium' ? 'selected' : '' }}>Premium</option>
@@ -44,8 +44,8 @@
             </div>
 
             <!-- Select Status -->
-            <div class="w-full md:w-48">
-                <select name="status" class="w-full py-3 px-4 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold text-gray-600 focus:bg-white focus:border-purple-300 focus:ring focus:ring-purple-200/50 transition duration-200 cursor-pointer">
+            <div class="w-full md:w-[160px]">
+                <select name="status" class="w-full py-12 px-16 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold text-gray-600 focus:bg-white focus:border-purple-300 focus:ring focus:ring-purple-200/50 transition duration-200 cursor-pointer">
                     <option value="">Qualquer Status</option>
                     <option value="ativo" {{ request('status') == 'ativo' ? 'selected' : '' }}>Ativo</option>
                     <option value="trial" {{ request('status') == 'trial' ? 'selected' : '' }}>Trial</option>
@@ -54,8 +54,8 @@
             </div>
 
             <!-- Submit Button -->
-            <button type="submit" class="w-full md:w-auto px-6 py-3 bg-gray-900 text-white rounded-2xl text-sm font-bold hover:bg-gray-800 transition duration-200 flex items-center justify-center gap-2 shadow-sm">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <button type="submit" class="w-full md:w-auto px-24 py-12 bg-gray-900 text-white rounded-2xl text-sm font-bold hover:bg-gray-800 transition duration-200 flex items-center justify-center gap-8 shadow-sm">
+                <svg class="w-16 h-16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591l.04 3.061M3.75 6h16.5M3 10h18M3 14h18M3 18h18" />
                 </svg>
                 Filtrar
