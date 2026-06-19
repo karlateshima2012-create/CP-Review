@@ -34,7 +34,7 @@
             <a href="{{ url('/login') }}" class="btn">Acessar Meu Painel</a>
 
             <div style="margin-top: 40px; border-top: 1px solid #f3f4f6; pt: 30px; text-align: center;">
-                <p style="font-size: 11px; color: #9ca3af;">CP Review Care • Inteligência em Customer Success</p>
+                <p style="font-size: 11px; color: #9ca3af;">CP Review • Inteligência em Customer Success</p>
             </div>
         </div>
     </div>

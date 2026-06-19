@@ -110,7 +110,7 @@
             <p class="text-3xl font-medium text-gray-400 tracking-wide">Escaneie para avaliar o nosso atendimento</p>
         </div>
         <div class="pt-20">
-            <p class="text-2xl font-mono text-gray-300">Powered by CP Review Care</p>
+            <p class="text-2xl font-mono text-gray-300">Powered by CP Review</p>
         </div>
     </div>
 </div>

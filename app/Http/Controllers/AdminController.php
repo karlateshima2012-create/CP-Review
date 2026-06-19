@@ -140,7 +140,7 @@ class AdminController extends Controller
 
         Mail::send('emails.welcome', compact('cliente', 'linkPainel', 'linkAvaliacao', 'linkQR'), function ($message) use ($cliente) {
             $message->to($cliente->email)
-                ->subject('🎉 Seu sistema CP Review Care está ativo!');
+                ->subject('🎉 Seu sistema CP Review está ativo!');
         });
     }
 

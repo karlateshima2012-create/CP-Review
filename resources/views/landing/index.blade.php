@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'CP Review Care - Gestão Inteligente')
+@section('title', 'CP Review - Gestão Inteligente')
 
 @section('content')
 <div class="min-h-screen bg-neutral-bg text-neutral-primary font-sans selection:bg-brand-600 selection:text-white flex flex-col">
@@ -23,7 +23,7 @@
                 Seu feedback é o seu <br/> <span class="text-brand-600">faturamento</span>
             </h1>
             <p class="text-body-g md:text-title-3 text-neutral-secondary mx-auto mb-10 leading-relaxed max-w-2xl">
-                O CP Review Care é a plataforma inteligente que transforma críticas privadas em oportunidades de fidelização. Capture feedbacks negativos antes que cheguem à internet e incentive avaliações positivas no Google.
+                O CP Review é a plataforma inteligente que transforma críticas privadas em oportunidades de fidelização. Capture feedbacks negativos antes que cheguem à internet e incentive avaliações positivas no Google.
             </p>
             <div class="flex flex-col sm:flex-row justify-center gap-4">
                 <a href="#testar" class="bg-brand-600 hover:bg-brand-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition-transform hover:scale-105 shadow-xl shadow-brand-200">

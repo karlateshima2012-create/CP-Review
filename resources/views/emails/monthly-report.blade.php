@@ -67,7 +67,7 @@
         </div>
 
         <div class="footer">
-            Este é um relatório automático gerado pelo CP Review Care.<br>
+            Este é um relatório automático gerado pelo CP Review.<br>
             © {{ date('Y') }} CP Review • Todos os direitos reservados.
         </div>
     </div>

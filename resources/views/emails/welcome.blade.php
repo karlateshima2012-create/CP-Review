@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bem-vindo ao CP Review Care</title>
+    <title>Bem-vindo ao CP Review</title>
 </head>
 <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px;">
     <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
         <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; text-align: center;">
             <div style="font-size: 48px;">⭐</div>
-            <h1 style="color: white; margin: 10px 0 0;">CP Review Care</h1>
+            <h1 style="color: white; margin: 10px 0 0;">CP Review</h1>
             <p style="color: rgba(255,255,255,0.9); margin: 5px 0 0;">Seu sistema de avaliações está ativo!</p>
         </div>
 
@@ -46,12 +46,12 @@
             </div>
 
             <p style="color: #666; margin: 20px 0 0;">Qualquer dúvida, estamos à disposição.</p>
-            <p style="color: #666; margin: 10px 0 0;">Atenciosamente,<br><strong>Equipe CP Review Care</strong></p>
+            <p style="color: #666; margin: 10px 0 0;">Atenciosamente,<br><strong>Equipe CP Review</strong></p>
         </div>
 
         <div style="background: #f4f4f4; padding: 20px; text-align: center; font-size: 12px; color: #999;">
             <p>Este é um e-mail automático. Por favor, não responda.</p>
-            <p>&copy; {{ date('Y') }} CP Review Care. Todos os direitos reservados.</p>
+            <p>&copy; {{ date('Y') }} CP Review. Todos os direitos reservados.</p>
         </div>
     </div>
 </body>

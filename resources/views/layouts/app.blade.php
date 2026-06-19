@@ -13,7 +13,7 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v={{ file_exists(public_path('favicon.svg')) ? filemtime(public_path('favicon.svg')) : time() }}">
     @yield('meta')
 
-    <title>CP Review Care - @yield('title')</title>
+    <title>CP Review - @yield('title')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
