@@ -10,7 +10,6 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="CP Review">
-    <link rel="apple-touch-icon" href="/icon-512.png?v={{ file_exists(public_path('icon-512.png')) ? filemtime(public_path('icon-512.png')) : time() }}">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v={{ file_exists(public_path('favicon.svg')) ? filemtime(public_path('favicon.svg')) : time() }}">
     @yield('meta')
 
