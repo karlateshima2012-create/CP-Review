@@ -119,6 +119,8 @@ class BotScriptTest extends TestCase
     {
         \Illuminate\Support\Facades\Storage::fake('public');
 
+        $this->tenant->update(['google_maps_link' => 'https://g.page/r/CT0IMW6LPFnnEBM/review']);
+
         $logoFile = \Illuminate\Http\UploadedFile::fake()->image('logo.png', 100, 100);
         $coverFile = \Illuminate\Http\UploadedFile::fake()->image('cover.jpg', 800, 400);
 
@@ -139,7 +141,6 @@ class BotScriptTest extends TestCase
 
         $payload = [
             'messages' => $messages,
-            'google_maps_link' => 'https://g.page/r/CT0IMW6LPFnnEBM/review',
             'logo' => $logoFile,
             'cover' => $coverFile,
             'motivos_problema' => ['atendimento', 'limpeza', 'outro']

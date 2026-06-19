@@ -142,7 +142,6 @@ class ClienteController extends Controller
             'messages.ja' => 'required|array',
             'messages.*.*.text' => 'nullable|string|max:1000',
             'messages.*.*.step' => 'nullable|integer|min:1',
-            'google_maps_link' => 'nullable|url|max:1000',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'cover' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
             'motivos_problema' => 'nullable|array',
@@ -171,7 +170,6 @@ class ClienteController extends Controller
             'msg_pergunta_nota_jp' => $jaMsgs['askRate']['text'] ?? $cliente->msg_pergunta_nota_jp,
             'msg_agradecimento_alta_jp' => $jaMsgs['highRate']['text'] ?? $cliente->msg_agradecimento_alta_jp,
             'msg_agradecimento_baixa_jp' => $jaMsgs['lowRate']['text'] ?? $cliente->msg_agradecimento_baixa_jp,
-            'google_maps_link' => $validated['google_maps_link'] ?? $cliente->google_maps_link,
             'motivos_problema' => $request->input('motivos_problema', []),
         ];
 

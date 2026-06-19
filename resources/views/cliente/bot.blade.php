@@ -243,13 +243,6 @@
                 
                 <!-- Accordion Body -->
                 <div id="accordion-page" class="p-24 space-y-24 hidden">
-                    <!-- Google Maps Link -->
-                    <div>
-                        <label class="block text-body-m font-bold text-neutral-secondary mb-4">Link de Avaliação do Google</label>
-                        <input type="url" name="google_maps_link" id="google-maps-link-input" value="{{ old('google_maps_link', $cliente->google_maps_link) }}" class="w-full border border-neutral-border rounded-lg px-12 py-8 text-body-m focus:ring-2 focus:ring-brand-600 focus:outline-none" placeholder="https://g.page/r/.../review">
-                        <p class="text-legend text-neutral-secondary/60 mt-4 font-medium">Usado para redirecionar clientes com avaliações de nota 4-5★ para avaliar sua empresa diretamente no Google.</p>
-                    </div>
-                    
                     <!-- File Uploads (Logo & Cover) -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-24">
                         <!-- Logo Upload -->
