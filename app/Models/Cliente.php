@@ -17,7 +17,7 @@ class Cliente extends Model
         'valor_mensal', 'trial_ends_at', 'status',
         'msg_boas_vindas_br', 'msg_pergunta_nota_br', 'msg_agradecimento_alta_br', 'msg_agradecimento_baixa_br',
         'msg_boas_vindas_jp', 'msg_pergunta_nota_jp', 'msg_agradecimento_alta_jp', 'msg_agradecimento_baixa_jp',
-        'logo_path', 'cover_path', 'motivos_problema', 'pack_idioma'
+        'logo_path', 'cover_path', 'cor_principal', 'motivos_problema', 'pack_idioma'
     ];
 
     protected $casts = [

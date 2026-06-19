@@ -3,6 +3,13 @@
 @section('title', 'Como foi sua visita?')
 
 @section('content')
+@php
+    $cor = $cliente->cor_principal ?? '#7C3AED';
+    $r = hexdec(substr($cor, 1, 2));
+    $g = hexdec(substr($cor, 3, 2));
+    $b = hexdec(substr($cor, 5, 2));
+    $corLight = sprintf('#%02x%02x%02x', min(255,$r+40), min(255,$g+40), min(255,$b+40));
+@endphp
 <script src="/pwa/offline-queue.js"></script>
 <script src="/pwa/photo-upload.js"></script>
 <style>
@@ -15,14 +22,14 @@
   --border: #E5E7EB;
   --bubble-bot: #FFFFFF;
   --bubble-bot-border: #E5E7EB;
-  --bubble-user: #7C3AED;
-  --bubble-user-dark: #6D28D9;
+  --bubble-user: {{ $cor }};
+  --bubble-user-dark: {{ $cor }};
   --text: #111827;
   --text-muted: #4B5563;
   --text-dim: #9CA3AF;
-  --accent: #7C3AED;
-  --accent-glow: rgba(124, 58, 237, 0.15);
-  --header-bg: linear-gradient(135deg, #7C3AED 0%, #9F67FF 100%);
+  --accent: {{ $cor }};
+  --accent-glow: rgba({{ $r }}, {{ $g }}, {{ $b }}, 0.15);
+  --header-bg: linear-gradient(135deg, {{ $cor }} 0%, {{ $corLight }} 100%);
   --green: #10B981;
   --yellow: #F59E0B;
   --red: #EF4444;

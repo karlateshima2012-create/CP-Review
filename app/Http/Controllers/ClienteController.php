@@ -179,6 +179,7 @@ class ClienteController extends Controller
             'cover' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
             'motivos_problema' => 'nullable|array',
             'motivos_problema.*' => 'string|in:atendimento,produto_servico,preco,demora,limpeza,conforto,entrega,outro',
+            'cor_principal' => ['nullable', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
         ]);
 
         foreach ($validated['messages'] as $locale => $msgs) {
@@ -207,6 +208,10 @@ class ClienteController extends Controller
 
         if (\Illuminate\Support\Facades\Schema::hasColumn('clientes', 'motivos_problema')) {
             $updateData['motivos_problema'] = $request->input('motivos_problema', []);
+        }
+
+        if (\Illuminate\Support\Facades\Schema::hasColumn('clientes', 'cor_principal')) {
+            $updateData['cor_principal'] = $validated['cor_principal'] ?? '#7C3AED';
         }
 
         // Processamento de Upload do Logo

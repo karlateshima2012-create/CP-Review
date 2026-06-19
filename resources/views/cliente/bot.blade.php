@@ -281,6 +281,25 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Cor Principal -->
+                    @php $corAtual = $cliente->cor_principal ?? '#7C3AED'; @endphp
+                    <div class="space-y-8">
+                        <label class="block text-body-m font-bold text-neutral-secondary">Cor Principal do Chatbot</label>
+                        <input type="hidden" name="cor_principal" id="cor-principal-input" value="{{ $corAtual }}">
+                        <button type="button" onclick="openColorModal()"
+                                class="w-full flex items-center gap-16 bg-gray-50 border border-neutral-border p-14 rounded-xl hover:bg-neutral-bg transition group">
+                            <div id="cor-trigger-swatch" class="w-44 h-44 rounded-xl shadow-md border border-black/10 flex-shrink-0 transition-all"
+                                 style="background: {{ $corAtual }}"></div>
+                            <div class="flex-1 text-left">
+                                <span class="block text-body-m font-bold text-neutral-primary font-mono tracking-wide" id="cor-trigger-hex">{{ strtoupper($corAtual) }}</span>
+                                <span class="text-legend text-neutral-secondary">Balões, botões e destaques do chatbot</span>
+                            </div>
+                            <svg class="w-20 h-20 text-neutral-secondary group-hover:text-neutral-primary transition" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.098 19.902a3.75 3.75 0 005.304 0l6.401-6.402M6.75 21A3.75 3.75 0 013 17.25V4.125C3 3.504 3.504 3 4.125 3h5.25c.621 0 1.125.504 1.125 1.125v4.072M6.75 21a3.75 3.75 0 003.75-3.75V8.197M6.75 17.25h.008v.008H6.75v-.008z"/>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -310,44 +329,38 @@
                 <div class="absolute top-4 left-1/2 -translate-x-1/2 w-48 h-12 bg-neutral-primary rounded-full z-50"></div>
 
                 <!-- Chat Header (Cover Banner) -->
-                <div id="mock-header" class="relative text-white h-[120px] flex items-end shadow-sm bg-cover bg-center overflow-hidden flex-shrink-0" style="background-color: #7C3AED; {{ $cliente->cover_path ? 'background-image: url(' . asset('storage/' . $cliente->cover_path) . ');' : '' }}">
+                <div id="mock-header" class="relative text-white h-[120px] flex items-center shadow-sm bg-cover bg-center overflow-hidden flex-shrink-0" style="background-color: {{ $corAtual }}; {{ $cliente->cover_path ? 'background-image: url(' . asset('storage/' . $cliente->cover_path) . ');' : '' }}">
                     <!-- Gradient Overlay for Contrast -->
                     <div id="mock-header-overlay" class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-black/20 z-10 {{ $cliente->cover_path ? '' : 'hidden' }}"></div>
 
                     <!-- Header Content -->
-                    <div class="relative z-20 flex items-center gap-8 p-12 w-full mt-12">
-                        <div class="w-32 h-32 bg-white border border-white/20 rounded-lg flex items-center justify-center text-brand-600 font-bold text-xs overflow-hidden flex-shrink-0" id="mock-logo-box">
+                    <div class="relative z-20 flex items-center gap-8 p-12 w-full">
+                        <div class="w-32 h-32 bg-white border border-black/20 rounded-lg flex items-center justify-center font-bold text-xs overflow-hidden flex-shrink-0" id="mock-logo-box">
                             @if($cliente->logo_path)
-                                <img id="mock-logo-img" src="{{ asset('storage/' . $cliente->logo_path) }}" alt="Logo" class="w-full h-full object-cover">
+                                <img id="mock-logo-img" src="{{ asset('storage/' . $cliente->logo_path) }}" alt="Logo" class="w-full h-full object-contain p-[2px]">
                             @else
                                 <span id="mock-logo-emoji" class="text-sm">🏢</span>
                             @endif
                         </div>
                         <div class="leading-none text-left">
-                            <span class="block font-bold text-xs tracking-wide truncate max-w-[170px]" id="mock-biz-name">{{ $cliente->nome_empresa }}</span>
-                            <span class="text-[8px] text-brand-100/90 flex items-center gap-4 mt-2 font-medium">
+                            <span class="block font-bold text-xs tracking-wide truncate max-w-[170px]" id="mock-biz-name" style="text-shadow: 0 1px 4px rgba(0,0,0,0.5)">{{ $cliente->nome_empresa }}</span>
+                            <span class="text-[8px] text-white/80 flex items-center gap-4 mt-2 font-medium">
                                 <span class="w-4 h-4 rounded-full bg-emerald-400 inline-block animate-pulse"></span> Online
                             </span>
                         </div>
-                        
-                        <!-- Close button ✕ -->
-                        <button type="button" class="text-brand-100 hover:text-white ml-auto text-xs opacity-60">
-                            ✕
-                        </button>
+                        <button type="button" class="text-white/60 hover:text-white ml-auto text-xs">✕</button>
                     </div>
                 </div>
 
                 <!-- Chat Body (Messages Mock) -->
                 <div class="flex-1 p-8 overflow-y-auto space-y-8 flex flex-col justify-start">
-                    
-                    <!-- Bot Msg 1 (Boas-vindas) -->
+
                     <div class="flex gap-4 items-end max-w-[80%]">
                         <div class="bg-white border border-neutral-border rounded-2xl rounded-bl-none px-12 py-8 text-[11px] shadow-sm text-neutral-primary text-left" id="preview-msg-welcome">
                             Olá! Como foi sua visita hoje?
                         </div>
                     </div>
 
-                    <!-- Bot Msg Star rating input mock -->
                     <div class="flex gap-4 items-end max-w-[80%]">
                         <div class="bg-white border border-neutral-border rounded-2xl rounded-bl-none p-8 flex justify-center gap-4 shadow-sm w-full">
                             <span class="text-amber-400 text-xs">★</span>
@@ -358,32 +371,26 @@
                         </div>
                     </div>
 
-                    <!-- User Msg (5 Stars selected) -->
-                    <div class="bg-brand-600 text-white rounded-2xl rounded-br-none px-12 py-8 text-[11px] self-end max-w-[80%] shadow-sm flex items-center">
+                    <!-- User Msg (colorida pela cor principal) -->
+                    <div id="mock-user-bubble" class="text-white rounded-2xl rounded-br-none px-12 py-8 text-[11px] self-end max-w-[80%] shadow-sm" style="background: {{ $corAtual }}">
                         ⭐⭐⭐⭐⭐
                     </div>
 
-                    <!-- Bot Msg 2 (Convite Google) -->
                     <div class="flex gap-4 items-end max-w-[80%]">
                         <div class="bg-white border border-neutral-border rounded-2xl rounded-bl-none px-12 py-8 text-[11px] shadow-sm text-neutral-primary text-left" id="preview-msg-high">
                             Que ótimo! Que tal deixar sua avaliação no Google?
                         </div>
                     </div>
 
-                    <!-- Redirect Google Card -->
                     <div class="border border-neutral-border bg-white rounded-xl p-8 max-w-[90%] shadow-sm self-start text-left">
                         <div class="flex items-center gap-8 mb-8">
-                            <div class="w-16 h-16 bg-blue-50 rounded flex items-center justify-center text-blue-600 font-bold text-[10px]">
-                                G
-                            </div>
+                            <div class="w-16 h-16 bg-blue-50 rounded flex items-center justify-center text-blue-600 font-bold text-[10px]">G</div>
                             <div class="leading-tight">
                                 <span class="block font-bold text-[9px] text-neutral-primary">Avaliar no Google</span>
                                 <span class="text-[7px] text-neutral-secondary">Rápido e prático</span>
                             </div>
                         </div>
-                        <button type="button" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-4 rounded font-bold text-[9px] flex items-center justify-center gap-2">
-                            ↗ Abrir Google
-                        </button>
+                        <button type="button" class="w-full bg-blue-500 text-white py-4 rounded font-bold text-[9px]">↗ Abrir Google</button>
                     </div>
 
                 </div>
@@ -391,7 +398,7 @@
                 <!-- Input footer mock -->
                 <div class="bg-white border-t border-neutral-border p-8 flex items-center gap-8 flex-shrink-0">
                     <input type="text" placeholder="Escreva aqui..." class="flex-1 bg-gray-50 border border-neutral-border rounded-full px-12 py-6 text-[9px] outline-none" disabled>
-                    <div class="w-24 h-24 rounded-full bg-brand-600 text-white flex items-center justify-center flex-shrink-0">
+                    <div id="mock-send-btn" class="w-24 h-24 rounded-full text-white flex items-center justify-center flex-shrink-0" style="background: {{ $corAtual }}">
                         <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
                     </div>
                 </div>
@@ -498,5 +505,184 @@
 
     // Initialize preview values
     updatePreview();
+
+    // ── COLOR PICKER ──────────────────────────────────────────────────────
+    const COLOR_PRESETS = [
+        '#7C3AED','#6D28D9','#9333EA','#3B82F6','#0EA5E9','#06B6D4',
+        '#10B981','#16A34A','#DC2626','#E11D48','#F59E0B','#1F2937'
+    ];
+
+    let pendingColor = document.getElementById('cor-principal-input').value || '#7C3AED';
+
+    function openColorModal() {
+        pendingColor = document.getElementById('cor-principal-input').value || '#7C3AED';
+        updateModalUI(pendingColor);
+        document.getElementById('color-picker-modal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeColorModal() {
+        document.getElementById('color-picker-modal').classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
+    function selectPresetColor(color) {
+        pendingColor = color;
+        updateModalUI(color);
+    }
+
+    function updateModalUI(color) {
+        document.getElementById('modal-color-strip').style.background =
+            `linear-gradient(135deg, ${color} 0%, ${adjustBrightness(color, 40)} 100%)`;
+        document.getElementById('apply-color-btn').style.background = color;
+        document.getElementById('custom-color-input').value = color;
+        document.getElementById('custom-color-swatch').style.background = color;
+        document.getElementById('custom-hex-input').value = color.toUpperCase();
+
+        document.querySelectorAll('[data-preset-color]').forEach(btn => {
+            const selected = btn.dataset.presetColor === color;
+            btn.innerHTML = selected
+                ? '<span style="color:#fff; font-size:14px; line-height:1; font-weight:700">✓</span>'
+                : '';
+            btn.style.outline = selected ? `3px solid ${color}` : 'none';
+            btn.style.outlineOffset = '2px';
+        });
+    }
+
+    function applySelectedColor() {
+        const color = pendingColor;
+        document.getElementById('cor-principal-input').value = color;
+        document.getElementById('cor-trigger-swatch').style.background = color;
+        document.getElementById('cor-trigger-hex').textContent = color.toUpperCase();
+        applyColorToPreview(color);
+        closeColorModal();
+    }
+
+    function applyColorToPreview(color) {
+        const header = document.getElementById('mock-header');
+        if (header) header.style.backgroundColor = color;
+
+        const bubble = document.getElementById('mock-user-bubble');
+        if (bubble) bubble.style.background = color;
+
+        const sendBtn = document.getElementById('mock-send-btn');
+        if (sendBtn) sendBtn.style.background = color;
+    }
+
+    // Convert hex to a slightly lighter shade for gradient end
+    function adjustBrightness(hex, amount) {
+        const r = Math.min(255, parseInt(hex.slice(1,3), 16) + amount);
+        const g = Math.min(255, parseInt(hex.slice(3,5), 16) + amount);
+        const b = Math.min(255, parseInt(hex.slice(5,7), 16) + amount);
+        return '#' + [r,g,b].map(v => v.toString(16).padStart(2,'0')).join('');
+    }
+
+    // Custom color picker (native input)
+    document.getElementById('custom-color-input').addEventListener('input', function () {
+        pendingColor = this.value;
+        document.getElementById('custom-color-swatch').style.background = this.value;
+        document.getElementById('custom-hex-input').value = this.value.toUpperCase();
+        document.getElementById('modal-color-strip').style.background =
+            `linear-gradient(135deg, ${this.value} 0%, ${adjustBrightness(this.value, 40)} 100%)`;
+        document.getElementById('apply-color-btn').style.background = this.value;
+        document.querySelectorAll('[data-preset-color]').forEach(btn => {
+            btn.innerHTML = '';
+            btn.style.outline = 'none';
+        });
+    });
+
+    // Hex text input
+    document.getElementById('custom-hex-input').addEventListener('input', function () {
+        const val = this.value.startsWith('#') ? this.value : '#' + this.value;
+        if (/^#[0-9A-Fa-f]{6}$/.test(val)) {
+            pendingColor = val;
+            document.getElementById('custom-color-input').value = val;
+            document.getElementById('custom-color-swatch').style.background = val;
+            document.getElementById('modal-color-strip').style.background =
+                `linear-gradient(135deg, ${val} 0%, ${adjustBrightness(val, 40)} 100%)`;
+            document.getElementById('apply-color-btn').style.background = val;
+        }
+    });
+
+    // Close on ESC
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeColorModal(); });
+
+    // Initialize preview with saved color
+    applyColorToPreview(pendingColor);
 </script>
+
+<!-- ── COLOR PICKER MODAL ──────────────────────────────────────────────────────── -->
+<div id="color-picker-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden" aria-modal="true">
+    <!-- Backdrop -->
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeColorModal()"></div>
+
+    <!-- Card -->
+    <div class="relative bg-white rounded-2xl shadow-2xl w-[360px] overflow-hidden mx-16" style="max-height: 90vh; overflow-y:auto">
+
+        <!-- Color preview strip -->
+        <div id="modal-color-strip" class="h-[80px] flex items-center justify-center px-24 transition-all duration-200"
+             style="background: linear-gradient(135deg, {{ $corAtual }} 0%, {{ strtoupper(sprintf('#%02x%02x%02x', min(255, hexdec(substr($corAtual,1,2))+40), min(255, hexdec(substr($corAtual,3,2))+40), min(255, hexdec(substr($corAtual,5,2))+40))) }} 100%)">
+            <span class="text-white font-bold text-base tracking-wide truncate max-w-full" style="text-shadow: 0 2px 8px rgba(0,0,0,0.4)">
+                {{ $cliente->nome_empresa }}
+            </span>
+        </div>
+
+        <div class="p-24">
+            <h3 class="text-body-g font-bold text-neutral-primary mb-4">Cor Principal</h3>
+            <p class="text-legend text-neutral-secondary mb-20">Escolha a cor de destaque do chatbot — aplicada em balões, botões e cabeçalho.</p>
+
+            <!-- Preset palette -->
+            <div class="grid grid-cols-6 gap-10 mb-24">
+                @foreach(['#7C3AED','#6D28D9','#9333EA','#3B82F6','#0EA5E9','#06B6D4','#10B981','#16A34A','#DC2626','#E11D48','#F59E0B','#1F2937'] as $preset)
+                    <button type="button"
+                            data-preset-color="{{ $preset }}"
+                            onclick="selectPresetColor('{{ $preset }}')"
+                            class="w-44 h-44 rounded-xl shadow-md transition-all duration-150 hover:scale-110 flex items-center justify-center"
+                            style="background: {{ $preset }}; {{ $preset === $corAtual ? 'outline:3px solid '.$preset.'; outline-offset:2px' : '' }}">
+                        @if($preset === $corAtual)
+                            <span style="color:#fff; font-size:14px; font-weight:700">✓</span>
+                        @endif
+                    </button>
+                @endforeach
+            </div>
+
+            <!-- Divider -->
+            <div class="flex items-center gap-12 mb-20">
+                <div class="flex-1 h-px bg-neutral-border"></div>
+                <span class="text-legend text-neutral-secondary font-medium">ou cor personalizada</span>
+                <div class="flex-1 h-px bg-neutral-border"></div>
+            </div>
+
+            <!-- Custom hex + native color input -->
+            <div class="flex items-center gap-12 bg-gray-50 border border-neutral-border rounded-xl p-12 mb-24">
+                <div class="relative w-44 h-44 rounded-xl overflow-hidden border border-neutral-border flex-shrink-0 cursor-pointer shadow-sm">
+                    <input type="color" id="custom-color-input" value="{{ $corAtual }}"
+                           class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" style="transform:scale(2)">
+                    <div id="custom-color-swatch" class="w-full h-full" style="background: {{ $corAtual }}"></div>
+                </div>
+                <div class="flex-1">
+                    <label class="text-legend text-neutral-secondary font-bold block mb-6">Código hexadecimal</label>
+                    <input type="text" id="custom-hex-input" value="{{ strtoupper($corAtual) }}"
+                           maxlength="7" placeholder="#000000"
+                           class="w-full border border-neutral-border rounded-lg px-10 py-8 text-body-m font-mono tracking-widest uppercase focus:ring-2 focus:outline-none"
+                           style="focus-ring-color: {{ $corAtual }}">
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex gap-12">
+                <button type="button" onclick="closeColorModal()"
+                        class="flex-1 border border-neutral-border text-neutral-secondary py-12 rounded-xl font-bold hover:bg-neutral-bg transition text-body-m">
+                    Cancelar
+                </button>
+                <button type="button" id="apply-color-btn" onclick="applySelectedColor()"
+                        class="flex-1 py-12 rounded-xl font-bold text-white transition text-body-m shadow-md"
+                        style="background: {{ $corAtual }}">
+                    Aplicar Cor
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
