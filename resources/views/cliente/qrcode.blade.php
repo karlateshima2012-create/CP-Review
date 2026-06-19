@@ -22,8 +22,8 @@
             <span class="text-legend text-neutral-secondary font-bold uppercase tracking-wider block mb-4">Link de avaliação</span>
             <div id="eval-message" class="text-body-m text-neutral-primary leading-relaxed break-all">
                 Olá! Por favor, deixe sua avaliação sobre nós em: 
-                <a href="{{ route('avaliacao.show', ['slug' => $cliente->slug, 'v' => 4]) }}" id="eval-link" class="font-bold text-brand-600 hover:underline" target="_blank">
-                    {{ route('avaliacao.show', ['slug' => $cliente->slug, 'v' => 4]) }}
+                <a href="{{ route('avaliacao.show', ['slug' => $cliente->slug, 'v' => 5]) }}" id="eval-link" class="font-bold text-brand-600 hover:underline" target="_blank">
+                    {{ route('avaliacao.show', ['slug' => $cliente->slug, 'v' => 5]) }}
                 </a>
             </div>
         </div>
@@ -52,15 +52,15 @@
             
             <div class="grid grid-cols-3 gap-12">
                 <!-- WhatsApp -->
-                <a href="https://api.whatsapp.com/send?text=Olá!%20Por%20favor,%20deixe%20sua%20avaliação%20sobre%20nós%20em:%20{{ urlencode(route('avaliacao.show', ['slug' => $cliente->slug, 'v' => 4])) }}" target="_blank" class="border border-neutral-border bg-white hover:bg-neutral-bg py-12 px-8 rounded-lg text-body-m font-bold text-neutral-primary flex items-center justify-center transition text-center">
+                <a href="https://api.whatsapp.com/send?text=Olá!%20Por%20favor,%20deixe%20sua%20avaliação%20sobre%20nós%20em:%20{{ urlencode(route('avaliacao.show', ['slug' => $cliente->slug, 'v' => 5])) }}" target="_blank" class="border border-neutral-border bg-white hover:bg-neutral-bg py-12 px-8 rounded-lg text-body-m font-bold text-neutral-primary flex items-center justify-center transition text-center">
                     WhatsApp
                 </a>
                 <!-- LINE -->
-                <a href="https://line.me/R/share?text=Olá!%20Por%20favor,%20deixe%20sua%20avaliação%20sobre%20nós%20em:%20{{ urlencode(route('avaliacao.show', ['slug' => $cliente->slug, 'v' => 4])) }}" target="_blank" class="border border-neutral-border bg-white hover:bg-neutral-bg py-12 px-8 rounded-lg text-body-m font-bold text-neutral-primary flex items-center justify-center transition text-center">
+                <a href="https://line.me/R/share?text=Olá!%20Por%20favor,%20deixe%20sua%20avaliação%20sobre%20nós%20em:%20{{ urlencode(route('avaliacao.show', ['slug' => $cliente->slug, 'v' => 5])) }}" target="_blank" class="border border-neutral-border bg-white hover:bg-neutral-bg py-12 px-8 rounded-lg text-body-m font-bold text-neutral-primary flex items-center justify-center transition text-center">
                     LINE
                 </a>
                 <!-- Email -->
-                <a href="mailto:?subject=Deixe%20sua%20avaliação&body=Olá!%20Por%20favor,%20deixe%20sua%20avaliação%20sobre%20nós%20em:%20{{ route('avaliacao.show', ['slug' => $cliente->slug, 'v' => 4]) }}" class="border border-neutral-border bg-white hover:bg-neutral-bg py-12 px-8 rounded-lg text-body-m font-bold text-neutral-primary flex items-center justify-center transition text-center">
+                <a href="mailto:?subject=Deixe%20sua%20avaliação&body=Olá!%20Por%20favor,%20deixe%20sua%20avaliação%20sobre%20nós%20em:%20{{ route('avaliacao.show', ['slug' => $cliente->slug, 'v' => 5]) }}" class="border border-neutral-border bg-white hover:bg-neutral-bg py-12 px-8 rounded-lg text-body-m font-bold text-neutral-primary flex items-center justify-center transition text-center">
                     E-mail
                 </a>
             </div>
