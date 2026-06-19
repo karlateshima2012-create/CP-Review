@@ -46,7 +46,24 @@ return Application::configure(basePath: dirname(__DIR__))
                 if ($botToken && $chatId) {
                     $url = "https://api.telegram.org/bot{$botToken}/sendMessage";
                     
+                    // Diagnóstico de impacto estimado do erro
+                    $impacto = "⚠️ <b>Erro de Execução:</b> O usuário provavelmente visualizou uma tela de erro (500) ou uma ação foi interrompida.";
+                    
+                    if ($e instanceof \Illuminate\Database\QueryException || str_contains(strtolower($e->getMessage()), 'database') || str_contains(strtolower($e->getMessage()), 'connection refused')) {
+                        $impacto = "🔴 <b>Banco de Dados Indisponível/Falha!</b> O sistema não consegue se conectar ao MySQL. O usuário está vendo uma tela de erro e o sistema está fora do ar.";
+                    } elseif ($e instanceof \Symfony\Component\HttpKernel\Exception\HttpException) {
+                        $statusCode = $e->getStatusCode();
+                        if ($statusCode === 503) {
+                            $impacto = "🚧 <b>Modo de Manutenção Ativo!</b> O usuário está vendo a tela padrão de manutenção (503).";
+                        } else {
+                            $impacto = "⚠️ <b>Erro HTTP {$statusCode}!</b> O usuário recebeu uma resposta de erro com o status {$statusCode}.";
+                        }
+                    } elseif ($e instanceof \Error || $e instanceof \ErrorException) {
+                        $impacto = "🔴 <b>Erro Fatal no Código (Crash)!</b> Ocorreu uma falha grave (variável indefinida, método inexistente ou syntax error). O usuário viu uma tela de erro (500).";
+                    }
+
                     $message = "⚠️ <b>[Erro de Aplicação]</b> no servidor <code>" . gethostname() . "</code>\n\n";
+                    $message .= "💥 <b>Impacto Estimado:</b>\n" . $impacto . "\n\n";
                     $message .= "<b>Mensagem:</b> <code>" . htmlspecialchars($e->getMessage()) . "</code>\n";
                     $message .= "<b>Arquivo:</b> <code>" . htmlspecialchars($e->getFile()) . ":" . $e->getLine() . "</code>\n";
                     $message .= "<b>URL:</b> <code>" . request()->fullUrl() . "</code>\n";
