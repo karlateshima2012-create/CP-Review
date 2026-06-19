@@ -12,9 +12,6 @@
             <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900 tracking-tight">
                 Bem-vindo de volta
             </h2>
-            <p class="mt-2 text-center text-sm text-gray-500">
-                Acesse seu painel administrativo ou de lojista
-            </p>
         </div>
         
         <form class="mt-8 space-y-6" action="{{ route('login') }}" method="POST">
@@ -33,14 +30,7 @@
                 </div>
             </div>
 
-            <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                    <input id="remember_me" name="remember" type="checkbox" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
-                    <label for="remember_me" class="ml-2 block text-sm text-gray-600">
-                        Lembrar-me
-                    </label>
-                </div>
-
+            <div class="flex justify-end">
                 <div class="text-sm">
                     <a href="https://wa.me/819011886491" target="_blank" class="font-medium text-purple-600 hover:text-purple-500 transition-colors">
                         Esqueceu a senha?
@@ -55,11 +45,8 @@
             </div>
         </form>
 
-        <div class="mt-8 text-center border-t border-gray-50 pt-8">
-            <p class="text-xs text-gray-400">
-                Acesso exclusivo para administradores e estabelecimentos parceiros.
-            </p>
-            <a href="{{ url('/') }}" class="mt-4 inline-block text-xs font-medium text-gray-500 hover:text-purple-600 underline decoration-gray-200">
+        <div class="mt-8 text-center border-t border-gray-50 pt-6">
+            <a href="{{ url('/') }}" class="inline-block text-xs font-medium text-gray-500 hover:text-purple-600 underline decoration-gray-200">
                 ← Voltar para a Home
             </a>
         </div>
