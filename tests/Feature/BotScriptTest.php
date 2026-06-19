@@ -114,4 +114,63 @@ class BotScriptTest extends TestCase
         $apiResponse->assertJsonPath('lang.q_first_visit.step', null);
         $apiResponse->assertJsonPath('lang.q_first_visit.text', 'Primeira vez?');
     }
+
+    public function test_lojista_pode_atualizar_branding_e_google_maps_link(): void
+    {
+        \Illuminate\Support\Facades\Storage::fake('public');
+
+        $logoFile = \Illuminate\Http\UploadedFile::fake()->image('logo.png', 100, 100);
+        $coverFile = \Illuminate\Http\UploadedFile::fake()->image('cover.jpg', 800, 400);
+
+        // Fetch valid defaults to satisfy request structure validation
+        $defaultsPt = \App\Models\BotScript::getDefaultMessages('pt');
+        $defaultsJp = \App\Models\BotScript::getDefaultMessages('ja');
+
+        $messages = [
+            'pt' => [],
+            'ja' => []
+        ];
+        foreach ($defaultsPt as $key => $val) {
+            $messages['pt'][$key] = ['text' => $val['text'], 'step' => (string)$val['step']];
+        }
+        foreach ($defaultsJp as $key => $val) {
+            $messages['ja'][$key] = ['text' => $val['text'], 'step' => (string)$val['step']];
+        }
+
+        $payload = [
+            'messages' => $messages,
+            'google_maps_link' => 'https://g.page/r/CT0IMW6LPFnnEBM/review',
+            'logo' => $logoFile,
+            'cover' => $coverFile,
+        ];
+
+        $response = $this->actingAs($this->lojista)
+            ->post(route('cliente.perfil.update', $this->tenant->id), $payload);
+
+        $response->assertRedirect();
+
+        $this->tenant = $this->tenant->fresh();
+
+        $this->assertEquals('https://g.page/r/CT0IMW6LPFnnEBM/review', $this->tenant->google_maps_link);
+        $this->assertNotNull($this->tenant->logo_path);
+        $this->assertNotNull($this->tenant->cover_path);
+
+        \Illuminate\Support\Facades\Storage::disk('public')->assertExists($this->tenant->logo_path);
+        \Illuminate\Support\Facades\Storage::disk('public')->assertExists($this->tenant->cover_path);
+
+        // Verify bot API returns the URLs
+        $apiResponse = $this->get("/api/bot-script/loja-teste");
+        $apiResponse->assertStatus(200);
+        $apiResponse->assertJsonPath('tenant.google_link', 'https://g.page/r/CT0IMW6LPFnnEBM/review');
+        $apiResponse->assertJsonPath('tenant.logo_url', asset('storage/' . $this->tenant->logo_path));
+        $apiResponse->assertJsonPath('tenant.cover_url', asset('storage/' . $this->tenant->cover_path));
+
+        // Verify HTML page rendering shows the cover and logo
+        $botViewResponse = $this->get("/avaliar/loja-teste");
+        $botViewResponse->assertStatus(200);
+        $botViewResponse->assertSee($this->tenant->nome_empresa);
+        $botViewResponse->assertSee('header-cover');
+        $botViewResponse->assertSee(asset('storage/' . $this->tenant->logo_path));
+        $botViewResponse->assertSee(asset('storage/' . $this->tenant->cover_path));
+    }
 }

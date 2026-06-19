@@ -22,7 +22,7 @@
   --text-dim: #9CA3AF;
   --accent: #7C3AED;
   --accent-glow: rgba(124, 58, 237, 0.15);
-  --header-bg: #7C3AED;
+  --header-bg: linear-gradient(135deg, #7C3AED 0%, #9F67FF 100%);
   --green: #10B981;
   --yellow: #F59E0B;
   --red: #EF4444;
@@ -71,15 +71,41 @@ body {
 /* HEADER */
 .header {
   flex-shrink: 0;
-  padding: 45px 20px 15px;
-  background: var(--header-bg);
+  height: 160px;
+  position: relative;
   border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  gap: 15px;
   z-index: 20;
   color: #FFFFFF;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  background: var(--header-bg);
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+
+.header-cover {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  z-index: 1;
+}
+
+.header-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.75) 100%);
+  z-index: 2;
+}
+
+.header-content {
+  position: relative;
+  width: 100%;
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  z-index: 3;
 }
 
 .biz-avatar {
@@ -90,13 +116,37 @@ body {
   font-size: 32px;
   box-shadow: 0 6px 16px rgba(0,0,0,0.15);
   margin-bottom: 4px;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 2px solid #FFFFFF;
 }
 
-.biz-info { flex: 1; }
+.biz-info { flex: 1; text-align: left; }
 .biz-name { font-size: 18px; font-weight: 800; color: #FFFFFF; line-height: 1.2; letter-spacing: 0.5px; }
 .biz-status { font-size: 12px; color: rgba(255,255,255,0.8); display: flex; align-items: center; gap: 5px; font-weight: 500; }
 .biz-status::before { content:''; width:6px; height:6px; background:#10B981; border-radius:50%; animation: pulse 2s infinite; }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
+
+.close-btn {
+  font-size: 18px;
+  color: #FFF;
+  cursor: pointer;
+  opacity: 0.7;
+  padding: 10px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.3);
+  line-height: 1;
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  border: none;
+}
+.close-btn:hover {
+  opacity: 1;
+  background: rgba(0,0,0,0.5);
+}
 
 /* CHAT AREA */
 .chat-area {
@@ -315,13 +365,28 @@ body {
 <div class="bot-container">
     <div class="phone">
         <div class="header">
-            <div class="biz-avatar">🏢</div>
-            <div class="biz-info">
-                <div class="biz-name" id="header-biz-name">...</div>
-                <div class="biz-status">Online</div>
-            </div>
-            <div onclick="showSuccessScreen()" style="font-size: 18px; color: #FFF; cursor: pointer; opacity: 0.6; padding: 10px; border-radius: 50%; background: rgba(255,255,255,0.1); line-height: 1; transition: 0.2s; display: flex; align-items: center; justify-content: center;" onmouseover="this.style.opacity=1;this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.opacity=0.6;this.style.background='rgba(255,255,255,0.1)'">
-                ✕
+            @if($cliente->cover_path)
+                <div class="header-cover" style="background-image: url('{{ asset('storage/' . $cliente->cover_path) }}')"></div>
+                <div class="header-overlay"></div>
+            @else
+                <div class="header-overlay" style="background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.4) 100%);"></div>
+            @endif
+            
+            <div class="header-content">
+                <div class="biz-avatar">
+                    @if($cliente->logo_path)
+                        <img src="{{ asset('storage/' . $cliente->logo_path) }}" alt="{{ $cliente->nome_empresa }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;">
+                    @else
+                        🏢
+                    @endif
+                </div>
+                <div class="biz-info">
+                    <div class="biz-name" id="header-biz-name">{{ $cliente->nome_empresa }}</div>
+                    <div class="biz-status">Online</div>
+                </div>
+                <button type="button" class="close-btn" onclick="showSuccessScreen()">
+                    ✕
+                </button>
             </div>
         </div>
 

@@ -142,6 +142,9 @@ class ClienteController extends Controller
             'messages.ja' => 'required|array',
             'messages.*.*.text' => 'nullable|string|max:1000',
             'messages.*.*.step' => 'nullable|integer|min:1',
+            'google_maps_link' => 'nullable|url|max:1000',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'cover' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
         ]);
 
         foreach ($validated['messages'] as $locale => $msgs) {
@@ -157,7 +160,7 @@ class ClienteController extends Controller
         $ptMsgs = $validated['messages']['pt'] ?? [];
         $jaMsgs = $validated['messages']['ja'] ?? [];
 
-        $cliente->update([
+        $updateData = [
             'msg_boas_vindas_br' => $ptMsgs['welcome']['text'] ?? $cliente->msg_boas_vindas_br,
             'msg_pergunta_nota_br' => $ptMsgs['askRate']['text'] ?? $cliente->msg_pergunta_nota_br,
             'msg_agradecimento_alta_br' => $ptMsgs['highRate']['text'] ?? $cliente->msg_agradecimento_alta_br,
@@ -166,9 +169,28 @@ class ClienteController extends Controller
             'msg_pergunta_nota_jp' => $jaMsgs['askRate']['text'] ?? $cliente->msg_pergunta_nota_jp,
             'msg_agradecimento_alta_jp' => $jaMsgs['highRate']['text'] ?? $cliente->msg_agradecimento_alta_jp,
             'msg_agradecimento_baixa_jp' => $jaMsgs['lowRate']['text'] ?? $cliente->msg_agradecimento_baixa_jp,
-        ]);
+            'google_maps_link' => $validated['google_maps_link'] ?? $cliente->google_maps_link,
+        ];
 
-        return redirect()->back()->with('success', 'Perfil atualizado com sucesso!');
+        // Processamento de Upload do Logo
+        if ($request->hasFile('logo')) {
+            if ($cliente->logo_path && \Illuminate\Support\Facades\Storage::disk('public')->exists($cliente->logo_path)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($cliente->logo_path);
+            }
+            $updateData['logo_path'] = $request->file('logo')->store('branding/logos', 'public');
+        }
+
+        // Processamento de Upload da Capa
+        if ($request->hasFile('cover')) {
+            if ($cliente->cover_path && \Illuminate\Support\Facades\Storage::disk('public')->exists($cliente->cover_path)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($cliente->cover_path);
+            }
+            $updateData['cover_path'] = $request->file('cover')->store('branding/covers', 'public');
+        }
+
+        $cliente->update($updateData);
+
+        return redirect()->back()->with('success', 'Configurações de personalização salvas com sucesso!');
     }
 
     public function showConta(Cliente $cliente)

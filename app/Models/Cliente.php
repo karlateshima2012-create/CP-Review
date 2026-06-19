@@ -16,7 +16,8 @@ class Cliente extends Model
         'slug', 'google_maps_link', 'pais', 'canal_notificacao', 'plano', 'ativo', 'data_ativacao',
         'valor_mensal', 'trial_ends_at', 'status',
         'msg_boas_vindas_br', 'msg_pergunta_nota_br', 'msg_agradecimento_alta_br', 'msg_agradecimento_baixa_br',
-        'msg_boas_vindas_jp', 'msg_pergunta_nota_jp', 'msg_agradecimento_alta_jp', 'msg_agradecimento_baixa_jp'
+        'msg_boas_vindas_jp', 'msg_pergunta_nota_jp', 'msg_agradecimento_alta_jp', 'msg_agradecimento_baixa_jp',
+        'logo_path', 'cover_path'
     ];
 
     protected $casts = [
@@ -54,5 +55,15 @@ class Cliente extends Model
     public function getQrCodeUrlAttribute(): string
     {
         return url("/cliente/qrcode/{$this->id}");
+    }
+
+    public function getLogoUrlAttribute(): ?string
+    {
+        return $this->logo_path ? asset('storage/' . $this->logo_path) : null;
+    }
+
+    public function getCoverUrlAttribute(): ?string
+    {
+        return $this->cover_path ? asset('storage/' . $this->cover_path) : null;
     }
 }

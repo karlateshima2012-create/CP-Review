@@ -217,6 +217,8 @@ class AvaliacaoController extends Controller
             'tenant' => [
                 'name' => $cliente->nome_empresa,
                 'google_link' => $cliente->google_maps_link ?? "https://www.google.com/maps?q=" . urlencode($cliente->nome_empresa),
+                'logo_url' => $cliente->logo_url,
+                'cover_url' => $cliente->cover_url,
             ],
             'config' => [
                 'auto_close' => 4000,
