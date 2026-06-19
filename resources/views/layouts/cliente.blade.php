@@ -11,9 +11,9 @@
             <!-- Brand & Company Info -->
             <div class="flex items-center gap-12">
                 <img src="/favicon.svg?v={{ file_exists(public_path('favicon.svg')) ? filemtime(public_path('favicon.svg')) : time() }}" alt="CP Review" class="w-32 h-32 flex-shrink-0">
-                <div class="leading-none">
-                    <span class="text-body-g font-bold uppercase tracking-[0.15em] text-neutral-primary block">CP REVIEW</span>
-                    <span class="text-[8px] text-neutral-secondary uppercase tracking-[0.02em] font-bold block mt-4">GESTÃO DE AVALIAÇÕES</span>
+                <div class="flex flex-col justify-between h-32 py-[1px] leading-none">
+                    <span class="text-[14px] font-bold uppercase tracking-[0.16em] text-neutral-primary block">CP REVIEW</span>
+                    <span class="text-[7px] text-neutral-secondary uppercase tracking-[0.04em] font-bold block">GESTÃO DE AVALIAÇÕES</span>
                 </div>
             </div>
 
