@@ -11,10 +11,10 @@
             <!-- Brand & Company Info -->
             <div class="flex items-center gap-12">
                 <img src="/favicon.svg?v={{ file_exists(public_path('favicon.svg')) ? filemtime(public_path('favicon.svg')) : time() }}" alt="CP Review" class="w-32 h-32 flex-shrink-0">
-                <div class="flex flex-col justify-between h-32 py-[1px] leading-none">
-                    <span class="text-[14px] font-bold uppercase tracking-[0.16em] text-neutral-primary block">CP REVIEW</span>
-                    <span class="text-[7px] text-neutral-secondary uppercase tracking-[0.04em] font-bold block">GESTÃO DE AVALIAÇÕES</span>
-                </div>
+                <svg viewBox="0 0 120 32" class="h-32 w-[120px] flex-shrink-0" style="font-family: 'IBM Plex Sans', sans-serif;">
+                    <text x="0" y="13" font-size="13.5" font-weight="700" fill="#111827" textLength="120" lengthAdjust="spacing">CP REVIEW</text>
+                    <text x="0" y="29" font-size="7.2" font-weight="700" fill="#4B5563" textLength="120" lengthAdjust="spacing">GESTÃO DE AVALIAÇÕES</text>
+                </svg>
             </div>
 
             <!-- Vertical Navigation Menu -->
