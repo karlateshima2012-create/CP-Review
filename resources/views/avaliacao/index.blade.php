@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
-@section('title', 'Como foi sua visita?')
+@section('title', 'Avaliação')
 
 @section('meta')
     <!-- Open Graph / WhatsApp Preview Meta Tags -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="CP Review - Como foi sua visita?">
+    <meta property="og:title" content="{{ config('app.name', 'CP Review') }}">
     <meta property="og:description" content="Olá! Por favor, deixe sua avaliação sobre nós em: {{ route('avaliacao.show', $cliente->slug) }}">
     <meta property="og:url" content="{{ route('avaliacao.show', $cliente->slug) }}">
 @endsection
