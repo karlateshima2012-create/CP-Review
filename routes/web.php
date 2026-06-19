@@ -39,6 +39,7 @@ Route::middleware(['auth'])->prefix('/cliente')->group(function () {
     Route::get('/{cliente}/qrcode-link', [ClienteController::class, 'showQrCodeLink'])->name('cliente.qrcode-link');
     Route::get('/{cliente}/bot', [ClienteController::class, 'showBotSettings'])->name('cliente.bot');
     Route::post('/{cliente}/conta', [ClienteController::class, 'updateConta'])->name('cliente.conta.update');
+    Route::get('/{cliente}/ajuda', [ClienteController::class, 'showAjuda'])->name('cliente.ajuda');
     Route::post('/avaliacao/{avaliacao}/responder', [ClienteController::class, 'responder']);
     Route::get('/qrcode/{cliente}', [ClienteController::class, 'qrcode']);
     Route::get('/qrcode/{cliente}/download', [ClienteController::class, 'downloadQrCode']);

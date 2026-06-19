@@ -157,7 +157,7 @@
                     <a href="https://wa.me/5511999999999" target="_blank" class="w-full border border-neutral-border hover:bg-neutral-bg py-12 px-16 rounded-lg text-body-m font-bold text-neutral-primary flex items-center justify-center gap-8 transition">
                         <span>💬 Falar com suporte (WhatsApp)</span>
                     </a>
-                    <a href="#" class="w-full border border-neutral-border hover:bg-neutral-bg py-12 px-16 rounded-lg text-body-m font-bold text-neutral-primary flex items-center justify-center gap-8 transition">
+                    <a href="{{ route('cliente.ajuda', $cliente->id) }}" class="w-full border border-neutral-border hover:bg-neutral-bg py-12 px-16 rounded-lg text-body-m font-bold text-neutral-primary flex items-center justify-center gap-8 transition">
                         <span>📄 Guia de uso</span>
                     </a>
                 </div>

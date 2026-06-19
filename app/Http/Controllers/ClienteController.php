@@ -276,6 +276,12 @@ class ClienteController extends Controller
         return redirect()->back()->with('success', 'Dados da conta atualizados com sucesso!');
     }
 
+    public function showAjuda(Cliente $cliente)
+    {
+        $this->authorize('view', $cliente);
+        return view('cliente.ajuda', compact('cliente'));
+    }
+
     public function showQrCodeLink(Cliente $cliente)
     {
         $this->authorize('view', $cliente);
