@@ -56,6 +56,12 @@ class AvaliacaoController extends Controller
 
         if (!$cliente) abort(404);
 
+        // Registra cada acesso ao bot para métricas de conversão
+        \DB::table('bot_acessos')->insert([
+            'tenant_id'  => $cliente->id,
+            'created_at' => now(),
+        ]);
+
         return view('avaliacao.index', compact('cliente'));
     }
 

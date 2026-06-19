@@ -22,28 +22,63 @@ class ClienteController extends Controller
     {
         $this->authorize('view', $cliente);
 
+        // ── Métricas gerais ────────────────────────────────────────────────
         $totalAvaliacoes = $cliente->avaliacoes()->count();
-        $mediaNotas = $cliente->avaliacoes()->avg('nota');
-        $negativas = $cliente->avaliacoes()->where('nota', '<=', 3)->count();
-        $ultimasAvaliacoes = $cliente->avaliacoes()
+        $mediaNotas      = $cliente->avaliacoes()->avg('nota') ?? 0;
+        $positivas       = $cliente->avaliacoes()->where('nota', '>=', 4)->count();
+        $negativas       = $cliente->avaliacoes()->where('nota', '<=', 3)->count();
+        $totalScans      = \DB::table('bot_acessos')->where('tenant_id', $cliente->id)->count();
+        $semAvaliacao    = max(0, $totalScans - $totalAvaliacoes);
+        $taxaConversao   = $totalScans > 0 ? round(($totalAvaliacoes / $totalScans) * 100, 1) : 0;
+
+        // ── Histórico recente (todas as avaliações, mais recentes primeiro) ──
+        $historicoRecente = $cliente->avaliacoes()
             ->orderBy('created_at', 'desc')
-            ->limit(10)
+            ->limit(20)
             ->get();
 
-        // Insights de BI
-        $pctPrimeiraVisita = $totalAvaliacoes > 0 
-            ? ($cliente->avaliacoes()->where('primeira_visita', true)->count() / $totalAvaliacoes) * 100 
-            : 0;
-            
-        $periodos = $cliente->avaliacoes()
-            ->select('periodo_visita', \Illuminate\Support\Facades\DB::raw('count(*) as total'))
-            ->whereNotNull('periodo_visita')
-            ->groupBy('periodo_visita')
+        // ── Ocorrências negativas pendentes (para o alerta) ───────────────
+        $ocorrenciasPendentes = $cliente->avaliacoes()
+            ->where('nota', '<=', 3)
+            ->where('resolvido', false)
+            ->orderBy('created_at', 'desc')
             ->get();
+
+        // ── Dados do gráfico — últimos 30 dias ────────────────────────────
+        $dias30 = collect(range(29, 0))->map(fn($i) => now()->subDays($i)->format('Y-m-d'));
+
+        $reviewsPorDia = $cliente->avaliacoes()
+            ->selectRaw("DATE(created_at) as dia,
+                         SUM(CASE WHEN nota >= 4 THEN 1 ELSE 0 END) as positivas,
+                         SUM(CASE WHEN nota <= 3 THEN 1 ELSE 0 END) as negativas")
+            ->where('created_at', '>=', now()->subDays(29)->startOfDay())
+            ->groupBy('dia')
+            ->get()->keyBy('dia');
+
+        $scansPorDia = \DB::table('bot_acessos')
+            ->selectRaw("DATE(created_at) as dia, COUNT(*) as total")
+            ->where('tenant_id', $cliente->id)
+            ->where('created_at', '>=', now()->subDays(29)->startOfDay())
+            ->groupBy('dia')
+            ->pluck('total', 'dia');
+
+        $chartLabels    = $dias30->map(fn($d) => \Carbon\Carbon::parse($d)->format('d/m'))->values();
+        $chartPositivas = $dias30->map(fn($d) => (int) ($reviewsPorDia[$d]->positivas ?? 0))->values();
+        $chartNegativas = $dias30->map(fn($d) => (int) ($reviewsPorDia[$d]->negativas ?? 0))->values();
+        $chartScans     = $dias30->map(fn($d) => (int) ($scansPorDia[$d] ?? 0))->values();
+
+        // ── Distribuição por estrela ───────────────────────────────────────
+        $starCounts = [];
+        for ($s = 1; $s <= 5; $s++) {
+            $starCounts[$s] = $cliente->avaliacoes()->where('nota', $s)->count();
+        }
 
         return view('cliente.dashboard', compact(
-            'cliente', 'totalAvaliacoes', 'mediaNotas', 'negativas', 'ultimasAvaliacoes',
-            'pctPrimeiraVisita', 'periodos'
+            'cliente', 'totalAvaliacoes', 'mediaNotas',
+            'positivas', 'negativas', 'totalScans', 'semAvaliacao', 'taxaConversao',
+            'historicoRecente', 'ocorrenciasPendentes',
+            'chartLabels', 'chartPositivas', 'chartNegativas', 'chartScans',
+            'starCounts'
         ));
     }
 
