@@ -284,19 +284,23 @@
 
                     <!-- Cor Principal -->
                     @php $corAtual = $cliente->cor_principal ?? '#7C3AED'; @endphp
-                    <div class="space-y-10">
+                    <div class="space-y-12">
                         <label class="block text-body-m font-bold text-neutral-secondary">Cor Principal do Chatbot</label>
                         <input type="hidden" name="cor_principal" id="cor-principal-input" value="{{ $corAtual }}">
 
-                        <!-- Swatch atual + native color picker -->
                         <div class="flex items-center gap-12">
-                            <div class="relative w-36 h-36 rounded-lg border border-black/15 shadow-sm flex-shrink-0 overflow-hidden cursor-pointer" title="Abrir seletor de cor">
-                                <div id="cor-trigger-swatch" class="w-full h-full" style="background: {{ $corAtual }}"></div>
-                                <input type="color" id="native-color-input" value="{{ $corAtual }}"
-                                       class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
-                            </div>
+                            <!-- Botão arco-íris com + -->
+                            <button type="button" id="color-picker-toggle" onclick="toggleColorPicker()"
+                                    title="Abrir seletor de cor"
+                                    style="width:38px;height:38px;border-radius:50%;padding:2.5px;flex-shrink:0;background:conic-gradient(hsl(0,100%,50%),hsl(60,100%,50%),hsl(120,100%,50%),hsl(180,100%,50%),hsl(240,100%,50%),hsl(300,100%,50%),hsl(360,100%,50%));border:none;cursor:pointer;">
+                                <div id="cp-inner-circle" style="width:100%;height:100%;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:300;color:#444;line-height:1;">+</div>
+                            </button>
+
+                            <!-- Swatch da cor selecionada -->
+                            <div id="cor-current-swatch" style="width:32px;height:32px;border-radius:50%;border:1.5px solid rgba(0,0,0,0.12);box-shadow:0 1px 4px rgba(0,0,0,0.15);flex-shrink:0;background:{{ $corAtual }}"></div>
+
+                            <!-- Hex display -->
                             <span class="text-body-m font-mono font-bold text-neutral-primary uppercase tracking-wider" id="cor-trigger-hex">{{ strtoupper($corAtual) }}</span>
-                            <span class="text-legend text-neutral-secondary">Clique na cor ou escolha abaixo</span>
                         </div>
 
                         <!-- Preset palette -->
@@ -307,7 +311,7 @@
                                         onclick="pickColor('{{ $preset }}')"
                                         title="{{ $preset }}"
                                         class="w-28 h-28 rounded-lg transition-all hover:scale-110 flex items-center justify-center border-2"
-                                        style="background:{{ $preset }}; border-color:{{ $preset === $corAtual ? '#111' : 'transparent' }}">
+                                        style="background:{{ $preset }};border-color:{{ $preset === $corAtual ? '#111' : 'transparent' }}">
                                     @if($preset === $corAtual)
                                         <span style="color:#fff;font-size:11px;font-weight:700;line-height:1">✓</span>
                                     @endif
@@ -521,18 +525,78 @@
     // Initialize preview values
     updatePreview();
 
-    // ── COLOR PICKER (inline, no modal) ──────────────────────────────────
-    function pickColor(color) {
-        document.getElementById('cor-principal-input').value = color;
-        document.getElementById('cor-trigger-swatch').style.background = color;
-        document.getElementById('cor-trigger-hex').textContent = color.toUpperCase();
-        document.getElementById('native-color-input').value = color;
+    // ── CUSTOM COLOR PICKER ───────────────────────────────────────────────
+    let cpOpen = false;
+    let cpHue = 0, cpSat = 0.7, cpVal = 0.7;
+    let cpDragging = false;
+
+    function hsvToRgb(h, s, v) {
+        const i = Math.floor(h / 60) % 6, f = h / 60 - Math.floor(h / 60);
+        const p = v*(1-s), q = v*(1-f*s), t = v*(1-(1-f)*s);
+        const m = [[v,t,p],[q,v,p],[p,v,t],[p,q,v],[t,p,v],[v,p,q]][i];
+        return m.map(c => Math.round(c * 255));
+    }
+
+    function rgbToHex(r, g, b) {
+        return '#' + [r,g,b].map(v => v.toString(16).padStart(2,'0')).join('');
+    }
+
+    function hexToHsv(hex) {
+        const r = parseInt(hex.slice(1,3),16)/255;
+        const g = parseInt(hex.slice(3,5),16)/255;
+        const b = parseInt(hex.slice(5,7),16)/255;
+        const max = Math.max(r,g,b), min = Math.min(r,g,b), d = max - min;
+        let h = 0, s = max === 0 ? 0 : d/max, v = max;
+        if (d) {
+            if (max===r) h = ((g-b)/d + (g<b?6:0)) / 6;
+            else if (max===g) h = ((b-r)/d + 2) / 6;
+            else h = ((r-g)/d + 4) / 6;
+        }
+        return [h*360, s, v];
+    }
+
+    function drawCanvas() {
+        const canvas = document.getElementById('cp-canvas');
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width = canvas.offsetWidth;
+        const h = canvas.height = canvas.offsetHeight;
+        const [hr,hg,hb] = hsvToRgb(cpHue, 1, 1);
+        const sg = ctx.createLinearGradient(0,0,w,0);
+        sg.addColorStop(0,'#fff');
+        sg.addColorStop(1,`rgb(${hr},${hg},${hb})`);
+        ctx.fillStyle = sg; ctx.fillRect(0,0,w,h);
+        const vg = ctx.createLinearGradient(0,0,0,h);
+        vg.addColorStop(0,'rgba(0,0,0,0)');
+        vg.addColorStop(1,'rgba(0,0,0,1)');
+        ctx.fillStyle = vg; ctx.fillRect(0,0,w,h);
+        // thumb
+        const tx = cpSat * w, ty = (1-cpVal) * h;
+        ctx.beginPath();
+        ctx.arc(tx, ty, 7, 0, Math.PI*2);
+        ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(tx, ty, 7, 0, Math.PI*2);
+        ctx.strokeStyle = 'rgba(0,0,0,0.3)'; ctx.lineWidth = 1; ctx.stroke();
+    }
+
+    function commitColor() {
+        const hex = rgbToHex(...hsvToRgb(cpHue, cpSat, cpVal));
+        pickColor(hex);
+    }
+
+    function pickColor(hex) {
+        document.getElementById('cor-principal-input').value = hex;
+        document.getElementById('cor-current-swatch').style.background = hex;
+        document.getElementById('cor-trigger-hex').textContent = hex.toUpperCase();
+        const hexField = document.getElementById('cp-hex-input');
+        if (hexField) hexField.value = hex.slice(1).toUpperCase();
         document.querySelectorAll('[data-preset-color]').forEach(btn => {
-            const sel = btn.dataset.presetColor === color;
+            const sel = btn.dataset.presetColor.toLowerCase() === hex.toLowerCase();
             btn.style.borderColor = sel ? '#111' : 'transparent';
             btn.innerHTML = sel ? '<span style="color:#fff;font-size:11px;font-weight:700;line-height:1">✓</span>' : '';
         });
-        applyColorToPreview(color);
+        applyColorToPreview(hex);
+        if (cpOpen) drawCanvas();
     }
 
     function applyColorToPreview(color) {
@@ -544,12 +608,99 @@
         if (sendBtn) sendBtn.style.background = color;
     }
 
-    document.getElementById('native-color-input').addEventListener('input', function () {
-        pickColor(this.value);
+    function toggleColorPicker() {
+        const pop = document.getElementById('cp-popover');
+        const btn = document.getElementById('color-picker-toggle');
+        cpOpen = !cpOpen;
+        if (cpOpen) {
+            const rect = btn.getBoundingClientRect();
+            const top = rect.bottom + window.scrollY + 8;
+            const left = Math.min(rect.left, window.innerWidth - 268);
+            pop.style.top  = top + 'px';
+            pop.style.left = Math.max(8, left) + 'px';
+            pop.style.display = 'block';
+            const hex = document.getElementById('cor-principal-input').value || '#7C3AED';
+            [cpHue, cpSat, cpVal] = hexToHsv(hex);
+            document.getElementById('cp-hue').value = Math.round(cpHue);
+            document.getElementById('cp-hex-input').value = hex.slice(1).toUpperCase();
+            requestAnimationFrame(drawCanvas);
+        } else {
+            pop.style.display = 'none';
+        }
+    }
+
+    // Close when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!cpOpen) return;
+        const pop  = document.getElementById('cp-popover');
+        const btn  = document.getElementById('color-picker-toggle');
+        if (!pop.contains(e.target) && !btn.contains(e.target)) {
+            cpOpen = false;
+            pop.style.display = 'none';
+        }
+    });
+
+    // Canvas interaction
+    function canvasXY(e, canvas) {
+        const r = canvas.getBoundingClientRect();
+        const cx = (e.touches ? e.touches[0].clientX : e.clientX) - r.left;
+        const cy = (e.touches ? e.touches[0].clientY : e.clientY) - r.top;
+        cpSat = Math.max(0, Math.min(1, cx / r.width));
+        cpVal = Math.max(0, Math.min(1, 1 - cy / r.height));
+        commitColor();
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const canvas = document.getElementById('cp-canvas');
+        if (!canvas) return;
+        canvas.addEventListener('mousedown',  e => { cpDragging=true; canvasXY(e,canvas); });
+        canvas.addEventListener('touchstart', e => { e.preventDefault(); canvasXY(e,canvas); }, {passive:false});
+        canvas.addEventListener('touchmove',  e => { e.preventDefault(); canvasXY(e,canvas); }, {passive:false});
+        document.addEventListener('mousemove', e => { if (cpDragging) canvasXY(e,canvas); });
+        document.addEventListener('mouseup',   () => { cpDragging = false; });
+
+        document.getElementById('cp-hue').addEventListener('input', function() {
+            cpHue = parseFloat(this.value);
+            commitColor();
+        });
+
+        document.getElementById('cp-hex-input').addEventListener('input', function() {
+            const val = '#' + this.value.replace(/[^0-9a-fA-F]/g,'');
+            if (/^#[0-9a-fA-F]{6}$/.test(val)) {
+                [cpHue, cpSat, cpVal] = hexToHsv(val);
+                document.getElementById('cp-hue').value = Math.round(cpHue);
+                pickColor(val);
+            }
+        });
     });
 
     // Initialize preview with saved color
     applyColorToPreview(document.getElementById('cor-principal-input').value || '#7C3AED');
 </script>
+
+<style>
+#cp-hue { -webkit-appearance:none; appearance:none; width:100%; height:12px; border-radius:6px; background:linear-gradient(to right,hsl(0,100%,50%),hsl(60,100%,50%),hsl(120,100%,50%),hsl(180,100%,50%),hsl(240,100%,50%),hsl(300,100%,50%),hsl(360,100%,50%)); outline:none; cursor:pointer; }
+#cp-hue::-webkit-slider-thumb { -webkit-appearance:none; width:18px; height:18px; border-radius:50%; background:#fff; border:1.5px solid rgba(0,0,0,0.25); cursor:pointer; box-shadow:0 1px 4px rgba(0,0,0,0.2); }
+#cp-hue::-moz-range-thumb { width:18px; height:18px; border-radius:50%; background:#fff; border:1.5px solid rgba(0,0,0,0.25); cursor:pointer; }
+</style>
+
+<!-- Color Picker Popover (fixed, outside overflow containers) -->
+<div id="cp-popover" style="display:none; position:fixed; z-index:9999; width:256px; background:#fff; border-radius:14px; box-shadow:0 8px 32px rgba(0,0,0,0.18); border:1px solid #E5E7EB; padding:14px;">
+    <!-- Canvas picker -->
+    <div style="border-radius:8px;overflow:hidden;margin-bottom:10px;cursor:crosshair;height:130px;">
+        <canvas id="cp-canvas" style="width:100%;height:130px;display:block;"></canvas>
+    </div>
+    <!-- Hue slider -->
+    <div style="margin-bottom:10px;">
+        <input type="range" id="cp-hue" min="0" max="360" value="0">
+    </div>
+    <!-- Hex input -->
+    <div style="display:flex;align-items:center;gap:8px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:8px;padding:8px 12px;">
+        <span style="font-size:12px;color:#9CA3AF;font-weight:600;">#</span>
+        <input type="text" id="cp-hex-input" maxlength="6" placeholder="7C3AED"
+               style="flex:1;background:transparent;border:none;outline:none;font-family:monospace;font-size:13px;font-weight:700;color:#111827;text-transform:uppercase;letter-spacing:0.05em;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+    </div>
+</div>
 
 @endsection
