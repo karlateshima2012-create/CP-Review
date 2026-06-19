@@ -11,8 +11,9 @@
 
 <div class="grid lg:grid-cols-12 gap-32 lg:items-stretch">
 
-    <!-- Left Column: QR Code -->
-    <div class="lg:col-span-6 card p-24 flex flex-col items-center text-center">
+    <!-- Left Column: QR Code + dica -->
+    <div class="lg:col-span-6 flex flex-col gap-16">
+    <div class="card p-24 flex flex-col items-center text-center flex-1">
         <!-- QR Code Image Box -->
         <div class="border border-neutral-border rounded-xl p-16 bg-white shadow-sm mb-24 flex items-center justify-center w-[220px] h-[220px]">
             <img src="{{ url("/cliente/qrcode/{$cliente->id}") }}" alt="QR Code" class="w-full h-full object-contain">
@@ -43,6 +44,15 @@
             </button>
         </div>
     </div>
+
+    <!-- Como usar Card -->
+    <div class="card p-16">
+        <p class="text-body-m text-neutral-secondary leading-relaxed">
+            Imprima e cole na mesa, balcão ou cardápio. O cliente escaneia, avalia — satisfeito vai ao Google, insatisfeito fica em Ocorrências.
+        </p>
+    </div>
+
+    </div>{{-- fim left column --}}
 
     <!-- Right Column: two cards that fill the same height as the left -->
     <div class="lg:col-span-6 flex flex-col gap-16">
@@ -109,9 +119,6 @@
                 </a>
             </div>
 
-            <p class="text-legend text-neutral-secondary mt-12 leading-relaxed">
-                Imprima e cole na mesa, balcão ou cardápio. O cliente escaneia, avalia — satisfeito vai ao Google, insatisfeito fica em Ocorrências.
-            </p>
         </div>
 
     </div>
