@@ -300,9 +300,6 @@
 
             <!-- Action Button -->
             <button type="submit" class="w-full bg-brand-600 text-white py-16 rounded-xl font-bold hover:bg-brand-700 transition shadow-sm flex items-center justify-center gap-8">
-                <svg class="w-24 h-24" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                </svg>
                 Salvar Alterações de Personalização
             </button>
         </div>

@@ -170,11 +170,14 @@ class ClienteController extends Controller
             'msg_pergunta_nota_jp' => $jaMsgs['askRate']['text'] ?? $cliente->msg_pergunta_nota_jp,
             'msg_agradecimento_alta_jp' => $jaMsgs['highRate']['text'] ?? $cliente->msg_agradecimento_alta_jp,
             'msg_agradecimento_baixa_jp' => $jaMsgs['lowRate']['text'] ?? $cliente->msg_agradecimento_baixa_jp,
-            'motivos_problema' => $request->input('motivos_problema', []),
         ];
 
+        if (\Illuminate\Support\Facades\Schema::hasColumn('clientes', 'motivos_problema')) {
+            $updateData['motivos_problema'] = $request->input('motivos_problema', []);
+        }
+
         // Processamento de Upload do Logo
-        if ($request->hasFile('logo')) {
+        if ($request->hasFile('logo') && \Illuminate\Support\Facades\Schema::hasColumn('clientes', 'logo_path')) {
             if ($cliente->logo_path && \Illuminate\Support\Facades\Storage::disk('public')->exists($cliente->logo_path)) {
                 \Illuminate\Support\Facades\Storage::disk('public')->delete($cliente->logo_path);
             }
@@ -182,7 +185,7 @@ class ClienteController extends Controller
         }
 
         // Processamento de Upload da Capa
-        if ($request->hasFile('cover')) {
+        if ($request->hasFile('cover') && \Illuminate\Support\Facades\Schema::hasColumn('clientes', 'cover_path')) {
             if ($cliente->cover_path && \Illuminate\Support\Facades\Storage::disk('public')->exists($cliente->cover_path)) {
                 \Illuminate\Support\Facades\Storage::disk('public')->delete($cliente->cover_path);
             }

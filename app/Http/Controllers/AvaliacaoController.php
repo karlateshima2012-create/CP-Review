@@ -116,7 +116,7 @@ class AvaliacaoController extends Controller
 
     protected function getStaticTranslations($locale, Cliente $cliente = null)
     {
-        $selectedKeys = ($cliente && $cliente->motivos_problema) 
+        $selectedKeys = ($cliente && \Illuminate\Support\Facades\Schema::hasColumn('clientes', 'motivos_problema') && $cliente->motivos_problema) 
             ? $cliente->motivos_problema 
             : ['atendimento', 'produto_servico', 'preco', 'demora', 'outro'];
 
