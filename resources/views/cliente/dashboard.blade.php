@@ -11,7 +11,7 @@
 </div>
 
 <!-- ── KPI CARDS ──────────────────────────────────────────────────────────── -->
-<div class="grid grid-cols-2 lg:grid-cols-4 gap-16 mb-24">
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-16 mb-24">
 
     {{-- Acessos ao Bot --}}
     <div class="card p-20 flex flex-col gap-8">
@@ -53,10 +53,10 @@
             </div>
         </div>
         <span class="text-[36px] font-bold text-red-500 leading-none">{{ number_format($negativas) }}</span>
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between flex-wrap gap-4">
             <span class="text-legend text-neutral-secondary">Notas 1★ a 3★</span>
             @if($ocorrenciasPendentes->count() > 0)
-                <span class="text-legend bg-amber-100 text-amber-700 font-bold px-8 py-2 rounded">{{ $ocorrenciasPendentes->count() }} pendentes</span>
+                <span class="text-legend bg-amber-100 text-amber-700 font-bold px-8 py-2 rounded whitespace-nowrap">{{ $ocorrenciasPendentes->count() }} pendentes</span>
             @endif
         </div>
     </div>
@@ -72,9 +72,9 @@
             </div>
         </div>
         <span class="text-[36px] font-bold text-amber-500 leading-none">{{ number_format($semAvaliacao) }}</span>
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between flex-wrap gap-4">
             <span class="text-legend text-neutral-secondary">Saíram sem avaliar</span>
-            <span class="text-legend text-neutral-secondary font-bold">{{ $taxaConversao }}% conversão</span>
+            <span class="text-legend text-neutral-secondary font-bold whitespace-nowrap">{{ $taxaConversao }}% conversão</span>
         </div>
     </div>
 
