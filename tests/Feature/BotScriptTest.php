@@ -96,6 +96,7 @@ class BotScriptTest extends TestCase
         ];
 
         $response = $this->actingAs($this->lojista)
+            ->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class)
             ->post(route('cliente.perfil.update', $this->tenant->id), $payload);
 
         $response->assertRedirect();
@@ -147,6 +148,7 @@ class BotScriptTest extends TestCase
         ];
 
         $response = $this->actingAs($this->lojista)
+            ->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class)
             ->post(route('cliente.perfil.update', $this->tenant->id), $payload);
 
         $response->assertRedirect();

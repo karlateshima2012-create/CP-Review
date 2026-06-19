@@ -119,6 +119,7 @@ class TenantIsolationTest extends TestCase
 
         // Lojista A tenta responder a avaliação da Loja B
         $response = $this->actingAs($this->lojistaA)
+            ->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class)
             ->post("/cliente/avaliacao/{$avaliacaoB->id}/responder", [
                 'resposta' => 'Resposta do Lojista A invasor'
             ]);

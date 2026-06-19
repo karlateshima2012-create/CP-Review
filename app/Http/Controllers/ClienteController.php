@@ -139,9 +139,11 @@ class ClienteController extends Controller
 
         $url = $cliente->url_avaliacao;
 
-        $qrCode = QrCode::create($url)
-            ->setSize(300)
-            ->setMargin(10);
+        $qrCode = new QrCode(
+            data: $url,
+            size: 300,
+            margin: 10
+        );
 
         $writer = new PngWriter();
         $result = $writer->write($qrCode);
@@ -156,9 +158,11 @@ class ClienteController extends Controller
 
         $url = $cliente->url_avaliacao;
 
-        $qrCode = QrCode::create($url)
-            ->setSize(300)
-            ->setMargin(10);
+        $qrCode = new QrCode(
+            data: $url,
+            size: 300,
+            margin: 10
+        );
 
         $writer = new PngWriter();
         $result = $writer->write($qrCode);
