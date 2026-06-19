@@ -70,28 +70,44 @@
             <p class="text-legend mt-4">Compartilhe o QR Code com seus clientes para começar a receber feedback.</p>
         </div>
     @else
-        <div class="divide-y divide-neutral-border">
-            @foreach($historicoRecente as $avaliacao)
+        <div class="grid grid-cols-1 md:grid-cols-2">
+            @foreach($historicoRecente as $index => $avaliacao)
                 @php
                     $isPositiva = $avaliacao->nota >= 4;
-                    $rowBg = $isPositiva ? '' : 'bg-red-50/30';
+                    $rowBg = $isPositiva ? 'bg-neutral-card' : 'bg-red-50/20';
+                    $hoverBg = $isPositiva ? 'hover:bg-neutral-bg' : 'hover:bg-red-50/40';
+
+                    $borderClasses = '';
+                    if ($index >= 1) {
+                        $borderClasses .= ' border-t border-neutral-border';
+                    }
+                    if ($index === 1) {
+                        $borderClasses .= ' md:border-t-0';
+                    }
+                    if ($index % 2 === 0) {
+                        $borderClasses .= ' md:border-r md:border-neutral-border';
+                    }
                 @endphp
-                <div class="p-16 flex items-start gap-16 {{ $rowBg }} hover:bg-neutral-bg/50 transition">
+                <div class="p-12 flex items-start gap-12 {{ $rowBg }} {{ $hoverBg }} {{ $borderClasses }} transition">
 
                     {{-- Nota / Estrelas --}}
-                    <div class="flex-shrink-0 text-center w-40">
-                        <span class="block text-title-1 font-bold {{ $isPositiva ? 'text-emerald-600' : 'text-red-500' }} leading-none">
+                    <div class="flex-shrink-0 text-center w-48">
+                        <span class="block text-title-2 font-bold {{ $isPositiva ? 'text-emerald-600' : 'text-red-500' }} leading-none">
                             {{ $avaliacao->nota }}
                         </span>
-                        <span class="text-amber-400 text-[10px] leading-none">★</span>
+                        <div class="flex justify-center text-amber-400 text-[10px] leading-none mt-4 gap-[2px]">
+                            @for($i = 1; $i <= $avaliacao->nota; $i++)
+                                <span>★</span>
+                            @endfor
+                        </div>
                     </div>
 
                     {{-- Badge tipo --}}
                     <div class="flex-shrink-0 mt-2">
                         @if($isPositiva)
-                            <span class="text-legend bg-emerald-100 text-emerald-700 font-bold px-8 py-4 rounded uppercase tracking-wider">Positiva</span>
+                            <span class="text-legend bg-emerald-50 text-emerald-700 font-bold px-6 py-2 rounded uppercase tracking-wider border border-emerald-200">Positiva</span>
                         @else
-                            <span class="text-legend {{ $avaliacao->resolvido ? 'bg-gray-100 text-gray-500' : 'bg-red-100 text-red-600' }} font-bold px-8 py-4 rounded uppercase tracking-wider">
+                            <span class="text-legend {{ $avaliacao->resolvido ? 'bg-gray-100 text-gray-500 border-gray-200' : 'bg-red-50 text-red-600 border-red-200' }} font-bold px-6 py-2 rounded uppercase tracking-wider border">
                                 {{ $avaliacao->resolvido ? 'Resolvida' : 'Pendente' }}
                             </span>
                         @endif
@@ -99,20 +115,20 @@
 
                     {{-- Feedback --}}
                     <div class="flex-1 min-w-0">
-                        <p class="text-body-m text-neutral-primary leading-relaxed">
+                        <p class="text-body-m text-neutral-primary leading-relaxed break-words">
                             {{ $avaliacao->feedback ?: '—' }}
                         </p>
                         @if($avaliacao->problema)
-                            <span class="inline-block mt-4 text-legend bg-neutral-bg border border-neutral-border text-neutral-secondary px-8 py-2 rounded font-medium">
+                            <span class="inline-block mt-4 text-[10px] bg-neutral-bg border border-neutral-border text-neutral-secondary px-6 py-1 rounded font-medium">
                                 {{ $avaliacao->problema }}
                             </span>
                         @endif
                     </div>
 
                     {{-- Data --}}
-                    <div class="flex-shrink-0 text-right">
-                        <span class="block text-body-m text-neutral-secondary">{{ $avaliacao->created_at->format('d/m/Y') }}</span>
-                        <span class="block text-legend text-neutral-secondary/60">{{ $avaliacao->created_at->format('H:i') }}</span>
+                    <div class="flex-shrink-0 text-right text-legend">
+                        <span class="block text-neutral-secondary font-medium">{{ $avaliacao->created_at->format('d/m/Y') }}</span>
+                        <span class="block text-neutral-secondary/60 mt-2">{{ $avaliacao->created_at->format('H:i') }}</span>
                     </div>
 
                 </div>
