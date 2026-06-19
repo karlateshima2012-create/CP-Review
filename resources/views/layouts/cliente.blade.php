@@ -10,11 +10,7 @@
         <div class="space-y-32">
             <!-- Brand & Company Info -->
             <div class="flex items-center gap-12">
-                <div class="w-32 h-32 bg-brand-600 rounded-lg flex items-center justify-center text-white flex-shrink-0">
-                    <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 .587l3.668 7.431 8.2 1.191-5.934 5.787 1.4 8.168L12 18.896l-7.334 3.857 1.4-8.168L.132 9.209l8.2-1.191L12 .587z"/>
-                    </svg>
-                </div>
+                <img src="/favicon.svg?v={{ file_exists(public_path('favicon.svg')) ? filemtime(public_path('favicon.svg')) : time() }}" alt="CP Review" class="w-32 h-32 flex-shrink-0">
                 <div class="leading-tight">
                     <span class="text-body-g font-bold text-neutral-primary block">CP Review</span>
                     <span class="text-[11px] text-neutral-secondary block truncate max-w-[140px]">{{ $cliente->nome_empresa }}</span>
@@ -87,11 +83,7 @@
             <div class="px-16 py-12 flex justify-between items-center">
                 <!-- Brand -->
                 <div class="flex items-center gap-8">
-                    <div class="w-24 h-24 bg-brand-600 rounded-lg flex items-center justify-center text-white">
-                        <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 .587l3.668 7.431 8.2 1.191-5.934 5.787 1.4 8.168L12 18.896l-7.334 3.857 1.4-8.168L.132 9.209l8.2-1.191L12 .587z"/>
-                        </svg>
-                    </div>
+                    <img src="/favicon.svg?v={{ file_exists(public_path('favicon.svg')) ? filemtime(public_path('favicon.svg')) : time() }}" alt="CP Review" class="w-24 h-24 flex-shrink-0">
                     <span class="text-body-m font-bold text-neutral-primary">CP Review</span>
                     <span class="text-neutral-secondary">|</span>
                     <span class="text-[11px] text-neutral-secondary truncate max-w-[120px]">{{ $cliente->nome_empresa }}</span>
