@@ -33,23 +33,20 @@ jobs:
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
-          password: ${{ secrets.SSH_PASSWORD }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            # Remove a barra inicial se existir para evitar erro de Root Permission
-            CLEAN_PATH=$(echo "${{ secrets.PROD_PATH }}" | sed 's/^\///')
-            mkdir -p $CLEAN_PATH
-            cd $CLEAN_PATH
+            mkdir -p ${{ secrets.PROD_PATH }}
       
       - name: SCP Transfer
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
-          password: ${{ secrets.SSH_PASSWORD }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           source: "."
-          target: "domains/creativeprintjp.com/public_html/cpreview"
+          target: "${{ secrets.PROD_PATH }}"
           rm: false
           strip_components: 0
 
@@ -58,13 +55,14 @@ jobs:
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
-          password: ${{ secrets.SSH_PASSWORD }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd ${{ secrets.PROD_PATH }}
             
             # Garantir permissões de escrita
             chmod -R 775 storage bootstrap/cache
+            chown -R www-data:www-data storage bootstrap/cache
             
             # Comandos Laravel
             php artisan migrate --force
@@ -72,4 +70,5 @@ jobs:
             php artisan route:cache
             php artisan view:cache
             php artisan storage:link --force || true
+
 
