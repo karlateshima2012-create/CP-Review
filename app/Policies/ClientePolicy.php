@@ -21,7 +21,7 @@ class ClientePolicy
      */
     public function view(User $user, Cliente $cliente): bool
     {
-        return $user->isAdmin() || $user->id === $cliente->user_id;
+        return $user->isAdmin() || $user->id === $cliente->user_id || $user->tenant_id === $cliente->id;
     }
 
     /**
@@ -37,7 +37,7 @@ class ClientePolicy
      */
     public function update(User $user, Cliente $cliente): bool
     {
-        return $user->isAdmin() || $user->id === $cliente->user_id;
+        return $user->isAdmin() || $user->id === $cliente->user_id || $user->tenant_id === $cliente->id;
     }
 
     /**
