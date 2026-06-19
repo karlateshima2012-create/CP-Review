@@ -122,7 +122,11 @@
         </div>
     @empty
         <div class="card p-48 text-center text-neutral-secondary lg:col-span-2">
-            Nenhuma ocorrência encontrada para este filtro.
+            @if($filter === 'pendentes')
+                Não há ocorrências pendentes.
+            @else
+                Nenhuma ocorrência encontrada para este filtro.
+            @endif
         </div>
     @endforelse
 </div>

@@ -115,6 +115,16 @@ class AvaliacaoController extends Controller
                 'conforto' => '🪑 快適さ',
                 'entrega' => '📦 配達',
                 'outro' => '❗ その他'
+            ],
+            'en' => [
+                'atendimento' => '😕 Service',
+                'produto_servico' => '⚙️ Product or Service',
+                'preco' => '💸 Price',
+                'demora' => '⏱️ Wait time',
+                'limpeza' => '🧹 Cleanliness',
+                'conforto' => '🪑 Comfort',
+                'entrega' => '📦 Delivery',
+                'outro' => '❗ Other'
             ]
         ];
 
@@ -123,6 +133,33 @@ class AvaliacaoController extends Controller
             if (isset($mapping[$locale][$key])) {
                 $optionsLow[] = $mapping[$locale][$key];
             }
+        }
+
+        if ($locale === 'en') {
+            return [
+                'btn_yes' => "👍 Yes",
+                'btn_no' => "🔄 Been here before",
+                'btn_morning' => "🌅 Morning",
+                'btn_afternoon' => "🌤️ Afternoon",
+                'btn_night' => "🌙 Evening",
+                'btn_rec_yes' => "✨ Of course!",
+                'btn_rec_maybe' => "👍 Yes",
+                'btn_rec_no' => "😶 No",
+                'btn_contact_yes' => "📱 Yes",
+                'btn_contact_no' => "❌ No",
+                'btn_choose_line' => "💬 LINE",
+                'btn_choose_email' => "📧 E-mail",
+                'btn_contact_line' => "💬 LINE",
+                'btn_contact_email' => "📧 E-mail",
+                'btn_skip' => "⏭️ Skip",
+                'btn_send' => "📸 Send",
+                'btn_send_txt' => "Send",
+                'btn_feedback_no' => "Skip",
+                'btn_feedback_send' => "Send",
+                'feedback_placeholder' => "✍️ Type your message...",
+                'googleBtn' => "⭐ Review on Google",
+                'optionsLow' => $optionsLow
+            ];
         }
 
         if ($locale === 'ja') {
@@ -186,7 +223,7 @@ class AvaliacaoController extends Controller
         
         // Detect language from request or fallback to tenant country
         $locale = request('locale');
-        if (!$locale || !in_array($locale, ['pt', 'ja'])) {
+        if (!$locale || !in_array($locale, ['pt', 'ja', 'en'])) {
             $locale = $cliente->pais === 'jp' ? 'ja' : 'pt';
         }
 
@@ -202,16 +239,9 @@ class AvaliacaoController extends Controller
             $savedText = $savedMessages[$key]['text'] ?? null;
             $savedStep = $savedMessages[$key]['step'] ?? null;
 
-            // Handle step value casting/preservation
-            $step = null;
-            if ($savedStep !== null && $savedStep !== '') {
-                $step = (int) $savedStep;
-            } elseif ($savedStep === null && $botScript) {
-                // If it exists in DB but step is explicitly null/blank, keep it null to hide it
-                $step = null;
-            } else {
-                $step = $defaultVal['step'];
-            }
+            $step = ($savedStep !== null && $savedStep !== '')
+                ? (int) $savedStep
+                : $defaultVal['step'];
 
             $messages[$key] = [
                 'text' => ($savedText !== null && $savedText !== '') ? $savedText : $defaultVal['text'],
@@ -234,7 +264,7 @@ class AvaliacaoController extends Controller
                 'locale' => $locale
             ],
             'lang' => $lang
-        ]);
+        ])->header('Cache-Control', 'no-store, no-cache, must-revalidate');
     }
 
     public function uploadMedia(Request $request)

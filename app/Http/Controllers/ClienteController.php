@@ -88,7 +88,7 @@ class ClienteController extends Controller
 
         $query = $cliente->avaliacoes()->where('nota', '<=', 3);
 
-        $filter = $request->query('filter', 'todas');
+        $filter = $request->query('filter', 'pendentes');
         if ($filter === 'pendentes') {
             $query->where('resolvido', false);
         } elseif ($filter === 'resolvidas') {

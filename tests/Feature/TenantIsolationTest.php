@@ -161,4 +161,49 @@ class TenantIsolationTest extends TestCase
         $this->assertEquals($this->tenantA->id, $avaliacoes->first()->tenant_id);
         $this->assertEquals('Excelente Loja A', $avaliacoes->first()->feedback);
     }
+
+    public function test_ocorrencias_tela_inicial_mostra_apenas_pendentes(): void
+    {
+        // Limpar avaliações antigas do Tenant A para o teste ser determinístico
+        Avaliacao::where('tenant_id', $this->tenantA->id)->delete();
+
+        // Criar uma avaliação resolvida
+        Avaliacao::create([
+            'tenant_id' => $this->tenantA->id,
+            'nota' => 1,
+            'feedback' => 'Reclamação resolvida',
+            'nome_cliente' => 'Cliente Resolvido',
+            'token_resposta' => 'token-r1',
+            'resolvido' => true,
+        ]);
+
+        // Criar uma avaliação pendente
+        $pendente = Avaliacao::create([
+            'tenant_id' => $this->tenantA->id,
+            'nota' => 2,
+            'feedback' => 'Reclamação pendente',
+            'nome_cliente' => 'Cliente Pendente',
+            'token_resposta' => 'token-p1',
+            'resolvido' => false,
+        ]);
+
+        $this->actingAs($this->lojistaA);
+
+        // Acessar tela inicial de ocorrências (sem parâmetros)
+        $response = $this->get(route('cliente.avaliacoes', $this->tenantA->id));
+
+        $response->assertStatus(200);
+        $response->assertViewHas('filter', 'pendentes');
+        
+        $viewAvaliacoes = $response->viewData('avaliacoes');
+        $this->assertCount(1, $viewAvaliacoes);
+        $this->assertEquals($pendente->id, $viewAvaliacoes->first()->id);
+
+        // Agora testar que se não houver ocorrências pendentes, mostra a mensagem específica
+        $pendente->delete();
+
+        $responseEmpty = $this->get(route('cliente.avaliacoes', $this->tenantA->id));
+        $responseEmpty->assertStatus(200);
+        $responseEmpty->assertSee('Não há ocorrências pendentes.');
+    }
 }
