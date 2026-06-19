@@ -51,13 +51,13 @@
                             <p class="text-legend text-neutral-secondary">Ajuste as mensagens automáticas de atendimento por idioma</p>
                         </div>
                     </div>
-                    <svg id="accordion-bot-chevron" class="w-24 h-24 text-neutral-secondary transition transform rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <svg id="accordion-bot-chevron" class="w-24 h-24 text-neutral-secondary transition transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                     </svg>
                 </div>
                 
                 <!-- Accordion Body -->
-                <div id="accordion-bot" class="p-24 space-y-24">
+                <div id="accordion-bot" class="p-24 space-y-24 hidden">
                     <!-- Language Selector Tabs -->
                     <div class="flex gap-8 mb-16">
                         <button type="button" id="tab-pt" onclick="switchLanguage('pt')" class="px-16 py-8 rounded-lg text-body-m font-bold border transition flex items-center gap-8 bg-brand-50 text-brand-600 border-brand-200">
@@ -205,9 +205,9 @@
                 <div class="flex items-center justify-between p-16 bg-neutral-card hover:bg-neutral-bg/50 cursor-pointer transition border-b border-neutral-border select-none" onclick="toggleAccordion('accordion-page')">
                     <div class="flex items-center gap-12">
                         <div class="w-32 h-32 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center flex-shrink-0">
-                            <!-- Paint Brush / Page design Icon -->
+                            <!-- Photo Icon -->
                             <svg class="w-24 h-24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.53 16.122a3 3 0 0 0-3.078 0L2.25 18.374v1.875c0 .414.336.75.75.75h18a.75.75 0 0 0 .75-.75V18.37a3 3 0 0 0-3.078 0L14.47 16.122a3 3 0 0 0-3.078 0l-1.86 1.077zM9.53 16.122V12.75a3 3 0 0 0-3-3H4.5m4.5 3.372v-1.122a3 3 0 0 0-3-3H4.5m10.5 4.122V12.75a3 3 0 0 1 3-3h1.875" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.9 2.9m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375 0 11-.75 0 .375.375 0 01.75 0z" />
                             </svg>
                         </div>
                         <div>
@@ -399,21 +399,15 @@
 
     // Accordion handler
     function toggleAccordion(id) {
-        const botBody = document.getElementById('accordion-bot');
-        const botChevron = document.getElementById('accordion-bot-chevron');
-        const pageBody = document.getElementById('accordion-page');
-        const pageChevron = document.getElementById('accordion-page-chevron');
+        const target = document.getElementById(id);
+        const chevron = document.getElementById(id + '-chevron');
         
-        if (id === 'accordion-bot') {
-            botBody.classList.remove('hidden');
-            botChevron.classList.add('rotate-180');
-            pageBody.classList.add('hidden');
-            pageChevron.classList.remove('rotate-180');
+        if (target.classList.contains('hidden')) {
+            target.classList.remove('hidden');
+            chevron.classList.add('rotate-180');
         } else {
-            pageBody.classList.remove('hidden');
-            pageChevron.classList.add('rotate-180');
-            botBody.classList.add('hidden');
-            botChevron.classList.remove('rotate-180');
+            target.classList.add('hidden');
+            chevron.classList.remove('rotate-180');
         }
     }
 
