@@ -64,13 +64,14 @@ body {
   flex-direction: column;
   box-shadow: 0 0 100px rgba(0,0,0,0.5);
   overflow: hidden;
+  border: 4px solid #000000;
 }
 
 @media (min-width: 500px) {
     .phone {
         height: 844px;
         border-radius: 40px;
-        border: 12px solid #111111;
+        border: 12px solid #000000;
         box-shadow: 0 30px 60px -10px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,0,0,0.2);
     }
 }
@@ -124,11 +125,11 @@ body {
   box-shadow: 0 6px 20px rgba(0,0,0,0.25);
   overflow: hidden;
   flex-shrink: 0;
-  border: 1.5px solid #000000;
+  border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
 .biz-info { flex: 1; text-align: left; }
-.biz-name { font-size: 18px; font-weight: 800; color: #FFFFFF; line-height: 1.2; letter-spacing: 0.5px; text-shadow: 0 2px 8px rgba(0,0,0,0.7), 0 4px 24px rgba(0,0,0,0.5); }
+.biz-name { font-size: 18px; font-weight: 800; color: #FFFFFF; line-height: 1.2; letter-spacing: 0.5px; text-shadow: 0 4px 12px rgba(0, 0, 0, 0.6), 0 1px 2px rgba(0, 0, 0, 0.8); }
 .biz-status { font-size: 12px; color: rgba(255,255,255,0.8); display: flex; align-items: center; gap: 5px; font-weight: 500; }
 .biz-status::before { content:''; width:6px; height:6px; background:#10B981; border-radius:50%; animation: pulse 2s infinite; }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
@@ -381,7 +382,7 @@ body {
             <div class="header-content">
                 <div class="biz-avatar">
                     @if($cliente->logo_path)
-                        <img src="{{ asset('storage/' . $cliente->logo_path) }}" alt="{{ $cliente->nome_empresa }}" style="width:100%; height:100%; object-fit:contain; border-radius:14px; padding:4px;">
+                        <img src="{{ asset('storage/' . $cliente->logo_path) }}" alt="{{ $cliente->nome_empresa }}" style="width:100%; height:100%; object-fit:contain; border-radius:15px; padding:0;">
                     @else
                         🏢
                     @endif
@@ -709,7 +710,7 @@ async function askRecommend() {
     const gDiv = document.createElement('div');
     gDiv.style.padding = '5px 0';
     gDiv.innerHTML = `
-        <a href="${botConfig.tenant.google_link}" target="_blank" onclick="handleGoogleClick()" class="confirm-btn" style="background:#4285F4; text-decoration:none">
+        <a href="${botConfig.tenant.google_link}" target="_blank" onclick="handleGoogleClick()" class="confirm-btn" style="background:var(--accent); text-decoration:none">
             ${botConfig.lang.googleBtn || '⭐ Avaliar no Google'}
         </a>
     `;
@@ -857,7 +858,7 @@ async function showGoogleBtn(msg, isPos) {
     const gDiv = document.createElement('div');
     gDiv.style.padding = '5px 0';
     gDiv.innerHTML = `
-        <a href="${botConfig.tenant.google_link}" target="_blank" onclick="handleGoogleClick()" class="confirm-btn" style="background:#4285F4; text-decoration:none">
+        <a href="${botConfig.tenant.google_link}" target="_blank" onclick="handleGoogleClick()" class="confirm-btn" style="background:var(--accent); text-decoration:none">
             ${botConfig.lang.googleBtn}
         </a>
     `;

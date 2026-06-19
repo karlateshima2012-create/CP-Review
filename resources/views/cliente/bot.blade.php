@@ -327,7 +327,7 @@
             <span class="text-body-m font-bold text-neutral-secondary mb-16 self-start uppercase tracking-wider">Preview do Chatbot (PWA)</span>
             
             <!-- Mobile body frame -->
-            <div class="w-[305px] h-[550px] border-[8px] border-neutral-primary rounded-[36px] overflow-hidden shadow-2xl flex flex-col bg-gray-50 relative select-none">
+            <div class="w-[305px] h-[550px] border-[8px] border-[#000000] rounded-[36px] overflow-hidden shadow-2xl flex flex-col bg-gray-50 relative select-none">
                 <!-- Camera Notch -->
                 <div class="absolute top-4 left-1/2 -translate-x-1/2 w-48 h-12 bg-neutral-primary rounded-full z-50"></div>
 
@@ -338,15 +338,15 @@
 
                     <!-- Header Content -->
                     <div class="relative z-20 flex items-center gap-8 p-12 w-full">
-                        <div class="w-32 h-32 bg-white border border-black/20 rounded-lg flex items-center justify-center font-bold text-xs overflow-hidden flex-shrink-0" id="mock-logo-box">
+                        <div class="w-32 h-32 bg-white border border-white/40 rounded-lg flex items-center justify-center font-bold text-xs overflow-hidden flex-shrink-0" id="mock-logo-box">
                             @if($cliente->logo_path)
-                                <img id="mock-logo-img" src="{{ asset('storage/' . $cliente->logo_path) }}" alt="Logo" class="w-full h-full object-contain p-[2px]">
+                                <img id="mock-logo-img" src="{{ asset('storage/' . $cliente->logo_path) }}" alt="Logo" class="w-full h-full object-contain p-0">
                             @else
                                 <span id="mock-logo-emoji" class="text-sm">🏢</span>
                             @endif
                         </div>
                         <div class="leading-none text-left">
-                            <span class="block font-bold text-xs tracking-wide truncate max-w-[170px]" id="mock-biz-name" style="text-shadow: 0 1px 4px rgba(0,0,0,0.5)">{{ $cliente->nome_empresa }}</span>
+                            <span class="block font-bold text-xs tracking-wide truncate max-w-[170px]" id="mock-biz-name" style="text-shadow: 0 4px 10px rgba(0,0,0,0.6), 0 1px 2px rgba(0,0,0,0.8)">{{ $cliente->nome_empresa }}</span>
                             <span class="text-[8px] text-white/80 flex items-center gap-4 mt-2 font-medium">
                                 <span class="w-4 h-4 rounded-full bg-emerald-400 inline-block animate-pulse"></span> Online
                             </span>
@@ -393,7 +393,7 @@
                                 <span class="text-[7px] text-neutral-secondary">Rápido e prático</span>
                             </div>
                         </div>
-                        <button type="button" class="w-full bg-blue-500 text-white py-4 rounded font-bold text-[9px]">↗ Abrir Google</button>
+                        <button type="button" id="mock-google-btn" class="w-full text-white py-4 rounded font-bold text-[9px]" style="background: {{ $corAtual }}">↗ Abrir Google</button>
                     </div>
 
                 </div>
@@ -479,7 +479,7 @@
                 
                 // Update Mobile Mockup
                 const mockBox = document.getElementById('mock-logo-box');
-                mockBox.innerHTML = `<img id="mock-logo-img" src="${evt.target.result}" alt="Logo" class="w-full h-full object-cover">`;
+                mockBox.innerHTML = `<img id="mock-logo-img" src="${evt.target.result}" alt="Logo" class="w-full h-full object-contain p-0">`;
             };
             reader.readAsDataURL(file);
         }
@@ -585,6 +585,8 @@
         if (bubble) bubble.style.background = color;
         const sendBtn = document.getElementById('mock-send-btn');
         if (sendBtn) sendBtn.style.background = color;
+        const googleBtn = document.getElementById('mock-google-btn');
+        if (googleBtn) googleBtn.style.backgroundColor = color;
     }
 
     function toggleColorPicker() {
