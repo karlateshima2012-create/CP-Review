@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Admin CP Review',
             'email' => 'admin@cpreview.com',
             'password' => \Illuminate\Support\Facades\Hash::make('admin123'),
+            'role' => 'super_admin',
         ]);
 
         // Lojista de Teste
