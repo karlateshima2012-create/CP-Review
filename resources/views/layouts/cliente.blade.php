@@ -11,9 +11,9 @@
             <!-- Brand & Company Info -->
             <div class="flex items-center gap-12">
                 <img src="/favicon.svg?v={{ file_exists(public_path('favicon.svg')) ? filemtime(public_path('favicon.svg')) : time() }}" alt="CP Review" class="w-32 h-32 flex-shrink-0">
-                <div class="leading-tight">
-                    <span class="text-body-g font-bold text-neutral-primary block">CP Review</span>
-                    <span class="text-[11px] text-neutral-secondary block truncate max-w-[140px]">{{ $cliente->nome_empresa }}</span>
+                <div class="leading-none">
+                    <span class="text-body-g font-bold uppercase tracking-[0.15em] text-neutral-primary block">CP REVIEW</span>
+                    <span class="text-[8px] text-neutral-secondary uppercase tracking-[0.02em] font-bold block mt-4">GESTÃO DE AVALIAÇÕES</span>
                 </div>
             </div>
 
@@ -84,7 +84,7 @@
                 <!-- Brand -->
                 <div class="flex items-center gap-8">
                     <img src="/favicon.svg?v={{ file_exists(public_path('favicon.svg')) ? filemtime(public_path('favicon.svg')) : time() }}" alt="CP Review" class="w-24 h-24 flex-shrink-0">
-                    <span class="text-body-m font-bold text-neutral-primary">CP Review</span>
+                    <span class="text-body-m font-bold uppercase tracking-wider text-neutral-primary">CP REVIEW</span>
                     <span class="text-neutral-secondary">|</span>
                     <span class="text-[11px] text-neutral-secondary truncate max-w-[120px]">{{ $cliente->nome_empresa }}</span>
                 </div>
