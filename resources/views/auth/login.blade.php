@@ -4,10 +4,10 @@
 
 @section('content')
 <div class="min-h-screen flex items-center justify-center bg-[#F9FAFB] py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full space-y-8 bg-white p-10 rounded-3xl border border-gray-100 shadow-xl">
+    <div class="max-w-md w-full space-y-8 bg-white p-6 sm:p-10 rounded-3xl border border-gray-100 shadow-xl">
         <div>
             <div class="mx-auto flex items-center justify-center">
-                <img src="/logo.png?v={{ file_exists(public_path('logo.png')) ? filemtime(public_path('logo.png')) : time() }}" alt="CP Review" class="h-24 w-auto">
+                <img src="/logo.png?v={{ file_exists(public_path('logo.png')) ? filemtime(public_path('logo.png')) : time() }}" alt="CP Review" class="h-[90px] w-auto">
             </div>
             <h2 class="mt-6 text-center text-4xl font-extrabold text-gray-900 tracking-tight">
                 Bem-vindo de volta
