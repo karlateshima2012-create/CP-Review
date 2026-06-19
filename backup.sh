@@ -10,6 +10,7 @@ RCLONE_REMOTE="gdrive"
 RCLONE_DEST="CPreview_Backups"
 RETENTION_DAYS=30
 TIMESTAMP=$(date +%Y-%m-%d_%H-%M)
+HOSTNAME=$(hostname)
 
 # ── Helpers ─────────────────────────────────────────────────────────────────
 log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*"; }
@@ -22,6 +23,30 @@ env_val() {
     raw="${raw%\'}" ; raw="${raw#\'}"
     echo "$raw"
 }
+
+# Carrega credenciais do Telegram
+TELEGRAM_BOT_TOKEN=$(env_val TELEGRAM_BOT_TOKEN)
+TELEGRAM_CHAT_ID=$(env_val TELEGRAM_CHAT_ID)
+
+send_telegram() {
+    if [ -n "${TELEGRAM_BOT_TOKEN:-}" ] && [ -n "${TELEGRAM_CHAT_ID:-}" ]; then
+        curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            -d "chat_id=${TELEGRAM_CHAT_ID}" \
+            -d "text=$1" \
+            -d "parse_mode=HTML" > /dev/null || log "Falha ao enviar notificação para o Telegram"
+    fi
+}
+
+# Handler de erro/sucesso para finalização
+cleanup() {
+    local exit_code=$?
+    if [ "$exit_code" -ne 0 ]; then
+        log "Erro detectado durante a execução do backup."
+        send_telegram "🔴 <b>[Backup Falhou]</b> CP Review no servidor <code>${HOSTNAME}</code>. Verifique os logs em <code>/var/log/cpreview-backup.log</code>"
+    fi
+    rm -rf "$BACKUP_TMP"
+}
+trap cleanup EXIT
 
 # ── Início ───────────────────────────────────────────────────────────────────
 log "========== INÍCIO DO BACKUP =========="
@@ -76,7 +101,5 @@ rclone delete "${RCLONE_REMOTE}:${RCLONE_DEST}/" \
     --min-age "${RETENTION_DAYS}d" \
     --log-level INFO || true
 
-# ── 5. Limpeza local ─────────────────────────────────────────────────────────
-rm -rf "$BACKUP_TMP"
-
 log "========== BACKUP CONCLUÍDO: db_${TIMESTAMP}.sql.gz =========="
+send_telegram "🟢 <b>[Backup Concluído]</b> CP Review no servidor <code>${HOSTNAME}</code>. Banco e arquivos enviados ao Google Drive com sucesso!"
