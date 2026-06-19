@@ -142,6 +142,7 @@ class BotScriptTest extends TestCase
             'google_maps_link' => 'https://g.page/r/CT0IMW6LPFnnEBM/review',
             'logo' => $logoFile,
             'cover' => $coverFile,
+            'motivos_problema' => ['atendimento', 'limpeza', 'outro']
         ];
 
         $response = $this->actingAs($this->lojista)
@@ -152,6 +153,7 @@ class BotScriptTest extends TestCase
         $this->tenant = $this->tenant->fresh();
 
         $this->assertEquals('https://g.page/r/CT0IMW6LPFnnEBM/review', $this->tenant->google_maps_link);
+        $this->assertEquals(['atendimento', 'limpeza', 'outro'], $this->tenant->motivos_problema);
         $this->assertNotNull($this->tenant->logo_path);
         $this->assertNotNull($this->tenant->cover_path);
 

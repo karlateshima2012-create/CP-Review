@@ -190,10 +190,31 @@
                             <h3 class="text-body-m font-bold text-neutral-primary">Motivos de problema</h3>
                             <svg id="chevron-prob" class="w-16 h-16 ml-auto transition transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"></path></svg>
                         </div>
-                        <div id="panel-problems" class="mt-12 space-y-8 hidden">
-                            <p class="text-legend text-neutral-secondary leading-relaxed">
-                                Os motivos de problemas ajudam os clientes insatisfeitos a categorizar a reclamação (ex: Limpeza, Atendimento, Comida fria, Tempo de espera). Eles são carregados automaticamente pelo bot de acordo com o idioma selecionado pelo cliente.
-                            </p>
+                        <div id="panel-problems" class="mt-12 space-y-12 hidden">
+                            <p class="text-legend text-neutral-secondary/60 font-semibold uppercase tracking-wider mb-8">Marque os problemas que os clientes podem selecionar no bot:</p>
+                            
+                            <div class="grid grid-cols-2 gap-12 pt-8">
+                                @php
+                                $allProblems = [
+                                    'atendimento' => '😕 Atendimento',
+                                    'produto_servico' => '⚙️ Produto ou Serviço',
+                                    'preco' => '💸 Preço',
+                                    'demora' => '⏱️ Demora',
+                                    'limpeza' => '🧹 Limpeza',
+                                    'conforto' => '🪑 Conforto',
+                                    'entrega' => '📦 Entrega',
+                                    'outro' => '❗ Outro'
+                                ];
+                                $selectedProblems = $cliente->motivos_problema ?? ['atendimento', 'produto_servico', 'preco', 'demora', 'outro'];
+                                @endphp
+                                
+                                @foreach($allProblems as $key => $label)
+                                    <label class="flex items-center gap-8 cursor-pointer select-none">
+                                        <input type="checkbox" name="motivos_problema[]" value="{{ $key }}" class="rounded text-brand-600 focus:ring-brand-500 border-neutral-border w-16 h-16" {{ in_array($key, $selectedProblems) ? 'checked' : '' }}>
+                                        <span class="text-body-m font-medium text-neutral-secondary">{{ $label }}</span>
+                                    </label>
+                                @endforeach
+                            </div>
                         </div>
                     </div>
                 </div>

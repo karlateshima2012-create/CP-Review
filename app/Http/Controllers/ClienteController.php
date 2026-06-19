@@ -145,6 +145,8 @@ class ClienteController extends Controller
             'google_maps_link' => 'nullable|url|max:1000',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'cover' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'motivos_problema' => 'nullable|array',
+            'motivos_problema.*' => 'string|in:atendimento,produto_servico,preco,demora,limpeza,conforto,entrega,outro',
         ]);
 
         foreach ($validated['messages'] as $locale => $msgs) {
@@ -170,6 +172,7 @@ class ClienteController extends Controller
             'msg_agradecimento_alta_jp' => $jaMsgs['highRate']['text'] ?? $cliente->msg_agradecimento_alta_jp,
             'msg_agradecimento_baixa_jp' => $jaMsgs['lowRate']['text'] ?? $cliente->msg_agradecimento_baixa_jp,
             'google_maps_link' => $validated['google_maps_link'] ?? $cliente->google_maps_link,
+            'motivos_problema' => $request->input('motivos_problema', []),
         ];
 
         // Processamento de Upload do Logo

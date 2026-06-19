@@ -114,8 +114,42 @@ class AvaliacaoController extends Controller
         return \App\Models\BotScript::getDefaultMessages($locale);
     }
 
-    protected function getStaticTranslations($locale)
+    protected function getStaticTranslations($locale, Cliente $cliente = null)
     {
+        $selectedKeys = ($cliente && $cliente->motivos_problema) 
+            ? $cliente->motivos_problema 
+            : ['atendimento', 'produto_servico', 'preco', 'demora', 'outro'];
+
+        $mapping = [
+            'pt' => [
+                'atendimento' => '😕 Atendimento',
+                'produto_servico' => '⚙️ Produto ou Serviço',
+                'preco' => '💸 Preço',
+                'demora' => '⏱️ Demora',
+                'limpeza' => '🧹 Limpeza',
+                'conforto' => '🪑 Conforto',
+                'entrega' => '📦 Entrega',
+                'outro' => '❗ Outro'
+            ],
+            'ja' => [
+                'atendimento' => '😕 接客',
+                'produto_servico' => '⚙️ 商品またはサービス',
+                'preco' => '💸 価格',
+                'demora' => '⏱️ 待ち時間',
+                'limpeza' => '🧹 清潔さ',
+                'conforto' => '🪑 快適さ',
+                'entrega' => '📦 配達',
+                'outro' => '❗ その他'
+            ]
+        ];
+
+        $optionsLow = [];
+        foreach ($selectedKeys as $key) {
+            if (isset($mapping[$locale][$key])) {
+                $optionsLow[] = $mapping[$locale][$key];
+            }
+        }
+
         if ($locale === 'ja') {
             return [
                 'btn_yes' => "👍 はい",
@@ -140,7 +174,7 @@ class AvaliacaoController extends Controller
                 'btn_feedback_send' => "送信",
                 'feedback_placeholder' => "✍️ メッセージを入力してください...",
                 'googleBtn' => "⭐ Googleで評価する",
-                'optionsLow' => ['😕 接客', '⚙️ 商品またはサービス', '💸 価格', '⏱️ 待ち時間', '❗ その他']
+                'optionsLow' => $optionsLow
             ];
         }
 
@@ -167,7 +201,7 @@ class AvaliacaoController extends Controller
             'btn_feedback_send' => "Enviar",
             'feedback_placeholder' => "✍️ Digite sua mensagem...",
             'googleBtn' => "⭐ Avaliar no Google",
-            'optionsLow' => ['😕 Atendimento', '⚙️ Produto ou Serviço', '💸 Preço', '⏱️ Demora', '❗ Outro']
+            'optionsLow' => $optionsLow
         ];
     }
 
@@ -210,7 +244,7 @@ class AvaliacaoController extends Controller
             ];
         }
 
-        $static = $this->getStaticTranslations($locale);
+        $static = $this->getStaticTranslations($locale, $cliente);
         $lang = array_merge($static, $messages);
 
         return response()->json([

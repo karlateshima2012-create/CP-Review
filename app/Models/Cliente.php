@@ -17,14 +17,15 @@ class Cliente extends Model
         'valor_mensal', 'trial_ends_at', 'status',
         'msg_boas_vindas_br', 'msg_pergunta_nota_br', 'msg_agradecimento_alta_br', 'msg_agradecimento_baixa_br',
         'msg_boas_vindas_jp', 'msg_pergunta_nota_jp', 'msg_agradecimento_alta_jp', 'msg_agradecimento_baixa_jp',
-        'logo_path', 'cover_path'
+        'logo_path', 'cover_path', 'motivos_problema'
     ];
 
     protected $casts = [
         'ativo' => 'boolean',
         'data_ativacao' => 'datetime',
         'trial_ends_at' => 'datetime',
-        'valor_mensal' => 'decimal:2'
+        'valor_mensal' => 'decimal:2',
+        'motivos_problema' => 'array'
     ];
 
     public function inTrial(): bool
