@@ -57,6 +57,9 @@ class OnboardingService
                 'role' => 'owner'
             ]);
 
+            // Vincular user_id ao cliente (necessário para $cliente->user via BelongsTo)
+            $cliente->update(['user_id' => $user->id]);
+
             // Enviar e-mail de boas-vindas com credenciais
             Mail::send('emails.welcome_credentials', [
                 'cliente' => $cliente,
