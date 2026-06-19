@@ -51,6 +51,54 @@
 
 </div>
 
+<!-- ── SCORE CARD ──────────────────────────────────────────────────────────── -->
+<div class="card p-24 mb-24 grid md:grid-cols-3 gap-24 items-center">
+    {{-- Média --}}
+    <div class="flex flex-col items-center md:items-start text-center md:text-left md:border-r border-neutral-border md:pr-24">
+        <span class="text-[56px] font-bold text-neutral-primary leading-none">{{ number_format($mediaNotas, 1) }}</span>
+        <div class="flex gap-4 my-8 text-amber-400">
+            @for($i = 1; $i <= 5; $i++)
+                @if($i <= round($mediaNotas))
+                    <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                @else
+                    <svg class="w-16 h-16 text-gray-200" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                @endif
+            @endfor
+        </div>
+        <span class="text-body-m text-neutral-secondary">{{ $totalAvaliacoes }} avaliações no total</span>
+    </div>
+
+    {{-- Barras por estrela --}}
+    <div class="space-y-8 md:border-r border-neutral-border md:pr-24">
+        @foreach([5 => 'bg-emerald-500', 4 => 'bg-emerald-400', 3 => 'bg-amber-400', 2 => 'bg-orange-400', 1 => 'bg-red-500'] as $star => $colorClass)
+            @php $pct = $totalAvaliacoes > 0 ? ($starCounts[$star] / $totalAvaliacoes) * 100 : 0; @endphp
+            <div class="flex items-center gap-12 text-body-m text-neutral-secondary">
+                <span class="w-8 text-right font-medium">{{ $star }}</span>
+                <div class="flex-1 bg-gray-100 rounded-full h-8 overflow-hidden">
+                    <div class="{{ $colorClass }} h-full transition-all" style="width: {{ $pct }}%"></div>
+                </div>
+                <span class="w-24 text-right">{{ $starCounts[$star] }}</span>
+            </div>
+        @endforeach
+    </div>
+
+    {{-- Totais --}}
+    <div class="flex justify-around md:flex-col md:justify-center md:gap-16 pl-12 text-center md:text-left">
+        <div>
+            <span class="block text-title-1 font-bold text-brand-600 leading-none">{{ $totalAvaliacoes }}</span>
+            <span class="text-legend text-neutral-secondary uppercase font-bold tracking-wider">Total</span>
+        </div>
+        <div>
+            <span class="block text-title-1 font-bold text-emerald-600 leading-none">{{ $positivas }}</span>
+            <span class="text-legend text-neutral-secondary uppercase font-bold tracking-wider">Positivas (4-5★)</span>
+        </div>
+        <div>
+            <span class="block text-title-1 font-bold text-red-500 leading-none">{{ $negativas }}</span>
+            <span class="text-legend text-neutral-secondary uppercase font-bold tracking-wider">Negativas (1-3★)</span>
+        </div>
+    </div>
+</div>
+
 <!-- ── HISTÓRICO COMPLETO ─────────────────────────────────────────────────── -->
 <div class="card overflow-hidden mb-24">
     <div class="p-16 flex justify-between items-center border-b border-neutral-border bg-neutral-card">
@@ -192,153 +240,4 @@
     </div>
 </div>
 @endif
-
-<!-- ── SCORE CARD ──────────────────────────────────────────────────────────── -->
-<div class="card p-24 mb-24 grid md:grid-cols-3 gap-24 items-center">
-    {{-- Média --}}
-    <div class="flex flex-col items-center md:items-start text-center md:text-left md:border-r border-neutral-border md:pr-24">
-        <span class="text-[56px] font-bold text-neutral-primary leading-none">{{ number_format($mediaNotas, 1) }}</span>
-        <div class="flex gap-4 my-8 text-amber-400">
-            @for($i = 1; $i <= 5; $i++)
-                @if($i <= round($mediaNotas))
-                    <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                @else
-                    <svg class="w-16 h-16 text-gray-200" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                @endif
-            @endfor
-        </div>
-        <span class="text-body-m text-neutral-secondary">{{ $totalAvaliacoes }} avaliações no total</span>
-    </div>
-
-    {{-- Barras por estrela --}}
-    <div class="space-y-8 md:border-r border-neutral-border md:pr-24">
-        @foreach([5 => 'bg-emerald-500', 4 => 'bg-emerald-400', 3 => 'bg-amber-400', 2 => 'bg-orange-400', 1 => 'bg-red-500'] as $star => $colorClass)
-            @php $pct = $totalAvaliacoes > 0 ? ($starCounts[$star] / $totalAvaliacoes) * 100 : 0; @endphp
-            <div class="flex items-center gap-12 text-body-m text-neutral-secondary">
-                <span class="w-8 text-right font-medium">{{ $star }}</span>
-                <div class="flex-1 bg-gray-100 rounded-full h-8 overflow-hidden">
-                    <div class="{{ $colorClass }} h-full transition-all" style="width: {{ $pct }}%"></div>
-                </div>
-                <span class="w-24 text-right">{{ $starCounts[$star] }}</span>
-            </div>
-        @endforeach
-    </div>
-
-    {{-- Totais --}}
-    <div class="flex justify-around md:flex-col md:justify-center md:gap-16 pl-12 text-center md:text-left">
-        <div>
-            <span class="block text-title-1 font-bold text-brand-600 leading-none">{{ $totalAvaliacoes }}</span>
-            <span class="text-legend text-neutral-secondary uppercase font-bold tracking-wider">Total</span>
-        </div>
-        <div>
-            <span class="block text-title-1 font-bold text-emerald-600 leading-none">{{ $positivas }}</span>
-            <span class="text-legend text-neutral-secondary uppercase font-bold tracking-wider">Positivas (4-5★)</span>
-        </div>
-        <div>
-            <span class="block text-title-1 font-bold text-red-500 leading-none">{{ $negativas }}</span>
-            <span class="text-legend text-neutral-secondary uppercase font-bold tracking-wider">Negativas (1-3★)</span>
-        </div>
-    </div>
-</div>
-
-<!-- ── GRÁFICO 30 DIAS ─────────────────────────────────────────────────────── -->
-<div class="card p-24">
-    <div class="flex items-center justify-between mb-20">
-        <div>
-            <h3 class="text-body-g font-bold text-neutral-primary">Histórico dos últimos 30 dias</h3>
-            <p class="text-legend text-neutral-secondary mt-2">Acessos, avaliações positivas e negativas por dia</p>
-        </div>
-        <div class="flex items-center gap-16 text-legend font-semibold">
-            <span class="flex items-center gap-6"><span class="w-12 h-3 rounded bg-brand-400 inline-block"></span> Acessos</span>
-            <span class="flex items-center gap-6"><span class="w-12 h-3 rounded bg-emerald-500 inline-block"></span> Positivas</span>
-            <span class="flex items-center gap-6"><span class="w-12 h-3 rounded bg-red-400 inline-block"></span> Negativas</span>
-        </div>
-    </div>
-    <div class="relative h-[200px]">
-        <canvas id="dashChart"></canvas>
-    </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<script>
-(function () {
-    const labels    = @json($chartLabels);
-    const scans     = @json($chartScans);
-    const positivas = @json($chartPositivas);
-    const negativas = @json($chartNegativas);
-
-    const ctx = document.getElementById('dashChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels,
-            datasets: [
-                {
-                    label: 'Acessos',
-                    data: scans,
-                    type: 'line',
-                    borderColor: '#818CF8',
-                    backgroundColor: 'rgba(129,140,248,0.08)',
-                    borderWidth: 2,
-                    pointRadius: 2,
-                    pointHoverRadius: 5,
-                    fill: true,
-                    tension: 0.3,
-                    yAxisID: 'y',
-                    order: 0,
-                },
-                {
-                    label: 'Positivas',
-                    data: positivas,
-                    backgroundColor: 'rgba(16,185,129,0.75)',
-                    borderRadius: 4,
-                    yAxisID: 'y',
-                    order: 1,
-                },
-                {
-                    label: 'Negativas',
-                    data: negativas,
-                    backgroundColor: 'rgba(239,68,68,0.65)',
-                    borderRadius: 4,
-                    yAxisID: 'y',
-                    order: 1,
-                },
-            ],
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: { mode: 'index', intersect: false },
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    callbacks: {
-                        title: (items) => items[0].label,
-                    },
-                },
-            },
-            scales: {
-                x: {
-                    grid: { display: false },
-                    ticks: {
-                        color: '#94A3B8',
-                        font: { size: 10 },
-                        maxTicksLimit: 10,
-                    },
-                },
-                y: {
-                    beginAtZero: true,
-                    grid: { color: 'rgba(0,0,0,0.04)' },
-                    ticks: {
-                        color: '#94A3B8',
-                        font: { size: 10 },
-                        stepSize: 1,
-                        precision: 0,
-                    },
-                },
-            },
-        },
-    });
-})();
-</script>
 @endsection

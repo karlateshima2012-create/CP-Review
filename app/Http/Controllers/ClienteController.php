@@ -44,29 +44,6 @@ class ClienteController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        // ── Dados do gráfico — últimos 30 dias ────────────────────────────
-        $dias30 = collect(range(29, 0))->map(fn($i) => now()->subDays($i)->format('Y-m-d'));
-
-        $reviewsPorDia = $cliente->avaliacoes()
-            ->selectRaw("DATE(created_at) as dia,
-                         SUM(CASE WHEN nota >= 4 THEN 1 ELSE 0 END) as positivas,
-                         SUM(CASE WHEN nota <= 3 THEN 1 ELSE 0 END) as negativas")
-            ->where('created_at', '>=', now()->subDays(29)->startOfDay())
-            ->groupBy('dia')
-            ->get()->keyBy('dia');
-
-        $scansPorDia = \DB::table('bot_acessos')
-            ->selectRaw("DATE(created_at) as dia, COUNT(*) as total")
-            ->where('tenant_id', $cliente->id)
-            ->where('created_at', '>=', now()->subDays(29)->startOfDay())
-            ->groupBy('dia')
-            ->pluck('total', 'dia');
-
-        $chartLabels    = $dias30->map(fn($d) => \Carbon\Carbon::parse($d)->format('d/m'))->values();
-        $chartPositivas = $dias30->map(fn($d) => (int) ($reviewsPorDia[$d]->positivas ?? 0))->values();
-        $chartNegativas = $dias30->map(fn($d) => (int) ($reviewsPorDia[$d]->negativas ?? 0))->values();
-        $chartScans     = $dias30->map(fn($d) => (int) ($scansPorDia[$d] ?? 0))->values();
-
         // ── Distribuição por estrela ───────────────────────────────────────
         $starCounts = [];
         for ($s = 1; $s <= 5; $s++) {
@@ -77,7 +54,6 @@ class ClienteController extends Controller
             'cliente', 'totalAvaliacoes', 'mediaNotas',
             'positivas', 'negativas', 'totalScans', 'semAvaliacao', 'taxaConversao',
             'historicoRecente', 'ocorrenciasPendentes',
-            'chartLabels', 'chartPositivas', 'chartNegativas', 'chartScans',
             'starCounts'
         ));
     }
