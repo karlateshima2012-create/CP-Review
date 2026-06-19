@@ -63,8 +63,8 @@ body {
     .phone {
         height: 844px;
         border-radius: 40px;
-        border: 12px solid #FFFFFF;
-        box-shadow: 0 20px 40px -10px rgba(0,0,0,0.1);
+        border: 12px solid #111111;
+        box-shadow: 0 30px 60px -10px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,0,0,0.2);
     }
 }
 
@@ -80,7 +80,7 @@ body {
   background: var(--header-bg);
   overflow: hidden;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
 }
 
 .header-cover {
@@ -101,7 +101,7 @@ body {
 .header-content {
   position: relative;
   width: 100%;
-  padding: 15px 20px;
+  padding: 0 20px;
   display: flex;
   align-items: center;
   gap: 15px;
@@ -109,20 +109,19 @@ body {
 }
 
 .biz-avatar {
-  width: 64px; height: 64px;
+  width: 76px; height: 76px;
   border-radius: 16px;
   background: #FFFFFF;
   display: flex; align-items: center; justify-content: center;
-  font-size: 32px;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
-  margin-bottom: 4px;
+  font-size: 38px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
   overflow: hidden;
   flex-shrink: 0;
-  border: 2px solid #FFFFFF;
+  border: 1.5px solid #000000;
 }
 
 .biz-info { flex: 1; text-align: left; }
-.biz-name { font-size: 18px; font-weight: 800; color: #FFFFFF; line-height: 1.2; letter-spacing: 0.5px; }
+.biz-name { font-size: 18px; font-weight: 800; color: #FFFFFF; line-height: 1.2; letter-spacing: 0.5px; text-shadow: 0 2px 8px rgba(0,0,0,0.7), 0 4px 24px rgba(0,0,0,0.5); }
 .biz-status { font-size: 12px; color: rgba(255,255,255,0.8); display: flex; align-items: center; gap: 5px; font-weight: 500; }
 .biz-status::before { content:''; width:6px; height:6px; background:#10B981; border-radius:50%; animation: pulse 2s infinite; }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
@@ -375,7 +374,7 @@ body {
             <div class="header-content">
                 <div class="biz-avatar">
                     @if($cliente->logo_path)
-                        <img src="{{ asset('storage/' . $cliente->logo_path) }}" alt="{{ $cliente->nome_empresa }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;">
+                        <img src="{{ asset('storage/' . $cliente->logo_path) }}" alt="{{ $cliente->nome_empresa }}" style="width:100%; height:100%; object-fit:contain; border-radius:14px; padding:4px;">
                     @else
                         🏢
                     @endif
@@ -392,9 +391,6 @@ body {
 
         <div class="chat-area" id="chat"></div>
 
-        <div id="footer-note" style="padding: 15px; text-align: center; font-size: 10px; color: var(--text-dim);">
-            🛡️ Seus dados estão protegidos.
-        </div>
     </div>
 </div>
 
