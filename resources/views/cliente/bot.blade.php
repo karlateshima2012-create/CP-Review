@@ -38,11 +38,11 @@
             <!-- ACCORDION 1: PERSONALIZAR BOT -->
             <div class="card overflow-hidden border border-neutral-border bg-white rounded-xl shadow-sm">
                 <!-- Accordion Header -->
-                <div class="flex items-center justify-between p-20 bg-neutral-card hover:bg-neutral-bg/50 cursor-pointer transition border-b border-neutral-border select-none" onclick="toggleAccordion('accordion-bot')">
+                <div class="flex items-center justify-between p-16 bg-neutral-card hover:bg-neutral-bg/50 cursor-pointer transition border-b border-neutral-border select-none" onclick="toggleAccordion('accordion-bot')">
                     <div class="flex items-center gap-12">
-                        <div class="w-36 h-36 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center flex-shrink-0">
+                        <div class="w-32 h-32 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center flex-shrink-0">
                             <!-- Sliders Icon -->
-                            <svg class="w-20 h-20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <svg class="w-24 h-24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
                             </svg>
                         </div>
@@ -51,7 +51,7 @@
                             <p class="text-legend text-neutral-secondary">Ajuste as mensagens automáticas de atendimento por idioma</p>
                         </div>
                     </div>
-                    <svg id="accordion-bot-chevron" class="w-20 h-20 text-neutral-secondary transition transform rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <svg id="accordion-bot-chevron" class="w-24 h-24 text-neutral-secondary transition transform rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                     </svg>
                 </div>
@@ -60,11 +60,11 @@
                 <div id="accordion-bot" class="p-24 space-y-24">
                     <!-- Language Selector Tabs -->
                     <div class="flex gap-8 mb-16">
-                        <button type="button" id="tab-pt" onclick="switchLanguage('pt')" class="px-16 py-10 rounded-lg text-body-m font-bold border transition flex items-center gap-8 bg-brand-50 text-brand-600 border-brand-200">
+                        <button type="button" id="tab-pt" onclick="switchLanguage('pt')" class="px-16 py-8 rounded-lg text-body-m font-bold border transition flex items-center gap-8 bg-brand-50 text-brand-600 border-brand-200">
                             <span>🇧🇷 Português</span>
                             <span class="text-legend bg-brand-100 px-8 py-2 rounded text-brand-700">Idioma 1</span>
                         </button>
-                        <button type="button" id="tab-jp" onclick="switchLanguage('jp')" class="px-16 py-10 rounded-lg text-body-m font-bold border transition flex items-center gap-8 bg-white text-neutral-secondary border-neutral-border hover:bg-neutral-bg">
+                        <button type="button" id="tab-jp" onclick="switchLanguage('jp')" class="px-16 py-8 rounded-lg text-body-m font-bold border transition flex items-center gap-8 bg-white text-neutral-secondary border-neutral-border hover:bg-neutral-bg">
                             <span>🇯🇵 Japonês</span>
                             <span class="text-legend bg-gray-100 px-8 py-2 rounded text-neutral-secondary">Idioma 2</span>
                         </button>
@@ -114,7 +114,7 @@
                     <!-- PORTUGUESE FORM -->
                     <div id="form-pt" class="space-y-16">
                         @foreach($stepsList as $sectionKey => $section)
-                            <div class="bg-gray-50 border border-neutral-border p-20 rounded-xl">
+                            <div class="bg-gray-50 border border-neutral-border p-16 rounded-xl">
                                 <div class="flex items-center gap-8 mb-16">
                                     <div class="w-24 h-24 rounded-full bg-neutral-bg flex items-center justify-center flex-shrink-0">
                                         {!! $section['icon'] !!}
@@ -149,7 +149,7 @@
                     <!-- JAPANESE FORM -->
                     <div id="form-jp" class="space-y-16 hidden">
                         @foreach($stepsList as $sectionKey => $section)
-                            <div class="bg-gray-50 border border-neutral-border p-20 rounded-xl">
+                            <div class="bg-gray-50 border border-neutral-border p-16 rounded-xl">
                                 <div class="flex items-center gap-8 mb-16">
                                     <div class="w-24 h-24 rounded-full bg-neutral-bg flex items-center justify-center flex-shrink-0">
                                         {!! $section['icon'] !!}
@@ -202,11 +202,11 @@
             <!-- ACCORDION 2: PERSONALIZAR PÁGINA -->
             <div class="card overflow-hidden border border-neutral-border bg-white rounded-xl shadow-sm">
                 <!-- Accordion Header -->
-                <div class="flex items-center justify-between p-20 bg-neutral-card hover:bg-neutral-bg/50 cursor-pointer transition border-b border-neutral-border select-none" onclick="toggleAccordion('accordion-page')">
+                <div class="flex items-center justify-between p-16 bg-neutral-card hover:bg-neutral-bg/50 cursor-pointer transition border-b border-neutral-border select-none" onclick="toggleAccordion('accordion-page')">
                     <div class="flex items-center gap-12">
-                        <div class="w-36 h-36 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center flex-shrink-0">
+                        <div class="w-32 h-32 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center flex-shrink-0">
                             <!-- Paint Brush / Page design Icon -->
-                            <svg class="w-20 h-20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <svg class="w-24 h-24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9.53 16.122a3 3 0 0 0-3.078 0L2.25 18.374v1.875c0 .414.336.75.75.75h18a.75.75 0 0 0 .75-.75V18.37a3 3 0 0 0-3.078 0L14.47 16.122a3 3 0 0 0-3.078 0l-1.86 1.077zM9.53 16.122V12.75a3 3 0 0 0-3-3H4.5m4.5 3.372v-1.122a3 3 0 0 0-3-3H4.5m10.5 4.122V12.75a3 3 0 0 1 3-3h1.875" />
                             </svg>
                         </div>
@@ -215,7 +215,7 @@
                             <p class="text-legend text-neutral-secondary">Adicione o link do Google, logotipo e imagem de capa do estabelecimento</p>
                         </div>
                     </div>
-                    <svg id="accordion-page-chevron" class="w-20 h-20 text-neutral-secondary transition transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <svg id="accordion-page-chevron" class="w-24 h-24 text-neutral-secondary transition transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                     </svg>
                 </div>
@@ -235,7 +235,7 @@
                         <div class="space-y-8">
                             <label class="block text-body-m font-bold text-neutral-secondary">Logotipo da Empresa</label>
                             <div class="flex items-center gap-16 bg-gray-50 border border-neutral-border p-12 rounded-xl">
-                                <div class="w-56 h-56 border border-neutral-border rounded-lg flex items-center justify-center bg-white overflow-hidden shadow-sm flex-shrink-0" id="logo-preview-box">
+                                <div class="w-48 h-48 border border-neutral-border rounded-lg flex items-center justify-center bg-white overflow-hidden shadow-sm flex-shrink-0" id="logo-preview-box">
                                     @if($cliente->logo_path)
                                         <img src="{{ asset('storage/' . $cliente->logo_path) }}" alt="Logo" class="w-full h-full object-cover">
                                     @else
@@ -256,7 +256,7 @@
                         <div class="space-y-8">
                             <label class="block text-body-m font-bold text-neutral-secondary">Banner de Capa</label>
                             <div class="flex items-center gap-16 bg-gray-50 border border-neutral-border p-12 rounded-xl">
-                                <div class="w-96 h-56 border border-neutral-border rounded-lg flex items-center justify-center bg-white overflow-hidden shadow-sm flex-shrink-0 bg-cover bg-center" id="cover-preview-box" style="{{ $cliente->cover_path ? 'background-image: url(' . asset('storage/' . $cliente->cover_path) . ')' : '' }}">
+                                <div class="w-64 h-48 border border-neutral-border rounded-lg flex items-center justify-center bg-white overflow-hidden shadow-sm flex-shrink-0 bg-cover bg-center" id="cover-preview-box" style="{{ $cliente->cover_path ? 'background-image: url(' . asset('storage/' . $cliente->cover_path) . ')' : '' }}">
                                     @if(!$cliente->cover_path)
                                         <span class="text-legend text-neutral-secondary/40 font-bold" id="cover-preview-text">Sem Capa</span>
                                     @endif
@@ -286,7 +286,7 @@
 
             <!-- Action Button -->
             <button type="submit" class="w-full bg-brand-600 text-white py-16 rounded-xl font-bold hover:bg-brand-700 transition shadow-sm flex items-center justify-center gap-8">
-                <svg class="w-20 h-20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                <svg class="w-24 h-24" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                 </svg>
                 Salvar Alterações de Personalização
@@ -309,7 +309,7 @@
 
                     <!-- Header Content -->
                     <div class="relative z-20 flex items-center gap-8 p-12 w-full mt-12">
-                        <div class="w-36 h-36 bg-white border border-white/20 rounded-lg flex items-center justify-center text-brand-600 font-bold text-xs overflow-hidden flex-shrink-0" id="mock-logo-box">
+                        <div class="w-32 h-32 bg-white border border-white/20 rounded-lg flex items-center justify-center text-brand-600 font-bold text-xs overflow-hidden flex-shrink-0" id="mock-logo-box">
                             @if($cliente->logo_path)
                                 <img id="mock-logo-img" src="{{ asset('storage/' . $cliente->logo_path) }}" alt="Logo" class="w-full h-full object-cover">
                             @else
@@ -366,7 +366,7 @@
                     <!-- Redirect Google Card -->
                     <div class="border border-neutral-border bg-white rounded-xl p-8 max-w-[90%] shadow-sm self-start text-left">
                         <div class="flex items-center gap-8 mb-8">
-                            <div class="w-20 h-20 bg-blue-50 rounded flex items-center justify-center text-blue-600 font-bold text-[10px]">
+                            <div class="w-16 h-16 bg-blue-50 rounded flex items-center justify-center text-blue-600 font-bold text-[10px]">
                                 G
                             </div>
                             <div class="leading-tight">
@@ -384,7 +384,7 @@
                 <!-- Input footer mock -->
                 <div class="bg-white border-t border-neutral-border p-8 flex items-center gap-8 flex-shrink-0">
                     <input type="text" placeholder="Escreva aqui..." class="flex-1 bg-gray-50 border border-neutral-border rounded-full px-12 py-6 text-[9px] outline-none" disabled>
-                    <div class="w-20 h-20 rounded-full bg-brand-600 text-white flex items-center justify-center flex-shrink-0">
+                    <div class="w-24 h-24 rounded-full bg-brand-600 text-white flex items-center justify-center flex-shrink-0">
                         <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
                     </div>
                 </div>
@@ -422,13 +422,13 @@
         if (lang === 'pt') {
             document.getElementById('form-pt').classList.remove('hidden');
             document.getElementById('form-jp').classList.add('hidden');
-            document.getElementById('tab-pt').className = 'px-16 py-10 rounded-lg text-body-m font-bold border transition flex items-center gap-8 bg-brand-50 text-brand-600 border-brand-200';
-            document.getElementById('tab-jp').className = 'px-16 py-10 rounded-lg text-body-m font-bold border transition flex items-center gap-8 bg-white text-neutral-secondary border-neutral-border hover:bg-neutral-bg';
+            document.getElementById('tab-pt').className = 'px-16 py-8 rounded-lg text-body-m font-bold border transition flex items-center gap-8 bg-brand-50 text-brand-600 border-brand-200';
+            document.getElementById('tab-jp').className = 'px-16 py-8 rounded-lg text-body-m font-bold border transition flex items-center gap-8 bg-white text-neutral-secondary border-neutral-border hover:bg-neutral-bg';
         } else {
             document.getElementById('form-pt').classList.add('hidden');
             document.getElementById('form-jp').classList.remove('hidden');
-            document.getElementById('tab-pt').className = 'px-16 py-10 rounded-lg text-body-m font-bold border transition flex items-center gap-8 bg-white text-neutral-secondary border-neutral-border hover:bg-neutral-bg';
-            document.getElementById('tab-jp').className = 'px-16 py-10 rounded-lg text-body-m font-bold border transition flex items-center gap-8 bg-brand-50 text-brand-600 border-brand-200';
+            document.getElementById('tab-pt').className = 'px-16 py-8 rounded-lg text-body-m font-bold border transition flex items-center gap-8 bg-white text-neutral-secondary border-neutral-border hover:bg-neutral-bg';
+            document.getElementById('tab-jp').className = 'px-16 py-8 rounded-lg text-body-m font-bold border transition flex items-center gap-8 bg-brand-50 text-brand-600 border-brand-200';
         }
         updatePreview();
     }
