@@ -285,7 +285,7 @@
                     <!-- Cor Principal -->
                     @php $corAtual = $cliente->cor_principal ?? '#7C3AED'; @endphp
                     <div class="space-y-12">
-                        <label class="block text-body-m font-bold text-neutral-secondary">Cor Principal do Chatbot</label>
+                        <label class="block text-body-m font-bold text-neutral-secondary">Escolha a cor principal do chatbot</label>
                         <input type="hidden" name="cor_principal" id="cor-principal-input" value="{{ $corAtual }}">
 
                         <div class="flex items-center gap-12">
@@ -301,22 +301,6 @@
 
                             <!-- Hex display -->
                             <span class="text-body-m font-mono font-bold text-neutral-primary uppercase tracking-wider" id="cor-trigger-hex">{{ strtoupper($corAtual) }}</span>
-                        </div>
-
-                        <!-- Preset palette -->
-                        <div class="flex flex-wrap gap-8">
-                            @foreach(['#7C3AED','#6D28D9','#3B82F6','#0EA5E9','#10B981','#16A34A','#DC2626','#E11D48','#F59E0B','#EA580C','#374151','#1F2937'] as $preset)
-                                <button type="button"
-                                        data-preset-color="{{ $preset }}"
-                                        onclick="pickColor('{{ $preset }}')"
-                                        title="{{ $preset }}"
-                                        class="w-28 h-28 rounded-lg transition-all hover:scale-110 flex items-center justify-center border-2"
-                                        style="background:{{ $preset }};border-color:{{ $preset === $corAtual ? '#111' : 'transparent' }}">
-                                    @if($preset === $corAtual)
-                                        <span style="color:#fff;font-size:11px;font-weight:700;line-height:1">✓</span>
-                                    @endif
-                                </button>
-                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -590,11 +574,6 @@
         document.getElementById('cor-trigger-hex').textContent = hex.toUpperCase();
         const hexField = document.getElementById('cp-hex-input');
         if (hexField) hexField.value = hex.slice(1).toUpperCase();
-        document.querySelectorAll('[data-preset-color]').forEach(btn => {
-            const sel = btn.dataset.presetColor.toLowerCase() === hex.toLowerCase();
-            btn.style.borderColor = sel ? '#111' : 'transparent';
-            btn.innerHTML = sel ? '<span style="color:#fff;font-size:11px;font-weight:700;line-height:1">✓</span>' : '';
-        });
         applyColorToPreview(hex);
         if (cpOpen) drawCanvas();
     }
