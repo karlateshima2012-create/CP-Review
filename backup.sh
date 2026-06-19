@@ -7,7 +7,7 @@ set -euo pipefail
 APP_DIR="/var/www/cpreview"
 BACKUP_TMP="/tmp/cp_backup_$$"          # $$ = PID, evita colisão entre runs
 RCLONE_REMOTE="gdrive"
-RCLONE_DEST="cp-review-backups"
+RCLONE_DEST="CPreview_Backups"
 RETENTION_DAYS=30
 TIMESTAMP=$(date +%Y-%m-%d_%H-%M)
 
@@ -43,6 +43,7 @@ mysqldump \
     --host="${DB_HOST:-127.0.0.1}" \
     --port="${DB_PORT:-3306}" \
     --user="$DB_USERNAME" \
+    --no-tablespaces \
     --single-transaction \
     --routines \
     --triggers \
