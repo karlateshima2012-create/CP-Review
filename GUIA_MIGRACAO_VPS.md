@@ -245,3 +245,143 @@ Com a VPS configurada, configure as **Secrets** no repositório do seu GitHub (*
 5. `PROD_PATH`: `/var/www/cpreview` (caminho onde o projeto está hospedado).
 
 Ao fazer qualquer `git push` para a branch `main`, as dependências serão compiladas via GitHub Actions e transferidas via SCP automaticamente para a VPS, rodando migrações e otimizando os caches de rotas e views de forma transparente!
+
+---
+
+## 💾 Passo 10: Backups Diários no Google Drive (rclone)
+
+O sistema realiza backups automáticos diários às **02:00** (horário da VPS), salvando:
+- **Banco de dados** completo (`mysqldump` comprimido com gzip)
+- **Arquivos de mídia** (logos e capas dos clientes — `storage/app/public`)
+
+Os backups ficam na pasta `cp-review-backups` do seu Google Drive e são mantidos por **30 dias**.
+
+---
+
+### 10.1 — Criar o Projeto no Google Cloud Console
+
+1. Acesse [console.cloud.google.com](https://console.cloud.google.com)
+2. Clique em **Select a project → New Project**
+3. Nome: `cp-review-backup` → **Create**
+4. Com o projeto selecionado, vá em **APIs & Services → Library**
+5. Busque **Google Drive API** → clique → **Enable**
+
+---
+
+### 10.2 — Criar Service Account (credencial do servidor)
+
+1. Em **APIs & Services → Credentials → Create Credentials → Service Account**
+2. Preencha:
+   - **Name**: `cp-review-backup-sa`
+   - **ID**: gerado automaticamente
+3. Clique em **Done** (sem precisar atribuir roles)
+4. Na lista de Service Accounts, clique no email gerado (ex: `cp-review-backup-sa@cp-review-backup.iam.gserviceaccount.com`)
+5. Aba **Keys → Add Key → Create new key → JSON → Create**
+6. O arquivo `*.json` será baixado automaticamente — **guarde-o com segurança**
+
+---
+
+### 10.3 — Criar a Pasta de Backups no Google Drive
+
+1. Acesse [drive.google.com](https://drive.google.com)
+2. Crie uma nova pasta: `cp-review-backups`
+3. Clique com o botão direito na pasta → **Share**
+4. No campo de e-mail, cole o e-mail do Service Account (ex: `cp-review-backup-sa@...iam.gserviceaccount.com`)
+5. Permissão: **Editor** → **Send**
+6. Abra a pasta e copie o **ID** da URL:
+   ```
+   https://drive.google.com/drive/folders/1ABC123XYZ...
+                                           ^^^^^^^^^^^^
+                                           Este é o ROOT_FOLDER_ID
+   ```
+
+---
+
+### 10.4 — Instalar e Configurar o rclone na VPS
+
+```bash
+# Conectar na VPS
+ssh root@IP_DA_VPS
+
+# Instalar rclone
+curl -fsSL https://rclone.org/install.sh | bash
+
+# Criar pasta de configuração
+mkdir -p /root/.config/rclone
+mkdir -p /etc/rclone
+```
+
+Copie o arquivo JSON do Service Account para a VPS (execute **no seu computador local**):
+```bash
+scp gdrive-sa.json root@IP_DA_VPS:/etc/rclone/gdrive-sa.json
+```
+
+Proteja o arquivo na VPS:
+```bash
+chmod 600 /etc/rclone/gdrive-sa.json
+```
+
+Crie o arquivo de configuração do rclone **na VPS** (use `nano` ou `vim`):
+```bash
+nano /root/.config/rclone/rclone.conf
+```
+
+Cole o conteúdo abaixo, substituindo `ROOT_FOLDER_ID` pelo ID copiado no passo 10.3:
+```ini
+[gdrive]
+type = drive
+scope = drive
+service_account_file = /etc/rclone/gdrive-sa.json
+root_folder_id = ROOT_FOLDER_ID
+```
+
+---
+
+### 10.5 — Testar a Conexão e o Backup
+
+```bash
+# Listar o conteúdo da pasta (deve aparecer vazia inicialmente)
+rclone lsd gdrive:
+
+# Executar o backup manualmente para testar
+/var/www/cpreview/backup.sh
+```
+
+Se tudo correr bem, você verá os arquivos `db_YYYY-MM-DD_HH-MM.sql.gz` e `files_YYYY-MM-DD_HH-MM.tar.gz` na pasta do Google Drive.
+
+---
+
+### 10.6 — Verificar o Cron Registrado
+
+O cron é registrado automaticamente em todo deploy. Para verificar:
+```bash
+crontab -l
+# Deve conter:
+# 0 2 * * * /var/www/cpreview/backup.sh >> /var/log/cpreview-backup.log 2>&1
+```
+
+Para acompanhar os logs:
+```bash
+tail -f /var/log/cpreview-backup.log
+```
+
+---
+
+### 10.7 — Restaurar um Backup (em caso de emergência)
+
+```bash
+# Baixar o backup mais recente do Drive
+rclone copy gdrive:cp-review-backups/ /tmp/restore/ --include "db_*.sql.gz"
+
+# Descomprimir
+gunzip /tmp/restore/db_YYYY-MM-DD_HH-MM.sql.gz
+
+# Restaurar o banco
+mysql -u cpreview_user -p u176367625_cpreview < /tmp/restore/db_YYYY-MM-DD_HH-MM.sql
+```
+
+Para restaurar arquivos de mídia:
+```bash
+rclone copy gdrive:cp-review-backups/ /tmp/restore/ --include "files_*.tar.gz"
+tar -xzf /tmp/restore/files_YYYY-MM-DD_HH-MM.tar.gz -C /var/www/cpreview/storage/app/
+```

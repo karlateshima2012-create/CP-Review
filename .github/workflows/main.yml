@@ -59,16 +59,29 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd ${{ secrets.PROD_PATH }}
-            
+
             # Garantir permissões de escrita
             chmod -R 775 storage bootstrap/cache
             chown -R www-data:www-data storage bootstrap/cache
-            
+
             # Comandos Laravel
             php artisan migrate --force
             php artisan config:cache
             php artisan route:cache
             php artisan view:cache
             php artisan storage:link --force || true
+
+            # ── Rclone: instalar se não estiver presente ──────────────────
+            if ! command -v rclone &> /dev/null; then
+              echo "Instalando rclone..."
+              curl -fsSL https://rclone.org/install.sh | bash
+            fi
+
+            # Tornar o script de backup executável
+            chmod +x ${{ secrets.PROD_PATH }}/backup.sh
+
+            # Registrar cron diário às 02:00 (idempotente)
+            CRON_JOB="0 2 * * * ${{ secrets.PROD_PATH }}/backup.sh >> /var/log/cpreview-backup.log 2>&1"
+            (crontab -l 2>/dev/null | grep -v "backup.sh"; echo "$CRON_JOB") | crontab -
 
 

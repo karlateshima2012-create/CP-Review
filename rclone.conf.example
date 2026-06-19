@@ -1,0 +1,18 @@
+# rclone — Configuração para Google Drive (Service Account)
+#
+# COMO USAR:
+#   1. Siga o Passo 10 do GUIA_MIGRACAO_VPS.md para criar o Service Account
+#      e obter o arquivo JSON da chave.
+#   2. Copie o JSON para a VPS:
+#        scp gdrive-sa.json root@IP_VPS:/etc/rclone/gdrive-sa.json
+#        chmod 600 /etc/rclone/gdrive-sa.json
+#   3. Cole este arquivo na VPS em:
+#        /root/.config/rclone/rclone.conf
+#   4. Substitua ROOT_FOLDER_ID pelo ID da pasta do Google Drive.
+#   5. Teste: rclone lsd gdrive:
+
+[gdrive]
+type = drive
+scope = drive
+service_account_file = /etc/rclone/gdrive-sa.json
+root_folder_id = ROOT_FOLDER_ID
