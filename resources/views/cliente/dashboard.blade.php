@@ -88,10 +88,10 @@
                         $borderClasses .= ' md:border-r md:border-neutral-border';
                     }
                 @endphp
-                <div class="p-12 flex items-start gap-12 {{ $rowBg }} {{ $hoverBg }} {{ $borderClasses }} transition">
+                <div class="p-16 md:p-24 flex items-start gap-16 {{ $rowBg }} {{ $hoverBg }} {{ $borderClasses }} transition">
 
                     {{-- Nota / Estrelas --}}
-                    <div class="flex-shrink-0 text-center w-48">
+                    <div class="flex-shrink-0 text-center w-48 flex flex-col items-center">
                         <span class="block text-title-2 font-bold {{ $isPositiva ? 'text-emerald-600' : 'text-red-500' }} leading-none">
                             {{ $avaliacao->nota }}
                         </span>
@@ -102,33 +102,41 @@
                         </div>
                     </div>
 
-                    {{-- Badge tipo --}}
-                    <div class="flex-shrink-0 mt-2">
-                        @if($isPositiva)
-                            <span class="text-legend bg-emerald-50 text-emerald-700 font-bold px-6 py-2 rounded uppercase tracking-wider border border-emerald-200">Positiva</span>
-                        @else
-                            <span class="text-legend {{ $avaliacao->resolvido ? 'bg-gray-100 text-gray-500 border-gray-200' : 'bg-red-50 text-red-600 border-red-200' }} font-bold px-6 py-2 rounded uppercase tracking-wider border">
-                                {{ $avaliacao->resolvido ? 'Resolvida' : 'Pendente' }}
-                            </span>
-                        @endif
-                    </div>
+                    {{-- Conteúdo --}}
+                    <div class="flex-1 min-w-0 flex flex-col gap-8">
+                        {{-- Topo: Badges e Data --}}
+                        <div class="flex flex-wrap items-center justify-between gap-8">
+                            <div class="flex items-center gap-8 flex-wrap">
+                                @if($isPositiva)
+                                    <span class="text-legend bg-emerald-50 text-emerald-700 font-bold px-6 py-2 rounded uppercase tracking-wider border border-emerald-200">Positiva</span>
+                                @else
+                                    <span class="text-legend {{ $avaliacao->resolvido ? 'bg-gray-100 text-gray-500 border-gray-200' : 'bg-red-50 text-red-600 border-red-200' }} font-bold px-6 py-2 rounded uppercase tracking-wider border">
+                                        {{ $avaliacao->resolvido ? 'Resolvida' : 'Pendente' }}
+                                    </span>
+                                @endif
 
-                    {{-- Feedback --}}
-                    <div class="flex-1 min-w-0">
-                        <p class="text-body-m text-neutral-primary leading-relaxed break-words">
-                            {{ $avaliacao->feedback ?: '—' }}
-                        </p>
-                        @if($avaliacao->problema)
-                            <span class="inline-block mt-4 text-[10px] bg-neutral-bg border border-neutral-border text-neutral-secondary px-6 py-1 rounded font-medium">
-                                {{ $avaliacao->problema }}
-                            </span>
-                        @endif
-                    </div>
+                                @if($avaliacao->problema)
+                                    <span class="inline-flex items-center text-[10px] bg-neutral-bg border border-neutral-border text-neutral-secondary px-6 py-1 rounded font-medium">
+                                        {{ $avaliacao->problema }}
+                                    </span>
+                                @endif
+                            </div>
 
-                    {{-- Data --}}
-                    <div class="flex-shrink-0 text-right text-legend">
-                        <span class="block text-neutral-secondary font-medium">{{ $avaliacao->created_at->format('d/m/Y') }}</span>
-                        <span class="block text-neutral-secondary/60 mt-2">{{ $avaliacao->created_at->format('H:i') }}</span>
+                            <div class="text-right text-legend text-neutral-secondary whitespace-nowrap">
+                                <span>{{ $avaliacao->created_at->format('d/m/Y') }}</span>
+                                <span class="text-neutral-secondary/40 mx-4">•</span>
+                                <span>{{ $avaliacao->created_at->format('H:i') }}</span>
+                            </div>
+                        </div>
+
+                        {{-- Comentário --}}
+                        <div class="text-body-m text-neutral-primary leading-relaxed break-words">
+                            @if($avaliacao->feedback)
+                                {{ $avaliacao->feedback }}
+                            @else
+                                <span class="text-neutral-secondary/40 italic">Sem comentário escrito</span>
+                            @endif
+                        </div>
                     </div>
 
                 </div>
