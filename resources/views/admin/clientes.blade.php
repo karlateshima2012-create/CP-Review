@@ -7,7 +7,7 @@
     <!-- Header with Export -->
     <div class="flex justify-between items-center mb-8">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Gestão de Tenants</h1>
+            <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Gestão de Clientes</h1>
             <p class="text-sm text-gray-500">Gerencie todos os lojistas ativos na plataforma</p>
         </div>
         <div class="flex gap-3">
@@ -93,26 +93,38 @@
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-2">
                                 <!-- Impersonate -->
-                                <a href="{{ route('admin.clientes.impersonate', $cliente->id) }}" class="p-2 bg-gray-100 hover:bg-orange-100 hover:text-orange-700 rounded-lg transition" title="Logar como este Tenant">
-                                    🕵️
+                                <a href="{{ route('admin.clientes.impersonate', $cliente->id) }}" class="p-2 bg-gray-100 hover:bg-orange-100 hover:text-orange-700 rounded-lg transition flex items-center justify-center text-gray-500" title="Logar como este Cliente">
+                                    <svg class="w-16 h-16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                                    </svg>
                                 </a>
                                 <!-- Ver Avaliações (Suporte) -->
-                                <a href="{{ route('cliente.avaliacoes', $cliente->id) }}" target="_blank" class="p-2 bg-gray-100 hover:bg-blue-100 hover:text-blue-700 rounded-lg transition" title="Ver Avaliações">
-                                    📋
+                                <a href="{{ route('cliente.avaliacoes', $cliente->id) }}" target="_blank" class="p-2 bg-gray-100 hover:bg-blue-100 hover:text-blue-700 rounded-lg transition flex items-center justify-center text-gray-500" title="Ver Avaliações">
+                                    <svg class="w-16 h-16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-3.658C3.03 15.931 2 14.072 2 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
+                                    </svg>
                                 </a>
                                 <!-- QR -->
-                                <a href="{{ route('admin.clientes.qrcode', $cliente->id) }}" class="p-2 bg-gray-100 hover:bg-blue-100 hover:text-blue-700 rounded-lg transition" title="Gerar QR Code">
-                                    🖼️
+                                <a href="{{ route('admin.clientes.qrcode', $cliente->id) }}" class="p-2 bg-gray-100 hover:bg-blue-100 hover:text-blue-700 rounded-lg transition flex items-center justify-center text-gray-500" title="Gerar QR Code">
+                                    <svg class="w-16 h-16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125v-2.25zM3.75 14.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125v-2.25zM14.625 3.75c-.621 0-1.125.504-1.125 1.125v2.25c0 .621.504 1.125 1.125 1.125h2.25c.621 0 1.125-.504 1.125-1.125v-2.25c0-.621-.504-1.125-1.125-1.125h-2.25zM16.5 16.5h.008v.008H16.5V16.5zm-3 0h.008v.008h-.008V16.5zm-3-3h.008v.008h-.008v-.008zm-3 0h.008v.008H7.5v-.008zm0-3h.008v.008H7.5V10.5zm3 0h.008v.008h-.008V10.5zm3 0h.008v.008h-.008V10.5zm3-3h.008v.008H16.5V7.5zm-3 0h.008v.008h-.008V7.5z" />
+                                    </svg>
                                 </a>
                                 <!-- Editar -->
-                                <a href="{{ route('admin.clientes.edit', $cliente->id) }}" class="p-2 bg-gray-100 hover:bg-purple-100 hover:text-purple-700 rounded-lg transition" title="Editar">
-                                    ✏️
+                                <a href="{{ route('admin.clientes.edit', $cliente->id) }}" class="p-2 bg-gray-100 hover:bg-purple-100 hover:text-purple-700 rounded-lg transition flex items-center justify-center text-gray-500" title="Editar">
+                                    <svg class="w-16 h-16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.83 20.013a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
+                                    </svg>
                                 </a>
                                 <!-- Delete -->
                                 <form action="{{ route('admin.clientes.destroy', $cliente->id) }}" method="POST" onsubmit="return confirm('ATENÇÃO: Isso apagará TODOS os dados deste lojista. Confirmar?')" class="inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button class="p-2 bg-gray-100 hover:bg-red-100 hover:text-red-700 rounded-lg transition">🗑️</button>
+                                    <button class="p-2 bg-gray-100 hover:bg-red-100 hover:text-red-700 rounded-lg transition flex items-center justify-center text-gray-500">
+                                        <svg class="w-16 h-16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                        </svg>
+                                    </button>
                                 </form>
                             </div>
                         </td>
@@ -120,7 +132,7 @@
                     @empty
                     <tr>
                         <td colspan="5" class="px-6 py-12 text-center text-gray-400 italic font-medium">
-                            Nenhum tenant encontrado com os filtros selecionados.
+                            Nenhum cliente encontrado com os filtros selecionados.
                         </td>
                     </tr>
                     @endforelse

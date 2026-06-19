@@ -1,8 +1,8 @@
 @extends('layouts.admin')
 
-@section('title', 'Central de Relatórios')
+@section('title', 'Relatórios')
 
-@section('header', 'Central de Relatórios Mensais')
+@section('header', 'Relatórios')
 
 @section('content')
 <div class="p-8 space-y-8">
@@ -18,7 +18,7 @@
                         <div class="space-y-2">
                             <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Destinatários</label>
                             <select name="tenant_id" id="tenant_select" class="block w-full rounded-xl border-gray-100 bg-gray-50 font-bold text-sm">
-                                <option value="all">Todos os Tenants Ativos</option>
+                                <option value="all">Todos os Clientes Ativos</option>
                                 @foreach($tenants as $t)
                                 <option value="{{ $t->id }}">{{ $t->nome_empresa }}</option>
                                 @endforeach
@@ -52,7 +52,7 @@
                     <thead>
                         <tr class="bg-gray-50">
                             <th class="px-8 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Data Envio</th>
-                            <th class="px-8 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Tenant</th>
+                            <th class="px-8 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Cliente</th>
                             <th class="px-8 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Período</th>
                             <th class="px-8 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Status</th>
                             <th class="px-8 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Abertura</th>
@@ -125,7 +125,7 @@
     function previewReport() {
         const tenantId = document.getElementById('tenant_select').value;
         if (tenantId === 'all') {
-            alert('Por favor, selecione um tenant específico para ver o preview.');
+            alert('Por favor, selecione um cliente específico para ver o preview.');
             return;
         }
         window.open(`/admin/reports/preview/${tenantId}`, '_blank');

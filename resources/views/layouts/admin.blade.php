@@ -40,8 +40,6 @@
             </div>
 
             <nav class="mt-4 px-6 space-y-1 flex-1 overflow-y-auto">
-                <p class="px-4 text-[10px] font-black text-gray-300 uppercase tracking-widest mb-4">Principal</p>
-                
                 <a href="{{ route('admin.dashboard') }}" class="flex items-center px-4 py-3.5 rounded-2xl transition-all duration-200 {{ request()->routeIs('admin.dashboard') ? 'sidebar-item-active shadow-sm ring-1 ring-purple-100' : 'text-gray-500 hover:bg-gray-50 hover:text-purple-600' }}">
                     <svg class="w-5 h-5 mr-3 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
                     <span class="font-bold text-sm">Dashboard Master</span>
@@ -49,10 +47,8 @@
 
                 <a href="{{ route('admin.clientes') }}" class="flex items-center px-4 py-3.5 rounded-2xl transition-all duration-200 {{ request()->routeIs('admin.clientes*') ? 'sidebar-item-active shadow-sm ring-1 ring-purple-100' : 'text-gray-500 hover:bg-gray-50 hover:text-purple-600' }}">
                     <svg class="w-5 h-5 mr-3 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                    <span class="font-bold text-sm">Gestão de Tenants</span>
+                    <span class="font-bold text-sm">Gestão de Clientes</span>
                 </a>
-
-                <p class="px-4 text-[10px] font-black text-gray-300 uppercase tracking-widest pt-6 mb-4">Operações</p>
 
                 <a href="{{ route('admin.transacoes') }}" class="flex items-center px-4 py-3.5 rounded-2xl transition-all duration-200 {{ request()->routeIs('admin.transacoes') ? 'sidebar-item-active shadow-sm ring-1 ring-purple-100' : 'text-gray-500 hover:bg-gray-50 hover:text-purple-600' }}">
                     <svg class="w-5 h-5 mr-3 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
@@ -65,8 +61,11 @@
                 </a>
 
                 <a href="{{ route('admin.reports.index') }}" class="flex items-center px-4 py-3.5 rounded-2xl transition-all duration-200 {{ request()->routeIs('admin.reports.*') ? 'sidebar-item-active shadow-sm ring-1 ring-purple-100' : 'text-gray-500 hover:bg-gray-50 hover:text-purple-600' }}">
-                    <svg class="w-5 h-5 mr-3 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2m32-2v2a4 4 0 01-4 4h-2a4 4 0 01-4-4v-2m-9 1a3 3 0 100-6 3 3 0 000 6z"></path></svg>
-                    <span class="font-bold text-sm">Central de Relatórios</span>
+                    <svg class="w-5 h-5 mr-3 opacity-70" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" />
+                    </svg>
+                    <span class="font-bold text-sm">Relatórios</span>
                 </a>
             </nav>
 
