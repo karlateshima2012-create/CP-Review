@@ -9,7 +9,7 @@
     <p class="text-body-m text-neutral-secondary">Compartilhe para receber avaliações e gerencie sua reputação</p>
 </div>
 
-<div class="grid lg:grid-cols-12 gap-32 lg:items-stretch">
+<div class="grid lg:grid-cols-12 gap-32 items-start">
 
     <!-- Left Column: QR Code -->
     <div class="lg:col-span-6 card p-24 flex flex-col items-center text-center">
@@ -52,7 +52,7 @@
     <div class="lg:col-span-6 flex flex-col gap-16">
 
         <!-- Google Reviews Card -->
-        <div class="card p-16 flex flex-col flex-1">
+        <div class="card p-16">
             <div class="flex items-center gap-10 mb-12">
                 <svg class="w-20 h-20 flex-shrink-0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.4-1.04 2.58-2.23 3.37v2.79h3.61c2.11-1.95 3.26-4.82 3.26-8.17z" fill="#4285F4"/>
@@ -66,7 +66,7 @@
                 </div>
             </div>
 
-            <div class="mt-auto space-y-8">
+            <div class="space-y-8">
                 <a href="https://business.google.com/reviews" target="_blank"
                    class="w-full flex items-center justify-center gap-8 py-10 px-14 rounded-lg font-bold text-white text-body-m transition shadow-sm"
                    style="background: linear-gradient(135deg, #4285F4 0%, #34A853 100%);">
@@ -93,7 +93,7 @@
         </div>
 
         <!-- Sharing Card -->
-        <div class="card p-16 flex flex-col flex-1">
+        <div class="card p-16">
             <span class="text-legend text-neutral-secondary font-bold uppercase tracking-wider block mb-12">Compartilhar link de avaliação</span>
 
             <div class="grid grid-cols-3 gap-10">
