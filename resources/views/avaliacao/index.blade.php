@@ -934,19 +934,25 @@ function showSuccessScreen(fastClose = false) {
     const screen = document.createElement('div');
     screen.className = 'success-screen';
     screen.innerHTML = `
+        <button onclick="window.close()" style="
+            position:absolute; top:16px; right:16px;
+            width:36px; height:36px; border-radius:50%;
+            border:none; background:rgba(0,0,0,0.08);
+            cursor:pointer; font-size:18px; line-height:1;
+            color:var(--text-muted); display:flex; align-items:center; justify-content:center;
+        " aria-label="Fechar">✕</button>
         <div class="success-icon">✓</div>
         <h2 class="success-title">MUITO OBRIGADO!</h2>
         <p style="color:var(--text); font-size:16px; line-height:1.5">${botConfig.lang.success || "Sua avaliação nos ajuda a crescer e melhorar todos os dias."}</p>
     `;
     document.querySelector('.phone').appendChild(screen);
-    
+
     const delay = fastClose ? 1500 : botConfig.config.auto_close;
     setTimeout(() => {
         try {
             window.close();
         } catch(e) {}
-        
-        // Se o navegador impedir o fechamento automático, adicionamos a instrução visual
+
         const exitMsg = document.createElement('p');
         exitMsg.style.color = 'var(--text-muted)';
         exitMsg.style.fontSize = '14px';
@@ -954,7 +960,7 @@ function showSuccessScreen(fastClose = false) {
         exitMsg.style.animation = 'fadeIn 0.5s';
         exitMsg.innerHTML = "Você já pode fechar ou minimizar o aplicativo.";
         screen.appendChild(exitMsg);
-        
+
     }, delay);
 }
 
