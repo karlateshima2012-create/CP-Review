@@ -4,8 +4,8 @@
 
 @section('cliente_content')
 <div class="mb-32">
-    <h2 class="text-title-1 font-bold text-neutral-primary">Guia de Uso</h2>
-    <p class="text-body-m text-neutral-secondary">Tudo que você precisa saber para tirar o máximo do CP Review</p>
+    <h2 class="text-title-1 font-bold text-neutral-primary">{{ __('Guia de Uso') }}</h2>
+    <p class="text-body-m text-neutral-secondary">{{ __('Tudo que você precisa saber para tirar o máximo do CP Review') }}</p>
 </div>
 
 <div class="max-w-3xl space-y-24">
@@ -18,7 +18,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636-.707.707M21 12h-1M4 12H3m3.343-5.657-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
                 </svg>
             </div>
-            <h3 class="text-body-g font-bold text-neutral-primary">Como o CP Review funciona</h3>
+            <h3 class="text-body-g font-bold text-neutral-primary">{{ __('Como o CP Review funciona') }}</h3>
         </div>
         <p class="text-body-m text-neutral-secondary leading-relaxed mb-16">
             O CP Review é um sistema de gestão de avaliações que separa o feedback positivo do negativo antes de chegar ao Google. Clientes satisfeitos são direcionados ao Google; insatisfeitos ficam registrados internamente para que você resolva antes que se tornem resenhas públicas.
@@ -46,7 +46,7 @@
                 <span class="text-body-g font-bold text-emerald-600">1</span>
             </div>
             <div>
-                <h3 class="text-body-g font-bold text-neutral-primary">Divulgue seu link de avaliação</h3>
+                <h3 class="text-body-g font-bold text-neutral-primary">{{ __('Divulgue seu link de avaliação') }}</h3>
                 <p class="text-legend text-neutral-secondary">Aba Divulgação</p>
             </div>
         </div>
@@ -83,7 +83,7 @@
                 <span class="text-body-g font-bold text-blue-600">2</span>
             </div>
             <div>
-                <h3 class="text-body-g font-bold text-neutral-primary">O bot recebe o cliente</h3>
+                <h3 class="text-body-g font-bold text-neutral-primary">{{ __('O bot recebe o cliente') }}</h3>
                 <p class="text-legend text-neutral-secondary">Automático — nenhuma ação necessária</p>
             </div>
         </div>
@@ -121,7 +121,7 @@
                 <span class="text-body-g font-bold text-orange-600">3</span>
             </div>
             <div>
-                <h3 class="text-body-g font-bold text-neutral-primary">Gerencie as Ocorrências</h3>
+                <h3 class="text-body-g font-bold text-neutral-primary">{{ __('Gerencie as Ocorrências') }}</h3>
                 <p class="text-legend text-neutral-secondary">Aba Ocorrências</p>
             </div>
         </div>
@@ -162,7 +162,7 @@
                 <span class="text-body-g font-bold text-purple-600">4</span>
             </div>
             <div>
-                <h3 class="text-body-g font-bold text-neutral-primary">Personalize o bot e a página</h3>
+                <h3 class="text-body-g font-bold text-neutral-primary">{{ __('Personalize o bot e a página') }}</h3>
                 <p class="text-legend text-neutral-secondary">Aba Personalização</p>
             </div>
         </div>
@@ -208,7 +208,7 @@
                 </svg>
             </div>
             <div>
-                <h3 class="text-body-g font-bold text-neutral-primary">Responda avaliações no Google</h3>
+                <h3 class="text-body-g font-bold text-neutral-primary">{{ __('Responda avaliações no Google') }}</h3>
                 <p class="text-legend text-neutral-secondary">Google Business Profile</p>
             </div>
         </div>
@@ -248,7 +248,7 @@
                 </svg>
             </div>
             <div>
-                <h3 class="text-body-g font-bold text-neutral-primary">Acompanhe pelo Dashboard</h3>
+                <h3 class="text-body-g font-bold text-neutral-primary">{{ __('Acompanhe pelo Dashboard') }}</h3>
                 <p class="text-legend text-neutral-secondary">Aba Dashboard</p>
             </div>
         </div>
@@ -289,10 +289,10 @@
     <div class="card p-24 bg-brand-50 border border-brand-100">
         <div class="flex items-center gap-12 mb-12">
             <span class="text-2xl">💬</span>
-            <h3 class="text-body-g font-bold text-brand-700">Precisa de ajuda?</h3>
+            <h3 class="text-body-g font-bold text-brand-700">{{ __('Precisa de ajuda?') }}</h3>
         </div>
         <p class="text-body-m text-brand-700 leading-relaxed mb-16">
-            Nossa equipe de suporte está disponível para tirar dúvidas, fazer configurações iniciais e ajudar você a extrair o máximo do sistema.
+            {{ __('Nossa equipe de suporte está disponível para tirar dúvidas, fazer configurações iniciais e ajudar você a extrair o máximo do sistema.') }}
         </p>
         <div class="flex justify-center">
             <a href="https://wa.me/819011886491" target="_blank"
@@ -300,7 +300,7 @@
                 <svg class="w-16 h-16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 9.75a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 0 1 .778-.332 48.294 48.294 0 0 0 5.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"/>
                 </svg>
-                Falar com suporte
+                {{ __('Falar com suporte') }}
             </a>
         </div>
     </div>

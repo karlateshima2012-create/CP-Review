@@ -139,18 +139,18 @@
 <!-- Modal Resolve / Anotação Interna -->
 <div id="resolverModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
     <div class="bg-white rounded-2xl p-16 sm:p-24 max-w-md w-full mx-16 shadow-lg">
-        <h2 class="text-title-3 font-bold mb-16 text-neutral-primary">Anotação Interna</h2>
-        <p class="text-body-m text-neutral-secondary mb-12">Adicione uma anotação sobre como esta reclamação foi resolvida. Esta anotação serve apenas para controle interno.</p>
+        <h2 class="text-title-3 font-bold mb-16 text-neutral-primary">{{ __('Anotação Interna') }}</h2>
+        <p class="text-body-m text-neutral-secondary mb-12">{{ __('Adicione uma anotação sobre como esta reclamação foi resolvida. Esta anotação serve apenas para controle interno.') }}</p>
         <form id="resolverForm">
             @csrf
             <input type="hidden" id="modal_avaliacao_id">
             <textarea id="modal_anotacao" rows="4" class="w-full border border-neutral-border rounded-lg px-12 py-8 text-body-m mb-16 focus:ring-2 focus:ring-brand-600 focus:outline-none" placeholder="Ex: Conversei com o cliente e oferecemos um desconto. Situação resolvida." required></textarea>
             <div class="flex gap-12">
                 <button type="submit" class="flex-1 bg-brand-600 text-white py-12 rounded-lg font-bold hover:bg-brand-700 transition">
-                    Salvar e Resolver
+                    {{ __('Salvar e Resolver') }}
                 </button>
                 <button type="button" onclick="fecharResolverModal()" class="flex-1 bg-neutral-secondary/10 text-neutral-secondary py-12 rounded-lg font-bold hover:bg-neutral-secondary/20 transition">
-                    Cancelar
+                    {{ __('Cancelar') }}
                 </button>
             </div>
         </form>
@@ -190,7 +190,7 @@
     }
 
     function reabrirOcorrencia(id) {
-        if (!confirm('Reabrir esta ocorrência?')) return;
+        if (!confirm('{{ __('Reabrir esta ocorrência?') }}')) return;
         chamarResponder(id, { reabrir: true });
     }
 

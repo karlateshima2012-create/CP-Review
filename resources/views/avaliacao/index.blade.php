@@ -901,10 +901,6 @@ async function finishChat(isPos, googleBtnShown = false) {
             await wait(600);
         }
     }
-
-    // Auto redirect to success screen after 2 seconds
-    await wait(2000);
-    showSuccessScreen();
 }
 
 async function submitEvaluation() {
