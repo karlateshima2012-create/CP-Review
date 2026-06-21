@@ -7,7 +7,7 @@
     <div class="max-w-md w-full space-y-8 bg-white p-6 sm:p-10 rounded-3xl border border-gray-100 shadow-xl">
         <div>
             <div class="mx-auto flex items-center justify-center">
-                <img src="/logo.png?v={{ file_exists(public_path('logo.png')) ? filemtime(public_path('logo.png')) : time() }}" alt="CP Review" class="h-[90px] w-auto">
+                <img src="/logo.png?v={{ file_exists(public_path('logo.png')) ? filemtime(public_path('logo.png')) : time() }}" alt="CP Review" class="h-[68px] w-auto">
             </div>
             <h2 class="mt-6 text-center text-4xl font-extrabold text-gray-900 tracking-tight">
                 Bem-vindo de volta
@@ -19,14 +19,14 @@
             <div class="space-y-4">
                 <div>
                     <label for="email" class="block text-base font-semibold text-gray-700 mb-1">E-mail</label>
-                    <input id="email" name="email" type="email" required class="appearance-none rounded-xl relative block w-full px-5 py-4 border border-gray-200 bg-gray-50 placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-base transition-all" placeholder="exemplo@email.com">
+                    <input id="email" name="email" type="email" required class="appearance-none rounded-xl relative block w-full px-[20px] py-[14px] border border-gray-200 bg-gray-50 placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-base transition-all" placeholder="exemplo@email.com">
                     @error('email')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
                 <div>
                     <label for="password" class="block text-base font-semibold text-gray-700 mb-1">Senha</label>
-                    <input id="password" name="password" type="password" required class="appearance-none rounded-xl relative block w-full px-5 py-4 border border-gray-200 bg-gray-50 placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-base transition-all" placeholder="••••••••">
+                    <input id="password" name="password" type="password" required class="appearance-none rounded-xl relative block w-full px-[20px] py-[14px] border border-gray-200 bg-gray-50 placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-base transition-all" placeholder="••••••••">
                 </div>
             </div>
 
@@ -39,7 +39,7 @@
             </div>
 
             <div>
-                <button type="submit" class="group relative w-full flex justify-center py-4 px-6 border border-transparent text-base font-bold rounded-xl text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all transform hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-purple-200">
+                <button type="submit" class="group relative w-full flex justify-center py-[14px] px-[24px] border border-transparent text-base font-bold rounded-xl text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all transform hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-purple-200">
                     Acessar Painel
                 </button>
             </div>
