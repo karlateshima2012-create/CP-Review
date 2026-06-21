@@ -1,4 +1,4 @@
-# 🚢 Guia de Deploy — CP REVIEW CARE
+# 🚢 Guia de Deploy — CP REVIEW
 
 Este guia documenta as duas formas de realizar o deploy do projeto **CP REVIEW** para o servidor VPS da **Hostinger**: 
 

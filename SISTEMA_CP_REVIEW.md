@@ -1,12 +1,12 @@
-# 🛡️ CP REVIEW CARE — Sistema de Gestão de Experiência do Cliente (SaaS)
+# 🛡️ CP REVIEW — Sistema de Gestão de Experiência do Cliente (SaaS)
 
-Este documento detalha a arquitetura, funcionalidades e as implementações de alto nível (Senior Hardening) aplicadas ao projeto **CP Review Care**. O sistema foi projetado para ser um SaaS multi-tenant robusto, escalável e preparado para o mercado internacional (Brasil e Japão).
+Este documento detalha a arquitetura, funcionalidades e as implementações de alto nível (Senior Hardening) aplicadas ao projeto **CP Review**. O sistema foi projetado para ser um SaaS multi-tenant robusto, escalável e preparado para o mercado internacional (Brasil e Japão).
 
 ---
 
 ## 🚀 Sobre o Sistema
 
-O **CP Review Care** é uma plataforma focada em transformar o feedback negativo em oportunidade de fidelização. O lojista disponibiliza um QR Code em seu estabelecimento; o cliente avalia sua experiência de forma privada e interativa através de um bot PWA. 
+O **CP Review** é uma plataforma focada em transformar o feedback negativo em oportunidade de fidelização. O lojista disponibiliza um QR Code em seu estabelecimento; o cliente avalia sua experiência de forma privada e interativa através de um bot PWA. 
 
 Se a nota for baixa, o lojista é notificado instantaneamente via canal preferido (WhatsApp ou LINE) para que possa intervir antes que o cliente publique uma reclamação em redes sociais ou Google Maps.
 
@@ -73,4 +73,4 @@ Recentemente, o sistema passou por um processo de endurecimento arquitetural sê
 6. [ ] Implementação de Testes Cross-Tenant Automatizados.
 
 ---
-*Documentação gerada pelo Arquiteto de Sistemas - CP REVIEW CARE v2.0*
+*Documentação gerada pelo Arquiteto de Sistemas - CP REVIEW v2.0*
