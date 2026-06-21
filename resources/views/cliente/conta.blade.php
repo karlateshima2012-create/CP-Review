@@ -151,14 +151,14 @@
 
             <!-- Support Links -->
             <div class="card p-24 space-y-16">
-                <span class="text-legend text-neutral-secondary font-bold uppercase tracking-wider">Suporte</span>
-                
+                <span class="text-legend text-neutral-secondary font-bold uppercase tracking-wider">{{ __('Suporte') }}</span>
+
                 <div class="space-y-12">
                     <a href="https://wa.me/819011886491" target="_blank" class="w-full border border-neutral-border hover:bg-neutral-bg py-12 px-16 rounded-lg text-body-m font-bold text-neutral-primary flex items-center justify-center gap-8 transition">
-                        <span>💬 Falar com suporte (WhatsApp)</span>
+                        <span>💬 {{ __('Falar com suporte (WhatsApp)') }}</span>
                     </a>
                     <a href="{{ route('cliente.ajuda', $cliente->id) }}" class="w-full border border-neutral-border hover:bg-neutral-bg py-12 px-16 rounded-lg text-body-m font-bold text-neutral-primary flex items-center justify-center gap-8 transition">
-                        <span>📄 Guia de uso</span>
+                        <span>📄 {{ __('Guia de uso') }}</span>
                     </a>
                 </div>
             </div>
