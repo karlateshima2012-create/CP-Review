@@ -941,7 +941,7 @@ async function submitEvaluation() {
     }
 }
 
-function showSuccessScreen(fastClose = false) {
+function showSuccessScreen(autoClose = false) {
     const screen = document.createElement('div');
     screen.className = 'success-screen';
     screen.innerHTML = `
@@ -958,21 +958,32 @@ function showSuccessScreen(fastClose = false) {
     `;
     document.querySelector('.phone').appendChild(screen);
 
-    const delay = fastClose ? 1500 : botConfig.config.auto_close;
-    setTimeout(() => {
-        try {
-            window.close();
-        } catch(e) {}
+    if (autoClose) {
+        setTimeout(() => {
+            try {
+                window.close();
+            } catch(e) {}
 
-        const exitMsg = document.createElement('p');
-        exitMsg.style.color = 'var(--text-muted)';
-        exitMsg.style.fontSize = '14px';
-        exitMsg.style.marginTop = '20px';
-        exitMsg.style.animation = 'fadeIn 0.5s';
-        exitMsg.innerHTML = "Você já pode fechar ou minimizar o aplicativo.";
-        screen.appendChild(exitMsg);
-
-    }, delay);
+            const exitMsg = document.createElement('p');
+            exitMsg.style.color = 'var(--text-muted)';
+            exitMsg.style.fontSize = '14px';
+            exitMsg.style.marginTop = '20px';
+            exitMsg.style.animation = 'fadeIn 0.5s';
+            exitMsg.innerHTML = "Você já pode fechar ou minimizar o aplicativo.";
+            screen.appendChild(exitMsg);
+        }, 1500);
+    } else {
+        // Apenas exibe a mensagem de encerramento sem fechar o aplicativo automaticamente
+        setTimeout(() => {
+            const exitMsg = document.createElement('p');
+            exitMsg.style.color = 'var(--text-muted)';
+            exitMsg.style.fontSize = '14px';
+            exitMsg.style.marginTop = '20px';
+            exitMsg.style.animation = 'fadeIn 0.5s';
+            exitMsg.innerHTML = "Você já pode fechar ou minimizar o aplicativo.";
+            screen.appendChild(exitMsg);
+        }, 1000);
+    }
 }
 
 // Service Worker Registration

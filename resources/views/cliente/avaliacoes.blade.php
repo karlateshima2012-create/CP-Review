@@ -5,31 +5,31 @@
 @section('cliente_content')
 <!-- Page Header -->
 <div class="mb-32">
-    <h2 class="text-title-1 font-bold text-neutral-primary">Ocorrências</h2>
-    <p class="text-body-m text-neutral-secondary">Avaliações negativas — resolva antes que virem problema público</p>
+    <h2 class="text-title-1 font-bold text-neutral-primary">{{ __('Ocorrências') }}</h2>
+    <p class="text-body-m text-neutral-secondary">{{ __('Avaliações negativas — resolva antes que virem problema público') }}</p>
 </div>
 
 <!-- Filters Tab Bar -->
 <div class="flex gap-8 mb-24 items-center overflow-x-auto pb-4 -mx-16 px-16 scroll-smooth">
     <!-- Todas -->
     <a href="{{ route('cliente.avaliacoes', [$cliente->id, 'filter' => 'todas']) }}" class="flex-shrink-0 px-12 py-8 rounded-full text-body-m font-medium transition {{ $filter === 'todas' ? 'bg-brand-600 text-white shadow-sm' : 'bg-white text-neutral-secondary border border-neutral-border hover:bg-neutral-bg' }}">
-        Todas ({{ $totalNegativas }})
+        {{ __('Todas') }} ({{ $totalNegativas }})
     </a>
     <!-- Pendentes -->
     <a href="{{ route('cliente.avaliacoes', [$cliente->id, 'filter' => 'pendentes']) }}" class="flex-shrink-0 px-12 py-8 rounded-full text-body-m font-medium transition {{ $filter === 'pendentes' ? 'bg-brand-600 text-white shadow-sm' : 'bg-white text-neutral-secondary border border-neutral-border hover:bg-neutral-bg' }}">
-        Pendentes ({{ $negativasPendentes }})
+        {{ __('Pendentes') }} ({{ $negativasPendentes }})
     </a>
     <!-- Resolvidas -->
     <a href="{{ route('cliente.avaliacoes', [$cliente->id, 'filter' => 'resolvidas']) }}" class="flex-shrink-0 px-12 py-8 rounded-full text-body-m font-medium transition {{ $filter === 'resolvidas' ? 'bg-brand-600 text-white shadow-sm' : 'bg-white text-neutral-secondary border border-neutral-border hover:bg-neutral-bg' }}">
-        Resolvidas ({{ $negativasResolvidas }})
+        {{ __('Resolvidas') }} ({{ $negativasResolvidas }})
     </a>
     <!-- Com contato -->
     <a href="{{ route('cliente.avaliacoes', [$cliente->id, 'filter' => 'com_contato']) }}" class="flex-shrink-0 px-12 py-8 rounded-full text-body-m font-medium transition {{ $filter === 'com_contato' ? 'bg-brand-600 text-white shadow-sm' : 'bg-white text-neutral-secondary border border-neutral-border hover:bg-neutral-bg' }}">
-        Com contato
+        {{ __('Com contato') }}
     </a>
     <!-- Sem contato -->
     <a href="{{ route('cliente.avaliacoes', [$cliente->id, 'filter' => 'sem_contato']) }}" class="flex-shrink-0 px-12 py-8 rounded-full text-body-m font-medium transition {{ $filter === 'sem_contato' ? 'bg-brand-600 text-white shadow-sm' : 'bg-white text-neutral-secondary border border-neutral-border hover:bg-neutral-bg' }}">
-        Sem contato
+        {{ __('Sem contato') }}
     </a>
 </div>
 
@@ -57,16 +57,16 @@
                     <div class="flex items-center gap-8">
                         <span class="text-legend text-neutral-secondary">{{ $avaliacao->created_at->format('d/m H:i') }}</span>
                         @if($avaliacao->resolvido)
-                            <span class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-8 py-2 rounded text-legend font-bold uppercase tracking-wider">Resolvido</span>
+                            <span class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-8 py-2 rounded text-legend font-bold uppercase tracking-wider">{{ __('Resolvida') }}</span>
                         @else
-                            <span class="bg-amber-100 text-amber-800 px-8 py-2 rounded text-legend font-bold uppercase tracking-wider">Pendente</span>
+                            <span class="bg-amber-100 text-amber-800 px-8 py-2 rounded text-legend font-bold uppercase tracking-wider">{{ __('Pendente') }}</span>
                         @endif
                     </div>
                 </div>
 
                 <!-- Feedback Text -->
                 <p class="text-body-s text-neutral-secondary mb-8 leading-relaxed">
-                    {{ $avaliacao->feedback ?: 'Sem feedback escrito' }}
+                    {{ $avaliacao->feedback ?: __('Sem feedback escrito') }}
                 </p>
 
                 <!-- Photo + Contact (inline) -->
@@ -74,7 +74,7 @@
                     @if($avaliacao->foto_problema)
                         <a href="{{ Storage::url($avaliacao->foto_problema) }}" target="_blank" class="text-brand-600 hover:text-brand-700 text-legend font-medium inline-flex items-center gap-4">
                             <svg class="w-12 h-12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"></path></svg>
-                            Ver foto
+                            {{ __('Ver foto') }}
                         </a>
                     @endif
                     @if($avaliacao->tipo_contato !== 'nao' && $avaliacao->contato_valor)
@@ -97,7 +97,7 @@
                     <div class="mt-auto pt-8 bg-emerald-50 border border-emerald-200 rounded-lg p-12">
                         <div class="flex justify-between items-start gap-8">
                             <div class="flex-1 min-w-0">
-                                <p class="text-legend text-emerald-700 truncate">{{ $avaliacao->resposta_dono ?: 'Resolvido sem anotação.' }}</p>
+                                <p class="text-legend text-emerald-700 truncate">{{ $avaliacao->resposta_dono ?: __('Resolvido sem anotação.') }}</p>
                                 @if($avaliacao->respondida_em)
                                     <p class="text-legend text-emerald-500 mt-2">{{ $avaliacao->respondida_em->format('d/m/Y H:i') }}</p>
                                 @endif

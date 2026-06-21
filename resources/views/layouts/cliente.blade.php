@@ -27,7 +27,7 @@
                         <rect x="14" y="14" width="7" height="7" rx="1"></rect>
                         <rect x="3" y="14" width="7" height="7" rx="1"></rect>
                     </svg>
-                    <span>Dashboard</span>
+                    <span>{{ __('Dashboard') }}</span>
                 </a>
 
                 <!-- Ocorrências -->
@@ -35,7 +35,7 @@
                     <svg class="w-24 h-24 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                     </svg>
-                    <span>Ocorrências</span>
+                    <span>{{ __('Ocorrências') }}</span>
                 </a>
 
                 <!-- QR Code -->
@@ -44,7 +44,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 3.75 9.375v-4.5ZM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 0 1-1.125-1.125v-4.5ZM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 13.5 9.375v-4.5Z"></path>
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 15h.008v.008H15V15Zm0 2.25h.008v.008H15v-.008ZM17.25 15h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008ZM15 19.5h.008v.008H15V19.5Zm2.25 0h.008v.008h-.008V19.5ZM19.5 15h.008v.008H19.5V19.5Zm0 2.25h.008v.008H19.5v-.008ZM19.5 19.5h.008v.008H19.5V19.5Z"></path>
                     </svg>
-                    <span>Divulgação</span>
+                    <span>{{ __('Divulgação') }}</span>
                 </a>
 
                 <!-- Personalização -->
@@ -52,7 +52,7 @@
                     <svg class="w-24 h-24 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
                     </svg>
-                    <span>Personalização</span>
+                    <span>{{ __('Personalização') }}</span>
                 </a>
 
                 <!-- Conta -->
@@ -60,7 +60,7 @@
                     <svg class="w-24 h-24 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"></path>
                     </svg>
-                    <span>Minha Conta</span>
+                    <span>{{ __('Minha Conta') }}</span>
                 </a>
             </nav>
         </div>
@@ -95,13 +95,17 @@
                     <span class="text-[11px] text-neutral-secondary truncate max-w-[120px]">{{ $cliente->nome_empresa }}</span>
                 </div>
 
-                <!-- Logout -->
-                <form action="{{ route('logout') }}" method="POST" class="inline">
-                    @csrf
-                    <button type="submit" class="border border-neutral-border hover:bg-neutral-bg px-12 py-6 rounded-lg text-body-m font-medium text-neutral-secondary transition">
-                        Sair
-                    </button>
-                </form>
+                <!-- Language Toggle + Logout -->
+                <div class="flex items-center gap-8">
+                    <a href="{{ route('set-locale', 'pt') }}" class="text-[10px] font-bold px-8 py-4 rounded border transition {{ app()->getLocale() === 'pt' ? 'bg-brand-50 text-brand-600 border-brand-200' : 'border-neutral-border text-neutral-secondary' }}">🇧🇷</a>
+                    <a href="{{ route('set-locale', 'ja') }}" class="text-[10px] font-bold px-8 py-4 rounded border transition {{ app()->getLocale() === 'ja' ? 'bg-brand-50 text-brand-600 border-brand-200' : 'border-neutral-border text-neutral-secondary' }}">🇯🇵</a>
+                    <form action="{{ route('logout') }}" method="POST" class="inline">
+                        @csrf
+                        <button type="submit" class="border border-neutral-border hover:bg-neutral-bg px-12 py-6 rounded-lg text-body-m font-medium text-neutral-secondary transition">
+                            {{ __('Sair') }}
+                        </button>
+                    </form>
+                </div>
             </div>
         </header>
 
@@ -122,7 +126,7 @@
                     <rect x="14" y="14" width="7" height="7" rx="1"></rect>
                     <rect x="3" y="14" width="7" height="7" rx="1"></rect>
                 </svg>
-                <span>Dashboard</span>
+                <span>{{ __('Dashboard') }}</span>
             </a>
 
             <!-- Tab 2: Ocorrências -->
@@ -130,7 +134,7 @@
                 <svg class="w-24 h-24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                 </svg>
-                <span>Ocorr.</span>
+                <span>{{ __('Ocorr.') }}</span>
             </a>
 
             <!-- Tab 3: QR Code -->
@@ -139,7 +143,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 3.75 9.375v-4.5ZM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 0 1-1.125-1.125v-4.5ZM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 13.5 9.375v-4.5Z"></path>
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 15h.008v.008H15V15Zm0 2.25h.008v.008H15v-.008ZM17.25 15h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008ZM15 19.5h.008v.008H15V19.5Zm2.25 0h.008v.008h-.008V19.5ZM19.5 15h.008v.008H19.5V15Zm0 2.25h.008v.008H19.5v-.008ZM19.5 19.5h.008v.008H19.5V19.5Z"></path>
                 </svg>
-                <span>Divulgar</span>
+                <span>{{ __('Divulgar') }}</span>
             </a>
 
             <!-- Tab 4: Personalização -->
@@ -147,7 +151,7 @@
                 <svg class="w-24 h-24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
                 </svg>
-                <span>Pers.</span>
+                <span>{{ __('Pers.') }}</span>
             </a>
 
             <!-- Tab 5: Conta -->
@@ -155,7 +159,7 @@
                 <svg class="w-24 h-24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"></path>
                 </svg>
-                <span>Conta</span>
+                <span>{{ __('Conta') }}</span>
             </a>
         </div>
     </nav>

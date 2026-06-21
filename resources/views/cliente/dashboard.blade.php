@@ -15,24 +15,24 @@
 
     {{-- Acessos ao Bot --}}
     <div class="card p-16 flex flex-col gap-4">
-        <span class="text-legend font-bold uppercase tracking-wider text-neutral-secondary">Acessos ao Bot</span>
+        <span class="text-legend font-bold uppercase tracking-wider text-neutral-secondary">{{ __('Acessos ao Bot') }}</span>
         <span class="text-[32px] font-bold text-neutral-primary leading-none">{{ number_format($totalScans) }}</span>
-        <span class="text-legend text-neutral-secondary">QR codes escaneados</span>
+        <span class="text-legend text-neutral-secondary">{{ __('QR codes escaneados') }}</span>
     </div>
 
     {{-- Avaliações Positivas --}}
     <div class="card p-16 flex flex-col gap-4">
-        <span class="text-legend font-bold uppercase tracking-wider text-neutral-secondary">Positivas</span>
+        <span class="text-legend font-bold uppercase tracking-wider text-neutral-secondary">{{ __('Positivas') }}</span>
         <span class="text-[32px] font-bold text-emerald-600 leading-none">{{ number_format($positivas) }}</span>
-        <span class="text-legend text-neutral-secondary">Notas 4★ e 5★</span>
+        <span class="text-legend text-neutral-secondary">{{ __('Notas 4★ e 5★') }}</span>
     </div>
 
     {{-- Avaliações Negativas --}}
     <div class="card p-16 flex flex-col gap-4">
-        <span class="text-legend font-bold uppercase tracking-wider text-neutral-secondary">Negativas</span>
+        <span class="text-legend font-bold uppercase tracking-wider text-neutral-secondary">{{ __('Negativas') }}</span>
         <span class="text-[32px] font-bold text-red-500 leading-none">{{ number_format($negativas) }}</span>
         <div class="flex items-center justify-between flex-wrap gap-4">
-            <span class="text-legend text-neutral-secondary">Notas 1★ a 3★</span>
+            <span class="text-legend text-neutral-secondary">{{ __('Notas 1★ a 3★') }}</span>
             @if($ocorrenciasPendentes->count() > 0)
                 <span class="text-legend bg-amber-100 text-amber-700 font-bold px-8 py-2 rounded whitespace-nowrap">{{ $ocorrenciasPendentes->count() }} pendentes</span>
             @endif
@@ -41,11 +41,11 @@
 
     {{-- Sem Avaliação --}}
     <div class="card p-16 flex flex-col gap-4">
-        <span class="text-legend font-bold uppercase tracking-wider text-neutral-secondary">Sem Avaliação</span>
+        <span class="text-legend font-bold uppercase tracking-wider text-neutral-secondary">{{ __('Sem Avaliação') }}</span>
         <span class="text-[32px] font-bold text-amber-500 leading-none">{{ number_format($semAvaliacao) }}</span>
         <div class="flex items-center justify-between flex-wrap gap-4">
-            <span class="text-legend text-neutral-secondary">Saíram sem avaliar</span>
-            <span class="text-legend text-neutral-secondary font-bold whitespace-nowrap">{{ $taxaConversao }}% conversão</span>
+            <span class="text-legend text-neutral-secondary">{{ __('Saíram sem avaliar') }}</span>
+            <span class="text-legend text-neutral-secondary font-bold whitespace-nowrap">{{ $taxaConversao }}% {{ __('conversão') }}</span>
         </div>
     </div>
 
@@ -65,7 +65,7 @@
                 @endif
             @endfor
         </div>
-        <span class="text-body-m text-neutral-secondary">{{ $totalAvaliacoes }} avaliações no total</span>
+        <span class="text-body-m text-neutral-secondary">{{ $totalAvaliacoes }} {{ __('avaliações no total') }}</span>
     </div>
 
     {{-- Barras por estrela --}}
@@ -103,19 +103,19 @@
 <div class="card overflow-hidden mb-24">
     <div class="p-16 flex flex-wrap justify-between items-center gap-8 border-b border-neutral-border bg-neutral-card">
         <div>
-            <h3 class="text-body-g font-bold text-neutral-primary">Histórico de Avaliações</h3>
-            <p class="text-legend text-neutral-secondary mt-2">Últimas {{ $historicoRecente->count() }} avaliações recebidas</p>
+            <h3 class="text-body-g font-bold text-neutral-primary">{{ __('Histórico de Avaliações') }}</h3>
+            <p class="text-legend text-neutral-secondary mt-2">{{ __('Últimas :count avaliações recebidas', ['count' => $historicoRecente->count()]) }}</p>
         </div>
         <a href="{{ route('cliente.avaliacoes', $cliente->id) }}" class="border border-neutral-border hover:bg-neutral-bg px-12 py-8 rounded-lg text-body-m font-medium text-neutral-secondary transition">
-            Ver todas →
+            {{ __('Ver todas →') }}
         </a>
     </div>
 
     @if($historicoRecente->isEmpty())
         <div class="p-32 text-center text-neutral-secondary">
             <p class="text-title-1 mb-8">📋</p>
-            <p class="text-body-m font-medium">Nenhuma avaliação recebida ainda.</p>
-            <p class="text-legend mt-4">Compartilhe o QR Code com seus clientes para começar a receber feedback.</p>
+            <p class="text-body-m font-medium">{{ __('Nenhuma avaliação recebida ainda.') }}</p>
+            <p class="text-legend mt-4">{{ __('Compartilhe o QR Code com seus clientes para começar a receber feedback.') }}</p>
         </div>
     @else
         <div class="grid grid-cols-1 md:grid-cols-2">
@@ -156,10 +156,10 @@
                         <div class="flex flex-wrap items-center justify-between gap-8">
                             <div class="flex items-center gap-8 flex-wrap">
                                 @if($isPositiva)
-                                    <span class="text-legend bg-emerald-50 text-emerald-700 font-bold px-6 py-2 rounded uppercase tracking-wider border border-emerald-200">Positiva</span>
+                                    <span class="text-legend bg-emerald-50 text-emerald-700 font-bold px-6 py-2 rounded uppercase tracking-wider border border-emerald-200">{{ __('Positiva') }}</span>
                                 @else
                                     <span class="text-legend {{ $avaliacao->resolvido ? 'bg-gray-100 text-gray-500 border-gray-200' : 'bg-red-50 text-red-600 border-red-200' }} font-bold px-6 py-2 rounded uppercase tracking-wider border">
-                                        {{ $avaliacao->resolvido ? 'Resolvida' : 'Pendente' }}
+                                        {{ $avaliacao->resolvido ? __('Resolvida') : __('Pendente') }}
                                     </span>
                                 @endif
 
@@ -182,7 +182,7 @@
                             @if($avaliacao->feedback)
                                 {{ $avaliacao->feedback }}
                             @else
-                                <span class="text-neutral-secondary/40 italic">Sem comentário escrito</span>
+                                <span class="text-neutral-secondary/40 italic">{{ __('Sem comentário escrito') }}</span>
                             @endif
                         </div>
                     </div>
@@ -204,12 +204,12 @@
                 </svg>
             </div>
             <div>
-                <h3 class="text-body-g font-bold text-neutral-primary">Ocorrências pendentes</h3>
-                <p class="text-body-m text-neutral-secondary">{{ $ocorrenciasPendentes->count() }} avaliação(ões) negativa(s) aguardando sua resposta</p>
+                <h3 class="text-body-g font-bold text-neutral-primary">{{ __('Ocorrências pendentes') }}</h3>
+                <p class="text-body-m text-neutral-secondary">{{ __(':count avaliação(ões) negativa(s) aguardando sua resposta', ['count' => $ocorrenciasPendentes->count()]) }}</p>
             </div>
         </div>
         <a href="{{ route('cliente.avaliacoes', $cliente->id) }}" class="border border-neutral-border bg-white hover:bg-neutral-bg px-12 py-8 rounded-lg text-body-m font-medium text-neutral-secondary transition">
-            Responder →
+            {{ __('Responder →') }}
         </a>
     </div>
     <div class="divide-y divide-amber-100/60 bg-amber-50/30">
@@ -225,7 +225,7 @@
                     @endfor
                 </div>
                 <div class="flex-1 min-w-0">
-                    <p class="text-body-m text-neutral-primary truncate">{{ $avaliacao->feedback ?: 'Sem comentário escrito' }}</p>
+                    <p class="text-body-m text-neutral-primary truncate">{{ $avaliacao->feedback ?: __('Sem comentário escrito') }}</p>
                     <p class="text-legend text-neutral-secondary mt-2">{{ $avaliacao->created_at->diffForHumans() }}</p>
                 </div>
             </div>
@@ -233,7 +233,7 @@
         @if($ocorrenciasPendentes->count() > 3)
             <div class="p-12 text-center">
                 <a href="{{ route('cliente.avaliacoes', $cliente->id) }}" class="text-body-m text-brand-600 font-semibold hover:underline">
-                    Ver mais {{ $ocorrenciasPendentes->count() - 3 }} ocorrências →
+                    {{ __('Ver mais :count ocorrências →', ['count' => $ocorrenciasPendentes->count() - 3]) }}
                 </a>
             </div>
         @endif
