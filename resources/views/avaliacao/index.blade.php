@@ -58,6 +58,7 @@ body {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
+  min-height: 100dvh;
   background: #E5E7EB;
 }
 
@@ -65,6 +66,7 @@ body {
   width: 100%;
   max-width: 430px;
   height: 100vh;
+  height: 100dvh;
   background: var(--bg);
   position: relative;
   display: flex;
@@ -900,17 +902,9 @@ async function finishChat(isPos, googleBtnShown = false) {
         }
     }
 
-    // Append a manual close button so they have time to click Google or just exit
-    const closeDiv = document.createElement('div');
-    closeDiv.style.textAlign = 'center';
-    closeDiv.style.marginTop = '20px';
-    closeDiv.innerHTML = `
-        <button onclick="showSuccessScreen()" style="background:var(--surface2); border:1px solid var(--border); border-radius:20px; color:var(--text-dim); font-size:13px; cursor:pointer; padding:8px 16px; font-weight:600">
-            ✕ SAIR
-        </button>
-    `;
-    chat.appendChild(closeDiv);
-    scrollChat();
+    // Auto redirect to success screen after 2 seconds
+    await wait(2000);
+    showSuccessScreen();
 }
 
 async function submitEvaluation() {

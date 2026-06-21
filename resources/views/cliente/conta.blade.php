@@ -59,7 +59,7 @@
                         <p class="text-legend text-neutral-secondary/60 mt-4">Usado para redirecionar clientes satisfeitos.</p>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-16">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-16">
                         <div>
                             <label class="block text-body-m font-bold text-neutral-secondary mb-4">Telefone WhatsApp</label>
                             <input type="text" name="telefone_whatsapp" value="{{ old('telefone_whatsapp', $cliente->telefone_whatsapp) }}" class="w-full border border-neutral-border rounded-lg px-12 py-8 text-body-m focus:ring-2 focus:ring-brand-600 focus:outline-none" placeholder="Ex: 5511999999999">
@@ -87,7 +87,7 @@
                         <input type="password" name="current_password" class="w-full border border-neutral-border rounded-lg px-12 py-8 text-body-m focus:ring-2 focus:ring-brand-600 focus:outline-none" placeholder="••••••••">
                     </div>
 
-                    <div class="grid grid-cols-2 gap-16">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-16">
                         <div>
                             <label class="block text-body-m font-bold text-neutral-secondary mb-4">Nova senha</label>
                             <input type="password" name="password" class="w-full border border-neutral-border rounded-lg px-12 py-8 text-body-m focus:ring-2 focus:ring-brand-600 focus:outline-none" placeholder="Mínimo 8 caracteres">
@@ -100,7 +100,7 @@
                 </div>
             </div>
 
-            <button type="submit" class="bg-brand-600 text-white hover:bg-brand-700 px-24 py-12 rounded-lg text-body-m font-bold transition flex items-center gap-8 shadow-sm">
+            <button type="submit" class="w-full sm:w-auto bg-brand-600 text-white hover:bg-brand-700 px-24 py-12 rounded-lg text-body-m font-bold transition flex items-center justify-center gap-8 shadow-sm">
                 <svg class="w-16 h-16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"></path></svg>
                 Salvar alterações
             </button>
@@ -154,7 +154,7 @@
                 <span class="text-legend text-neutral-secondary font-bold uppercase tracking-wider">Suporte</span>
                 
                 <div class="space-y-12">
-                    <a href="https://wa.me/5511999999999" target="_blank" class="w-full border border-neutral-border hover:bg-neutral-bg py-12 px-16 rounded-lg text-body-m font-bold text-neutral-primary flex items-center justify-center gap-8 transition">
+                    <a href="https://wa.me/819011886491" target="_blank" class="w-full border border-neutral-border hover:bg-neutral-bg py-12 px-16 rounded-lg text-body-m font-bold text-neutral-primary flex items-center justify-center gap-8 transition">
                         <span>💬 Falar com suporte (WhatsApp)</span>
                     </a>
                     <a href="{{ route('cliente.ajuda', $cliente->id) }}" class="w-full border border-neutral-border hover:bg-neutral-bg py-12 px-16 rounded-lg text-body-m font-bold text-neutral-primary flex items-center justify-center gap-8 transition">

@@ -7,6 +7,14 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\AvaliacaoController;
 use Illuminate\Support\Facades\Route;
 
+// Locale toggle
+Route::get('/set-locale/{locale}', function(string $locale) {
+    if (in_array($locale, ['pt', 'ja'])) {
+        session(['locale' => $locale]);
+    }
+    return redirect()->back();
+})->name('set-locale');
+
 // Landing Page
 Route::get('/', [LandingController::class, 'index'])->name('landing');
 Route::post('/contratar', [LandingController::class, 'contratar']);

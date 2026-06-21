@@ -17,13 +17,8 @@
 <body class="bg-[#F9FAFB] h-screen overflow-hidden text-[#111827]">
     
     <!-- Mobile Header -->
-    <header class="lg:hidden bg-white border-b border-gray-100 p-4 flex justify-between items-center z-40">
-        <div class="flex items-center gap-2">
-            <span class="font-display text-2xl text-[#7C3AED] tracking-tight">CP REVIEW</span>
-        </div>
-        <button id="toggle-sidebar" class="p-2 rounded-xl bg-gray-50 text-gray-500">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-        </button>
+    <header class="lg:hidden bg-white border-b border-gray-100 p-4 flex items-center z-40">
+        <span class="font-display text-2xl text-[#7C3AED] tracking-tight">CP REVIEW</span>
     </header>
     
     <div class="flex h-full">
@@ -106,7 +101,7 @@
             </header>
 
             <!-- Scrollable Content -->
-            <div class="flex-1 overflow-y-auto p-4 lg:p-0">
+            <div class="flex-1 overflow-y-auto p-4 lg:p-0 pb-[80px] lg:pb-0">
                 @if(session('success'))
                 <div class="m-8 p-4 bg-green-50 border border-green-100 text-green-700 rounded-2xl flex items-center gap-3">
                     <span class="text-xl">✅</span>
@@ -118,6 +113,30 @@
             </div>
         </main>
     </div>
+
+    <!-- Mobile Bottom Nav -->
+    <nav class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 z-40 flex items-stretch" style="padding-bottom: env(safe-area-inset-bottom);">
+        <a href="{{ route('admin.dashboard') }}" class="flex-1 flex flex-col items-center justify-center py-2 gap-1 {{ request()->routeIs('admin.dashboard') ? 'text-[#7C3AED]' : 'text-gray-400' }}">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+            <span class="text-[10px] font-bold uppercase tracking-wider">Dashboard</span>
+        </a>
+        <a href="{{ route('admin.clientes') }}" class="flex-1 flex flex-col items-center justify-center py-2 gap-1 {{ request()->routeIs('admin.clientes*') ? 'text-[#7C3AED]' : 'text-gray-400' }}">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+            <span class="text-[10px] font-bold uppercase tracking-wider">Clientes</span>
+        </a>
+        <a href="{{ route('admin.transacoes') }}" class="flex-1 flex flex-col items-center justify-center py-2 gap-1 {{ request()->routeIs('admin.transacoes') ? 'text-[#7C3AED]' : 'text-gray-400' }}">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+            <span class="text-[10px] font-bold uppercase tracking-wider">Planos</span>
+        </a>
+        <a href="{{ route('admin.notifications') }}" class="flex-1 flex flex-col items-center justify-center py-2 gap-1 {{ request()->routeIs('admin.notifications') ? 'text-[#7C3AED]' : 'text-gray-400' }}">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            <span class="text-[10px] font-bold uppercase tracking-wider">Monitor</span>
+        </a>
+        <a href="{{ route('admin.reports.index') }}" class="flex-1 flex flex-col items-center justify-center py-2 gap-1 {{ request()->routeIs('admin.reports.*') ? 'text-[#7C3AED]' : 'text-gray-400' }}">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" /><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" /></svg>
+            <span class="text-[10px] font-bold uppercase tracking-wider">Relatórios</span>
+        </a>
+    </nav>
 
     <script>
         const sidebar = document.getElementById('sidebar');

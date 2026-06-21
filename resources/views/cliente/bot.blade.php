@@ -30,7 +30,7 @@
     @csrf
 
     <!-- Main Content Split (Form Left, Preview Right) -->
-    <div class="grid lg:grid-cols-12 gap-32 items-start">
+    <div class="grid lg:grid-cols-12 gap-16 lg:gap-32 items-start">
         
         <!-- Left Side: Accordion and Inputs -->
         <div class="lg:col-span-7 space-y-16">
@@ -59,12 +59,12 @@
                 <!-- Accordion Body -->
                 <div id="accordion-bot" class="p-24 space-y-24 hidden">
                     <!-- Language Selector Tabs (dynamic based on pack_idioma) -->
-                    <div class="flex gap-8 mb-16">
+                    <div class="flex gap-8 mb-16 overflow-x-auto pb-2">
                         @foreach($localeData as $i => $tab)
                         <button type="button"
                                 id="tab-{{ $tab['key'] }}"
                                 onclick="switchLanguage('{{ $tab['key'] }}')"
-                                class="px-16 py-8 rounded-lg text-body-m font-bold border transition flex items-center gap-8
+                                class="flex-shrink-0 px-16 py-8 rounded-lg text-body-m font-bold border transition flex items-center gap-8
                                        {{ $i === 0 ? 'bg-brand-50 text-brand-600 border-brand-200' : 'bg-white text-neutral-secondary border-neutral-border hover:bg-neutral-bg' }}">
                             <span>{{ $tab['flag'] }} {{ $tab['label'] }}</span>
                             <span class="text-legend px-8 py-2 rounded {{ $i === 0 ? 'bg-brand-100 text-brand-700' : 'bg-gray-100 text-neutral-secondary' }}">Idioma {{ $i + 1 }}</span>
@@ -162,7 +162,7 @@
                                             </div>
 
                                             @if(isset($section['options'][$key][$tab['locale']]))
-                                                <div class="pl-[80px] flex flex-wrap gap-8 items-center">
+                                                <div class="pl-0 sm:pl-[80px] flex flex-wrap gap-8 items-center">
                                                     <span class="text-[11px] text-neutral-secondary font-bold uppercase tracking-wider">Opções:</span>
                                                     @foreach($section['options'][$key][$tab['locale']] as $opt)
                                                         <span class="text-legend bg-neutral-bg border border-neutral-border px-8 py-2 rounded text-neutral-secondary font-semibold">{{ $opt }}</span>
@@ -333,7 +333,7 @@
             <span class="text-body-m font-bold text-neutral-secondary mb-16 self-start uppercase tracking-wider">Preview do Chatbot (PWA)</span>
             
             <!-- Mobile body frame -->
-            <div class="w-[305px] h-[550px] border-[8px] border-[#FFFFFF] rounded-[36px] overflow-hidden shadow-2xl flex flex-col bg-gray-50 relative select-none">
+            <div class="w-full max-w-[305px] h-[550px] border-[8px] border-[#FFFFFF] rounded-[36px] overflow-hidden shadow-2xl flex flex-col bg-gray-50 relative select-none">
                 <!-- Camera Notch -->
                 <div class="absolute top-4 left-1/2 -translate-x-1/2 w-48 h-12 bg-neutral-primary rounded-full z-50"></div>
 

@@ -18,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         
         $middleware->appendToGroup('web', [
             \App\Http\Middleware\TenantMiddleware::class,
+            \App\Http\Middleware\SetLocaleMiddleware::class,
             \App\Http\Middleware\SecurityHeadersMiddleware::class,
         ]);
     })

@@ -5,19 +5,25 @@
 @section('content')
 <div class="px-4 sm:px-6 lg:px-8 py-8">
     <!-- Header with Action -->
-    <div class="flex justify-between items-center mb-8">
-        <div>
-            <h1 class="text-3xl font-black text-gray-900 tracking-tight">Gestão de Clientes</h1>
-            <p class="text-sm text-gray-500 font-medium">Gerencie todos os lojistas ativos na plataforma</p>
-        </div>
-        <div>
-            <a href="{{ route('admin.clientes.create') }}" class="bg-[#7C3AED] text-white px-6 py-4 rounded-2xl text-base font-bold hover:bg-[#6D28D9] transition duration-200 shadow-md hover:shadow-lg flex items-center gap-2">
+    <div class="mb-8">
+        <div class="flex justify-between items-center mb-4">
+            <div>
+                <h1 class="text-3xl font-black text-gray-900 tracking-tight">Gestão de Clientes</h1>
+                <p class="text-sm text-gray-500 font-medium">Gerencie todos os lojistas ativos na plataforma</p>
+            </div>
+            <a href="{{ route('admin.clientes.create') }}" class="hidden sm:flex bg-[#7C3AED] text-white px-6 py-4 rounded-2xl text-base font-bold hover:bg-[#6D28D9] transition duration-200 shadow-md hover:shadow-lg items-center gap-2">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                 </svg>
                 Novo Cliente
             </a>
         </div>
+        <a href="{{ route('admin.clientes.create') }}" class="sm:hidden w-full bg-[#7C3AED] text-white py-3 rounded-2xl text-base font-bold hover:bg-[#6D28D9] transition duration-200 shadow-md flex items-center justify-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+            Novo Cliente
+        </a>
     </div>
 
     <!-- Search & Filters -->
@@ -68,27 +74,26 @@
             <table class="w-full text-left border-collapse">
                 <thead class="bg-gray-50/50">
                     <tr>
-                        <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">ID</th>
+                        <th class="hidden lg:table-cell px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">ID</th>
                         <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Empresa / Slug</th>
-                        <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Contato de Notificação</th>
-                        <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Plano / Billing</th>
-                        <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Ações Master</th>
+                        <th class="hidden lg:table-cell px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Contato de Notificação</th>
+                        <th class="hidden lg:table-cell px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Plano / Billing</th>
+                        <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Ações</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
                     @forelse($clientes as $cliente)
                     <tr class="hover:bg-gray-50/50 transition-colors group">
-                        <td class="px-6 py-4 text-[10px] text-gray-300 font-mono">...{{ substr($cliente->id, -8) }}</td>
+                        <td class="hidden lg:table-cell px-6 py-4 text-[10px] text-gray-300 font-mono">...{{ substr($cliente->id, -8) }}</td>
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
-                                <div class="bg-gray-100 w-10 h-10 rounded-lg flex items-center justify-center text-lg">🏢</div>
                                 <div>
                                     <div class="font-bold text-gray-900">{{ $cliente->nome_empresa }}</div>
                                     <div class="text-[10px] bg-gray-100 inline-block px-1.5 py-0.5 rounded text-gray-500 font-mono">/avaliar/{{ $cliente->slug }}</div>
                                 </div>
                             </div>
                         </td>
-                        <td class="px-6 py-4">
+                        <td class="hidden lg:table-cell px-6 py-4">
                             <div class="text-sm text-gray-600 space-y-0.5">
                                 <div class="flex items-center gap-2"><span>📧</span> {{ $cliente->email }}</div>
                                 @if($cliente->telefone_whatsapp)
@@ -96,7 +101,7 @@
                                 @endif
                             </div>
                         </td>
-                        <td class="px-6 py-4">
+                        <td class="hidden lg:table-cell px-6 py-4">
                             <div class="flex flex-col gap-1">
                                 <span class="capitalize px-2 py-0.5 rounded-full text-[10px] font-bold text-center w-20
                                     {{ $cliente->plano == 'premium' ? 'bg-purple-100 text-purple-700' : ($cliente->plano == 'standard' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700') }}">
@@ -149,7 +154,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="5" class="px-6 py-12 text-center text-gray-400 italic font-medium">
+                        <td colspan="2" class="px-6 py-12 text-center text-gray-400 italic font-medium">
                             Nenhum cliente encontrado com os filtros selecionados.
                         </td>
                     </tr>

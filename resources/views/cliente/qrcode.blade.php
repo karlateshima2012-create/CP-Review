@@ -9,7 +9,7 @@
     <p class="text-body-m text-neutral-secondary">Compartilhe para receber avaliações e gerencie sua reputação</p>
 </div>
 
-<div class="grid lg:grid-cols-12 gap-32 items-start">
+<div class="grid lg:grid-cols-12 gap-16 lg:gap-32 items-start">
 
     <!-- Left Column: QR Code -->
     <div class="lg:col-span-6 card p-24 flex flex-col items-center text-center">

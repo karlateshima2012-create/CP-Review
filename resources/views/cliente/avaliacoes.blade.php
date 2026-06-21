@@ -10,25 +10,25 @@
 </div>
 
 <!-- Filters Tab Bar -->
-<div class="flex flex-wrap gap-8 mb-24 items-center">
+<div class="flex gap-8 mb-24 items-center overflow-x-auto pb-4 -mx-16 px-16 scroll-smooth">
     <!-- Todas -->
-    <a href="{{ route('cliente.avaliacoes', [$cliente->id, 'filter' => 'todas']) }}" class="px-12 py-8 rounded-full text-body-m font-medium transition {{ $filter === 'todas' ? 'bg-brand-600 text-white shadow-sm' : 'bg-white text-neutral-secondary border border-neutral-border hover:bg-neutral-bg' }}">
+    <a href="{{ route('cliente.avaliacoes', [$cliente->id, 'filter' => 'todas']) }}" class="flex-shrink-0 px-12 py-8 rounded-full text-body-m font-medium transition {{ $filter === 'todas' ? 'bg-brand-600 text-white shadow-sm' : 'bg-white text-neutral-secondary border border-neutral-border hover:bg-neutral-bg' }}">
         Todas ({{ $totalNegativas }})
     </a>
     <!-- Pendentes -->
-    <a href="{{ route('cliente.avaliacoes', [$cliente->id, 'filter' => 'pendentes']) }}" class="px-12 py-8 rounded-full text-body-m font-medium transition {{ $filter === 'pendentes' ? 'bg-brand-600 text-white shadow-sm' : 'bg-white text-neutral-secondary border border-neutral-border hover:bg-neutral-bg' }}">
+    <a href="{{ route('cliente.avaliacoes', [$cliente->id, 'filter' => 'pendentes']) }}" class="flex-shrink-0 px-12 py-8 rounded-full text-body-m font-medium transition {{ $filter === 'pendentes' ? 'bg-brand-600 text-white shadow-sm' : 'bg-white text-neutral-secondary border border-neutral-border hover:bg-neutral-bg' }}">
         Pendentes ({{ $negativasPendentes }})
     </a>
     <!-- Resolvidas -->
-    <a href="{{ route('cliente.avaliacoes', [$cliente->id, 'filter' => 'resolvidas']) }}" class="px-12 py-8 rounded-full text-body-m font-medium transition {{ $filter === 'resolvidas' ? 'bg-brand-600 text-white shadow-sm' : 'bg-white text-neutral-secondary border border-neutral-border hover:bg-neutral-bg' }}">
+    <a href="{{ route('cliente.avaliacoes', [$cliente->id, 'filter' => 'resolvidas']) }}" class="flex-shrink-0 px-12 py-8 rounded-full text-body-m font-medium transition {{ $filter === 'resolvidas' ? 'bg-brand-600 text-white shadow-sm' : 'bg-white text-neutral-secondary border border-neutral-border hover:bg-neutral-bg' }}">
         Resolvidas ({{ $negativasResolvidas }})
     </a>
     <!-- Com contato -->
-    <a href="{{ route('cliente.avaliacoes', [$cliente->id, 'filter' => 'com_contato']) }}" class="px-12 py-8 rounded-full text-body-m font-medium transition {{ $filter === 'com_contato' ? 'bg-brand-600 text-white shadow-sm' : 'bg-white text-neutral-secondary border border-neutral-border hover:bg-neutral-bg' }}">
+    <a href="{{ route('cliente.avaliacoes', [$cliente->id, 'filter' => 'com_contato']) }}" class="flex-shrink-0 px-12 py-8 rounded-full text-body-m font-medium transition {{ $filter === 'com_contato' ? 'bg-brand-600 text-white shadow-sm' : 'bg-white text-neutral-secondary border border-neutral-border hover:bg-neutral-bg' }}">
         Com contato
     </a>
     <!-- Sem contato -->
-    <a href="{{ route('cliente.avaliacoes', [$cliente->id, 'filter' => 'sem_contato']) }}" class="px-12 py-8 rounded-full text-body-m font-medium transition {{ $filter === 'sem_contato' ? 'bg-brand-600 text-white shadow-sm' : 'bg-white text-neutral-secondary border border-neutral-border hover:bg-neutral-bg' }}">
+    <a href="{{ route('cliente.avaliacoes', [$cliente->id, 'filter' => 'sem_contato']) }}" class="flex-shrink-0 px-12 py-8 rounded-full text-body-m font-medium transition {{ $filter === 'sem_contato' ? 'bg-brand-600 text-white shadow-sm' : 'bg-white text-neutral-secondary border border-neutral-border hover:bg-neutral-bg' }}">
         Sem contato
     </a>
 </div>
@@ -39,7 +39,7 @@
         <div class="card overflow-hidden flex flex-col">
             <div class="p-16 flex flex-col flex-1">
                 <!-- Header Card Info -->
-                <div class="flex justify-between items-center mb-8">
+                <div class="flex flex-wrap justify-between items-start gap-8 mb-8">
                     <div class="flex items-center gap-6">
                         <div class="flex text-amber-400">
                             @for($i = 1; $i <= 5; $i++)
@@ -108,11 +108,11 @@
                         </div>
                     </div>
                 @else
-                    <div class="mt-auto flex gap-8 border-t border-neutral-border pt-12">
-                        <button onclick="abrirResolverModal('{{ $avaliacao->id }}')" class="border border-brand-600 text-brand-600 hover:bg-brand-50 px-12 py-6 rounded-lg text-legend font-bold transition">
+                    <div class="mt-auto flex flex-col sm:flex-row gap-8 border-t border-neutral-border pt-12">
+                        <button onclick="abrirResolverModal('{{ $avaliacao->id }}')" class="flex-1 border border-brand-600 text-brand-600 hover:bg-brand-50 px-12 py-8 rounded-lg text-legend font-bold transition text-center">
                             Anotação interna
                         </button>
-                        <button onclick="marcarResolvidoDireto('{{ $avaliacao->id }}')" class="bg-success-base text-white hover:bg-success-dark px-12 py-6 rounded-lg text-legend font-bold transition flex items-center gap-4">
+                        <button onclick="marcarResolvidoDireto('{{ $avaliacao->id }}')" class="flex-1 bg-success-base text-white hover:bg-success-dark px-12 py-8 rounded-lg text-legend font-bold transition flex items-center justify-center gap-4">
                             <svg class="w-12 h-12" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"></path></svg>
                             Marcar resolvido
                         </button>
@@ -138,7 +138,7 @@
 
 <!-- Modal Resolve / Anotação Interna -->
 <div id="resolverModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-    <div class="bg-white rounded-2xl p-24 max-w-md w-full mx-16 shadow-lg">
+    <div class="bg-white rounded-2xl p-16 sm:p-24 max-w-md w-full mx-16 shadow-lg">
         <h2 class="text-title-3 font-bold mb-16 text-neutral-primary">Anotação Interna</h2>
         <p class="text-body-m text-neutral-secondary mb-12">Adicione uma anotação sobre como esta reclamação foi resolvida. Esta anotação serve apenas para controle interno.</p>
         <form id="resolverForm">

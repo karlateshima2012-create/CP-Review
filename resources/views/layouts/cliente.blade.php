@@ -65,12 +65,18 @@
             </nav>
         </div>
 
+        <!-- Language Toggle -->
+        <div class="flex gap-8 mb-12">
+            <a href="{{ route('set-locale', 'pt') }}" class="flex-1 text-center py-6 rounded-lg text-legend font-bold border transition {{ app()->getLocale() === 'pt' ? 'bg-brand-50 text-brand-600 border-brand-200' : 'border-neutral-border text-neutral-secondary hover:bg-neutral-bg' }}">🇧🇷 PT</a>
+            <a href="{{ route('set-locale', 'ja') }}" class="flex-1 text-center py-6 rounded-lg text-legend font-bold border transition {{ app()->getLocale() === 'ja' ? 'bg-brand-50 text-brand-600 border-brand-200' : 'border-neutral-border text-neutral-secondary hover:bg-neutral-bg' }}">🇯🇵 JA</a>
+        </div>
+
         <!-- Logout Bottom -->
         <form action="{{ route('logout') }}" method="POST" class="w-full">
             @csrf
             <button type="submit" class="w-full border border-neutral-border hover:bg-neutral-bg py-12 rounded-lg text-body-m font-bold text-neutral-secondary transition flex items-center justify-center gap-8">
                 <svg class="w-16 h-16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"></path></svg>
-                Sair da Conta
+                {{ __('Sair da Conta') }}
             </button>
         </form>
     </aside>

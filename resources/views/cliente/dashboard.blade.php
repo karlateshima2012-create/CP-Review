@@ -54,7 +54,7 @@
 <!-- ── SCORE CARD ──────────────────────────────────────────────────────────── -->
 <div class="card p-24 mb-24 grid md:grid-cols-3 gap-24 items-center">
     {{-- Média --}}
-    <div class="flex flex-col items-center md:items-start text-center md:text-left md:border-r border-neutral-border md:pr-24">
+    <div class="flex flex-col items-center md:items-start text-center md:text-left md:border-r border-neutral-border md:pr-24 pb-16 md:pb-0">
         <span class="text-[56px] font-bold text-neutral-primary leading-none">{{ number_format($mediaNotas, 1) }}</span>
         <div class="flex gap-4 my-8 text-amber-400">
             @for($i = 1; $i <= 5; $i++)
@@ -69,7 +69,7 @@
     </div>
 
     {{-- Barras por estrela --}}
-    <div class="space-y-8 md:border-r border-neutral-border md:pr-24">
+    <div class="space-y-8 md:border-r border-neutral-border md:pr-24 border-t md:border-t-0 pt-16 md:pt-0">
         @foreach([5 => 'bg-emerald-500', 4 => 'bg-emerald-400', 3 => 'bg-amber-400', 2 => 'bg-orange-400', 1 => 'bg-red-500'] as $star => $colorClass)
             @php $pct = $totalAvaliacoes > 0 ? ($starCounts[$star] / $totalAvaliacoes) * 100 : 0; @endphp
             <div class="flex items-center gap-12 text-body-m text-neutral-secondary">
@@ -83,7 +83,7 @@
     </div>
 
     {{-- Totais --}}
-    <div class="flex justify-around md:flex-col md:justify-center md:gap-16 pl-12 text-center md:text-left">
+    <div class="flex flex-col gap-12 md:flex-col md:justify-center md:gap-16 pl-12 text-center md:text-left border-t md:border-t-0 border-neutral-border pt-16 md:pt-0">
         <div>
             <span class="block text-title-1 font-bold text-brand-600 leading-none">{{ $totalAvaliacoes }}</span>
             <span class="text-legend text-neutral-secondary uppercase font-bold tracking-wider">Total</span>
@@ -101,7 +101,7 @@
 
 <!-- ── HISTÓRICO COMPLETO ─────────────────────────────────────────────────── -->
 <div class="card overflow-hidden mb-24">
-    <div class="p-16 flex justify-between items-center border-b border-neutral-border bg-neutral-card">
+    <div class="p-16 flex flex-wrap justify-between items-center gap-8 border-b border-neutral-border bg-neutral-card">
         <div>
             <h3 class="text-body-g font-bold text-neutral-primary">Histórico de Avaliações</h3>
             <p class="text-legend text-neutral-secondary mt-2">Últimas {{ $historicoRecente->count() }} avaliações recebidas</p>
@@ -196,7 +196,7 @@
 <!-- ── OCORRÊNCIAS PENDENTES (alerta) ─────────────────────────────────────── -->
 @if($ocorrenciasPendentes->count() > 0)
 <div class="card overflow-hidden mb-24">
-    <div class="p-16 flex justify-between items-center border-b border-neutral-border bg-amber-50">
+    <div class="p-16 flex flex-wrap justify-between items-center gap-8 border-b border-neutral-border bg-amber-50">
         <div class="flex items-center gap-12">
             <div class="w-32 h-32 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center">
                 <svg class="w-16 h-16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
