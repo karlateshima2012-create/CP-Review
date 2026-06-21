@@ -103,18 +103,18 @@
                                 @endif
                             </div>
                             <button onclick="reabrirOcorrencia('{{ $avaliacao->id }}')" class="text-legend text-neutral-secondary hover:text-red-600 border border-neutral-border hover:border-red-300 px-8 py-4 rounded transition whitespace-nowrap flex-shrink-0">
-                                Reabrir
+                                {{ __('Reabrir') }}
                             </button>
                         </div>
                     </div>
                 @else
                     <div class="mt-auto flex flex-col sm:flex-row gap-8 border-t border-neutral-border pt-12">
                         <button onclick="abrirResolverModal('{{ $avaliacao->id }}')" class="flex-1 border border-brand-600 text-brand-600 hover:bg-brand-50 px-12 py-8 rounded-lg text-legend font-bold transition text-center">
-                            Anotação interna
+                            {{ __('Anotação interna') }}
                         </button>
                         <button onclick="marcarResolvidoDireto('{{ $avaliacao->id }}')" class="flex-1 bg-success-base text-white hover:bg-success-dark px-12 py-8 rounded-lg text-legend font-bold transition flex items-center justify-center gap-4">
                             <svg class="w-12 h-12" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"></path></svg>
-                            Marcar resolvido
+                            {{ __('Marcar resolvido') }}
                         </button>
                     </div>
                 @endif
@@ -123,9 +123,9 @@
     @empty
         <div class="card p-48 text-center text-neutral-secondary lg:col-span-2">
             @if($filter === 'pendentes')
-                Não há ocorrências pendentes.
+                {{ __('Não há ocorrências pendentes.') }}
             @else
-                Nenhuma ocorrência encontrada para este filtro.
+                {{ __('Nenhuma ocorrência encontrada para este filtro.') }}
             @endif
         </div>
     @endforelse
