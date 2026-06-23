@@ -3,12 +3,15 @@
 @section('title', 'CP Review - Gestão Inteligente')
 
 @section('content')
-<div class="min-h-screen bg-neutral-bg text-neutral-primary font-sans selection:bg-brand-600 selection:text-white flex flex-col">
-    <!-- Navbar -->
+<div class="min-h-screen bg-neutral-bg text-neutral-primary font-sans selection:bg-brand-600 selection:text-white flex flex-col">    <!-- Navbar -->
     <nav class="container mx-auto px-6 py-6 flex justify-between items-center bg-transparent relative z-10">
-        <div class="flex items-center gap-2">
-            <img src="/logo.png" alt="CP Review Logo" class="h-[44px] w-auto">
-        </div>
+        <a href="{{ url('/') }}" class="flex items-center gap-12">
+            <img src="/favicon.svg?v={{ file_exists(public_path('favicon.svg')) ? filemtime(public_path('favicon.svg')) : time() }}" alt="CP Review" class="w-32 h-32 flex-shrink-0">
+            <svg viewBox="0 0 120 32" class="h-32 w-[120px] flex-shrink-0" style="font-family: 'IBM Plex Sans', sans-serif;">
+                <text x="0" y="13" font-size="13.5" font-weight="700" fill="#111827" textLength="120" lengthAdjust="spacing">CP REVIEW</text>
+                <text x="0" y="29" font-size="7.2" font-weight="700" fill="#4B5563" textLength="120" lengthAdjust="spacing">GESTÃO DE AVALIAÇÕES</text>
+            </svg>
+        </a>
         <div>
             <a href="{{ url('/login') }}" class="bg-brand-600 hover:bg-brand-700 text-white px-6 py-2.5 rounded-xl font-semibold transition-all shadow-md hover:shadow-lg">
                 Entrar
@@ -104,8 +107,8 @@
                                        {{ $plano['value'] === 'standard' ? 'checked' : '' }}
                                        class="sr-only peer">
                                 <div class="border-2 rounded-2xl p-4 text-center transition-all
-                                            peer-checked:border-brand-600 peer-checked:bg-brand-50
-                                            border-gray-200 hover:border-gray-300">
+                                             peer-checked:border-brand-600 peer-checked:bg-brand-50
+                                             border-gray-200 hover:border-gray-300">
                                     <p class="font-bold text-sm text-neutral-primary">{{ $plano['label'] }}</p>
                                     <p class="text-xs text-neutral-secondary mt-1">{{ $plano['price'] }}/mês</p>
                                 </div>
@@ -160,7 +163,13 @@
     <!-- RODA PE -->
     <footer class="bg-white py-12">
         <div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-            <img src="/logo.png" alt="CP Review" class="h-[36px] w-auto grayscale opacity-50">
+            <div class="flex items-center gap-12 grayscale opacity-50">
+                <img src="/favicon.svg?v={{ file_exists(public_path('favicon.svg')) ? filemtime(public_path('favicon.svg')) : time() }}" alt="CP Review" class="w-24 h-24 flex-shrink-0">
+                <svg viewBox="0 0 120 32" class="h-24 w-[90px] flex-shrink-0" style="font-family: 'IBM Plex Sans', sans-serif;">
+                    <text x="0" y="13" font-size="13.5" font-weight="700" fill="#111827" textLength="120" lengthAdjust="spacing">CP REVIEW</text>
+                    <text x="0" y="29" font-size="7.2" font-weight="700" fill="#4B5563" textLength="120" lengthAdjust="spacing">GESTÃO DE AVALIAÇÕES</text>
+                </svg>
+            </div>
             <p class="text-neutral-secondary text-sm">
                 &copy; 2026 Creative Print. Todos os direitos reservados.
             </p>
