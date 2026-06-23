@@ -9,26 +9,12 @@
     <aside class="hidden md:flex flex-col w-[260px] bg-neutral-card border-r border-neutral-border h-screen fixed top-0 left-0 z-40 p-24 justify-between">
         <div class="space-y-32">
             <!-- Brand & Company Info -->
-            <div class="flex flex-col gap-16">
-                <div class="flex items-center gap-12">
-                    <img src="/favicon.svg?v={{ file_exists(public_path('favicon.svg')) ? filemtime(public_path('favicon.svg')) : time() }}" alt="CP Review" class="w-32 h-32 flex-shrink-0">
-                    <svg viewBox="0 0 120 32" class="h-32 w-[120px] flex-shrink-0" style="font-family: 'IBM Plex Sans', sans-serif;">
-                        <text x="0" y="13" font-size="13.5" font-weight="700" fill="#111827" textLength="120" lengthAdjust="spacing">CP REVIEW</text>
-                        <text x="0" y="29" font-size="7.2" font-weight="700" fill="#4B5563" textLength="120" lengthAdjust="spacing">GESTÃO DE AVALIAÇÕES</text>
-                    </svg>
-                </div>
-
-                <!-- Premium Language Toggle -->
-                <div class="bg-neutral-bg p-[2px] rounded-lg flex items-center border border-neutral-border/60 w-fit">
-                    <a href="{{ route('set-locale', 'pt') }}" class="flex items-center gap-4 px-8 py-4 text-legend font-bold transition-all duration-200 {{ app()->getLocale() === 'pt' ? 'bg-white text-brand-600 shadow-sm rounded-md border border-neutral-border/40' : 'text-neutral-secondary hover:text-neutral-primary' }}">
-                        <span>🇧🇷</span>
-                        <span>PT</span>
-                    </a>
-                    <a href="{{ route('set-locale', 'ja') }}" class="flex items-center gap-4 px-8 py-4 text-legend font-bold transition-all duration-200 {{ app()->getLocale() === 'ja' ? 'bg-white text-brand-600 shadow-sm rounded-md border border-neutral-border/40' : 'text-neutral-secondary hover:text-neutral-primary' }}">
-                        <span>🇯🇵</span>
-                        <span>JA</span>
-                    </a>
-                </div>
+            <div class="flex items-center gap-12">
+                <img src="/favicon.svg?v={{ file_exists(public_path('favicon.svg')) ? filemtime(public_path('favicon.svg')) : time() }}" alt="CP Review" class="w-32 h-32 flex-shrink-0">
+                <svg viewBox="0 0 120 32" class="h-32 w-[120px] flex-shrink-0" style="font-family: 'IBM Plex Sans', sans-serif;">
+                    <text x="0" y="13" font-size="13.5" font-weight="700" fill="#111827" textLength="120" lengthAdjust="spacing">CP REVIEW</text>
+                    <text x="0" y="29" font-size="7.2" font-weight="700" fill="#4B5563" textLength="120" lengthAdjust="spacing">GESTÃO DE AVALIAÇÕES</text>
+                </svg>
             </div>
 
             <!-- Vertical Navigation Menu -->
@@ -79,7 +65,19 @@
             </nav>
         </div>
 
-
+        <!-- Premium Language Toggle (Vertically Centered in Menu Space) -->
+        <div class="flex justify-center py-16 my-auto">
+            <div class="bg-neutral-bg p-[2px] rounded-lg flex items-center border border-neutral-border/60 w-fit">
+                <a href="{{ route('set-locale', 'pt') }}" class="flex items-center gap-4 px-8 py-4 text-legend font-bold transition-all duration-200 {{ app()->getLocale() === 'pt' ? 'bg-white text-brand-600 shadow-sm rounded-md border border-neutral-border/40' : 'text-neutral-secondary hover:text-neutral-primary' }}">
+                    <span>🇧🇷</span>
+                    <span>PT</span>
+                </a>
+                <a href="{{ route('set-locale', 'ja') }}" class="flex items-center gap-4 px-8 py-4 text-legend font-bold transition-all duration-200 {{ app()->getLocale() === 'ja' ? 'bg-white text-brand-600 shadow-sm rounded-md border border-neutral-border/40' : 'text-neutral-secondary hover:text-neutral-primary' }}">
+                    <span>🇯🇵</span>
+                    <span>JA</span>
+                </a>
+            </div>
+        </div>
 
         <!-- Logout Bottom -->
         <form action="{{ route('logout') }}" method="POST" class="w-full">
@@ -96,18 +94,20 @@
         
         <!-- Mobile Header (Hidden on Desktop) -->
         <header class="md:hidden bg-neutral-card border-b border-neutral-border sticky top-0 z-40">
-            <div class="px-16 py-12 flex justify-between items-center">
-                <!-- Brand -->
-                <div class="flex items-center gap-8">
-                    <img src="/favicon.svg?v={{ file_exists(public_path('favicon.svg')) ? filemtime(public_path('favicon.svg')) : time() }}" alt="CP Review" class="w-24 h-24 flex-shrink-0">
-                    <span class="text-body-m font-bold uppercase tracking-wider text-neutral-primary">CP REVIEW</span>
-                    <span class="text-neutral-secondary">|</span>
-                    <span class="text-[11px] text-neutral-secondary truncate max-w-[120px]">{{ $cliente->nome_empresa }}</span>
+            <div class="px-16 py-12 flex flex-col gap-12">
+                <!-- Row 1: Brand -->
+                <div class="flex items-center">
+                    <div class="flex items-center gap-8">
+                        <img src="/favicon.svg?v={{ file_exists(public_path('favicon.svg')) ? filemtime(public_path('favicon.svg')) : time() }}" alt="CP Review" class="w-24 h-24 flex-shrink-0">
+                        <span class="text-body-m font-bold uppercase tracking-wider text-neutral-primary">CP REVIEW</span>
+                        <span class="text-neutral-secondary">|</span>
+                        <span class="text-[11px] text-neutral-secondary truncate max-w-[150px]">{{ $cliente->nome_empresa }}</span>
+                    </div>
                 </div>
 
-                <!-- Language Toggle + Logout -->
-                <div class="flex items-center gap-12">
-                    <div class="bg-neutral-bg p-[2px] rounded-lg flex items-center border border-neutral-border/60">
+                <!-- Row 2: Language Toggle + Logout -->
+                <div class="flex items-center justify-between">
+                    <div class="bg-neutral-bg p-[2px] rounded-lg flex items-center border border-neutral-border/60 w-fit">
                         <a href="{{ route('set-locale', 'pt') }}" class="px-8 py-4 text-[11px] font-bold transition-all duration-200 {{ app()->getLocale() === 'pt' ? 'bg-white text-brand-600 shadow-sm rounded-md border border-neutral-border/40' : 'text-neutral-secondary' }}">🇧🇷</a>
                         <a href="{{ route('set-locale', 'ja') }}" class="px-8 py-4 text-[11px] font-bold transition-all duration-200 {{ app()->getLocale() === 'ja' ? 'bg-white text-brand-600 shadow-sm rounded-md border border-neutral-border/40' : 'text-neutral-secondary' }}">🇯🇵</a>
                     </div>
