@@ -6,7 +6,7 @@
 
 <!-- Page Header -->
 <div class="mb-24">
-    <h2 class="text-title-1 font-bold text-neutral-primary">Dashboard</h2>
+    <h2 class="text-title-1 font-bold text-neutral-primary">{{ __('Dashboard') }}</h2>
     <p class="text-body-m text-neutral-secondary">{{ $cliente->nome_empresa }}</p>
 </div>
 
@@ -86,15 +86,15 @@
     <div class="flex flex-col gap-12 md:flex-col md:justify-center md:gap-16 pl-12 text-center md:text-left border-t md:border-t-0 border-neutral-border pt-16 md:pt-0">
         <div>
             <span class="block text-title-1 font-bold text-brand-600 leading-none">{{ $totalAvaliacoes }}</span>
-            <span class="text-legend text-neutral-secondary uppercase font-bold tracking-wider">Total</span>
+            <span class="text-legend text-neutral-secondary uppercase font-bold tracking-wider">{{ __('Total') }}</span>
         </div>
         <div>
             <span class="block text-title-1 font-bold text-emerald-600 leading-none">{{ $positivas }}</span>
-            <span class="text-legend text-neutral-secondary uppercase font-bold tracking-wider">Positivas (4-5★)</span>
+            <span class="text-legend text-neutral-secondary uppercase font-bold tracking-wider">{{ __('Positivas') }} (4-5★)</span>
         </div>
         <div>
             <span class="block text-title-1 font-bold text-red-500 leading-none">{{ $negativas }}</span>
-            <span class="text-legend text-neutral-secondary uppercase font-bold tracking-wider">Negativas (1-3★)</span>
+            <span class="text-legend text-neutral-secondary uppercase font-bold tracking-wider">{{ __('Negativas') }} (1-3★)</span>
         </div>
     </div>
 </div>
@@ -118,25 +118,14 @@
             <p class="text-legend mt-4">{{ __('Compartilhe o QR Code com seus clientes para começar a receber feedback.') }}</p>
         </div>
     @else
-        <div class="grid grid-cols-1 md:grid-cols-2">
-            @foreach($historicoRecente as $index => $avaliacao)
+        <div class="flex flex-col divide-y divide-neutral-border">
+            @foreach($historicoRecente as $avaliacao)
                 @php
                     $isPositiva = $avaliacao->nota >= 4;
                     $rowBg = $isPositiva ? 'bg-neutral-card' : 'bg-red-50/20';
                     $hoverBg = $isPositiva ? 'hover:bg-neutral-bg' : 'hover:bg-red-50/40';
-
-                    $borderClasses = '';
-                    if ($index >= 1) {
-                        $borderClasses .= ' border-t border-neutral-border';
-                    }
-                    if ($index === 1) {
-                        $borderClasses .= ' md:border-t-0';
-                    }
-                    if ($index % 2 === 0) {
-                        $borderClasses .= ' md:border-r md:border-neutral-border';
-                    }
                 @endphp
-                <div class="p-16 md:p-24 flex items-start gap-16 {{ $rowBg }} {{ $hoverBg }} {{ $borderClasses }} transition">
+                <div class="p-16 md:p-24 flex items-start gap-16 {{ $rowBg }} {{ $hoverBg }} transition">
 
                     {{-- Nota / Estrelas --}}
                     <div class="flex-shrink-0 text-center w-48 flex flex-col items-center">
