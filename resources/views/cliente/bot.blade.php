@@ -163,7 +163,7 @@
 
                                             @if(isset($section['options'][$key][$tab['locale']]))
                                                 <div class="pl-0 sm:pl-[80px] flex flex-wrap gap-8 items-center">
-                                                    <span class="text-[11px] text-neutral-secondary font-bold uppercase tracking-wider">Opções:</span>
+                                                    <span class="text-[11px] text-neutral-secondary font-bold uppercase tracking-wider">{{ __('Opções:') }}</span>
                                                     @foreach($section['options'][$key][$tab['locale']] as $opt)
                                                         <span class="text-legend bg-neutral-bg border border-neutral-border px-8 py-2 rounded text-neutral-secondary font-semibold">{{ $opt }}</span>
                                                     @endforeach
@@ -207,7 +207,7 @@
                                 @foreach($allProblems as $key => $label)
                                     <label class="flex items-center gap-8 cursor-pointer select-none">
                                         <input type="checkbox" name="motivos_problema[]" value="{{ $key }}" class="rounded text-brand-600 focus:ring-brand-500 border-neutral-border w-16 h-16" {{ in_array($key, $selectedProblems) ? 'checked' : '' }}>
-                                        <span class="text-body-m font-medium text-neutral-secondary">{{ $label }}</span>
+                                        <span class="text-body-m font-medium text-neutral-secondary">{{ __($label) }}</span>
                                     </label>
                                 @endforeach
                             </div>

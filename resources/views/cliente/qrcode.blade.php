@@ -110,7 +110,7 @@
                 </a>
                 <a href="mailto:?subject=Deixe%20sua%20avaliação&body=Olá!%20Por%20favor,%20deixe%20sua%20avaliação%20sobre%20nós%20em:%20{{ route('avaliacao.show', ['slug' => $cliente->slug, 'v' => 5]) }}"
                    class="border border-neutral-border bg-white hover:bg-neutral-bg py-12 px-8 rounded-lg text-body-m font-bold text-neutral-primary flex items-center justify-center transition text-center">
-                    E-mail
+                    {{ __('E-mail') }}
                 </a>
             </div>
         </div>
