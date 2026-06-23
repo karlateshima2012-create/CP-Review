@@ -5,8 +5,8 @@
 @section('cliente_content')
 <!-- Page Header -->
 <div class="mb-32">
-    <h2 class="text-title-1 font-bold text-neutral-primary">Personalização</h2>
-    <p class="text-body-m text-neutral-secondary">Configure a identidade visual da página de avaliação e o fluxo de mensagens do bot</p>
+    <h2 class="text-title-1 font-bold text-neutral-primary">{{ __('Personalização') }}</h2>
+    <p class="text-body-m text-neutral-secondary">{{ __('Configure a identidade visual da página de avaliação e o fluxo de mensagens do bot') }}</p>
 </div>
 
 @if(session('success'))
@@ -17,7 +17,7 @@
 
 @if($errors->any())
     <div class="bg-red-50 border border-red-200 text-red-700 p-16 mb-24 rounded-lg shadow-sm" role="alert">
-        <p class="font-bold">Ocorreu um erro:</p>
+        <p class="font-bold">{{ __('Ocorreu um erro:') }}</p>
         <ul class="list-disc list-inside text-body-m mt-4">
             @foreach($errors->all() as $error)
                 <li>{{ $error }}</li>
@@ -47,8 +47,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="text-body-g font-bold text-neutral-primary">1. Personalizar o Bot</h3>
-                            <p class="text-legend text-neutral-secondary">Ajuste as mensagens automáticas de atendimento por idioma</p>
+                            <h3 class="text-body-g font-bold text-neutral-primary">{{ __('1. Personalizar o Bot') }}</h3>
+                            <p class="text-legend text-neutral-secondary">{{ __('Ajuste as mensagens automáticas de atendimento por idioma') }}</p>
                         </div>
                     </div>
                     <svg id="accordion-bot-chevron" class="w-24 h-24 text-neutral-secondary transition transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -67,7 +67,7 @@
                                 class="flex-shrink-0 px-16 py-8 rounded-lg text-body-m font-bold border transition flex items-center gap-8
                                        {{ $i === 0 ? 'bg-brand-50 text-brand-600 border-brand-200' : 'bg-white text-neutral-secondary border-neutral-border hover:bg-neutral-bg' }}">
                             <span>{{ $tab['flag'] }} {{ $tab['label'] }}</span>
-                            <span class="text-legend px-8 py-2 rounded {{ $i === 0 ? 'bg-brand-100 text-brand-700' : 'bg-gray-100 text-neutral-secondary' }}">Idioma {{ $i + 1 }}</span>
+                            <span class="text-legend px-8 py-2 rounded {{ $i === 0 ? 'bg-brand-100 text-brand-700' : 'bg-gray-100 text-neutral-secondary' }}">{{ __('Idioma') }} {{ $i + 1 }}</span>
                         </button>
                         @endforeach
                     </div>
@@ -138,7 +138,7 @@
                                         {!! $section['icon'] !!}
                                     </div>
                                     <h3 class="text-body-m font-bold text-neutral-primary">
-                                        {{ $section['title'] }}
+                                        {{ __($section['title']) }}
                                         <span class="text-legend font-normal text-neutral-secondary ml-4">{{ $tab['flag'] }}</span>
                                     </h3>
                                 </div>
@@ -183,11 +183,11 @@
                             <div class="w-24 h-24 rounded-full bg-neutral-secondary/10 text-neutral-secondary flex items-center justify-center">
                                 <svg class="w-12 h-12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                             </div>
-                            <h3 class="text-body-m font-bold text-neutral-primary">Motivos de problema</h3>
+                            <h3 class="text-body-m font-bold text-neutral-primary">{{ __('Motivos de problema') }}</h3>
                             <svg id="chevron-prob" class="w-16 h-16 ml-auto transition transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"></path></svg>
                         </div>
                         <div id="panel-problems" class="mt-12 space-y-12 hidden">
-                            <p class="text-legend text-neutral-secondary/60 font-semibold uppercase tracking-wider mb-8">Marque os problemas que os clientes podem selecionar no bot:</p>
+                            <p class="text-legend text-neutral-secondary/60 font-semibold uppercase tracking-wider mb-8">{{ __('Marque os problemas que os clientes podem selecionar no bot:') }}</p>
                             
                             <div class="grid grid-cols-2 gap-12 pt-8">
                                 @php
@@ -228,8 +228,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="text-body-g font-bold text-neutral-primary">2. Personalizar a Página</h3>
-                            <p class="text-legend text-neutral-secondary">Adicione o link do Google, logotipo e imagem de capa do estabelecimento</p>
+                            <h3 class="text-body-g font-bold text-neutral-primary">{{ __('2. Personalizar a Página') }}</h3>
+                            <p class="text-legend text-neutral-secondary">{{ __('Adicione o link do Google, logotipo e imagem de capa do estabelecimento') }}</p>
                         </div>
                     </div>
                     <svg id="accordion-page-chevron" class="w-24 h-24 text-neutral-secondary transition transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -243,7 +243,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-24">
                         <!-- Logo Upload -->
                         <div class="space-y-8 flex flex-col h-full">
-                            <label class="block text-body-m font-bold text-neutral-secondary">Logotipo da Empresa</label>
+                            <label class="block text-body-m font-bold text-neutral-secondary">{{ __('Logotipo da Empresa') }}</label>
                             <input type="file" id="logo-file-input" name="logo" accept="image/jpeg,image/png,image/webp" class="hidden">
                             <div onclick="document.getElementById('logo-file-input').click()" class="flex-1 group cursor-pointer border border-neutral-border hover:border-brand-500 bg-neutral-bg/30 hover:bg-brand-50/10 rounded-xl p-16 flex items-center gap-16 transition-all duration-200 shadow-sm">
                                 <div class="w-64 h-64 border border-neutral-border rounded-lg flex items-center justify-center bg-white overflow-hidden shadow-inner flex-shrink-0" id="logo-preview-box">
@@ -258,16 +258,16 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"/>
                                     </svg>
                                     <span class="text-body-m font-bold text-neutral-primary group-hover:text-brand-600 transition">
-                                        {{ $cliente->logo_path ? 'Substituir Logotipo' : 'Enviar Logotipo' }}
+                                        {{ $cliente->logo_path ? __('Substituir Logotipo') : __('Enviar Logotipo') }}
                                     </span>
                                 </div>
                             </div>
-                            <p class="text-[10px] text-neutral-secondary/60 mt-4">PNG, JPG ou WEBP. Quadrada (máx. 2MB)</p>
+                            <p class="text-[10px] text-neutral-secondary/60 mt-4">{{ __('PNG, JPG ou WEBP. Quadrada (máx. 2MB)') }}</p>
                         </div>
 
                         <!-- Cover Upload -->
                         <div class="space-y-8 flex flex-col h-full">
-                            <label class="block text-body-m font-bold text-neutral-secondary">Banner de Capa</label>
+                            <label class="block text-body-m font-bold text-neutral-secondary">{{ __('Banner de Capa') }}</label>
                             <input type="file" id="cover-file-input" name="cover" accept="image/jpeg,image/png,image/webp" class="hidden">
                             <div onclick="document.getElementById('cover-file-input').click()" class="flex-1 group cursor-pointer border border-neutral-border hover:border-brand-500 bg-neutral-bg/30 hover:bg-brand-50/10 rounded-xl p-16 flex items-center gap-16 transition-all duration-200 shadow-sm">
                                 <div class="w-[96px] h-64 border border-neutral-border rounded-lg flex items-center justify-center bg-white overflow-hidden shadow-inner flex-shrink-0 bg-cover bg-center" id="cover-preview-box" style="{{ $cliente->cover_path ? 'background-image: url(' . asset('storage/' . $cliente->cover_path) . ')' : '' }}">
@@ -280,18 +280,18 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"/>
                                     </svg>
                                     <span class="text-body-m font-bold text-neutral-primary group-hover:text-brand-600 transition">
-                                        {{ $cliente->cover_path ? 'Substituir Banner' : 'Enviar Banner' }}
+                                        {{ $cliente->cover_path ? __('Substituir Banner') : __('Enviar Banner') }}
                                     </span>
                                 </div>
                             </div>
-                            <p class="text-[10px] text-neutral-secondary/60 mt-4">PNG, JPG ou WEBP. Retangular (máx. 5MB)</p>
+                            <p class="text-[10px] text-neutral-secondary/60 mt-4">{{ __('PNG, JPG ou WEBP. Retangular (máx. 5MB)') }}</p>
                         </div>
                     </div>
 
                     <!-- Cor Principal -->
                     @php $corAtual = $cliente->cor_principal ?? '#7C3AED'; @endphp
                     <div class="space-y-12">
-                        <label class="block text-body-m font-bold text-neutral-secondary">Escolha a cor principal do chatbot</label>
+                        <label class="block text-body-m font-bold text-neutral-secondary">{{ __('Escolha a cor principal do chatbot') }}</label>
                         <input type="hidden" name="cor_principal" id="cor-principal-input" value="{{ $corAtual }}">
 
                         <div class="flex items-center gap-12">
@@ -324,13 +324,13 @@
 
             <!-- Action Button -->
             <button type="submit" class="w-full bg-brand-600 text-white py-16 rounded-xl font-bold hover:bg-brand-700 transition shadow-sm flex items-center justify-center gap-8">
-                Salvar Alterações de Personalização
+                {{ __('Salvar Alterações de Personalização') }}
             </button>
         </div>
 
         <!-- Right Side: Phone Preview (PWA Simulator) -->
         <div class="lg:col-span-5 flex flex-col items-center">
-            <span class="text-body-m font-bold text-neutral-secondary mb-16 self-start uppercase tracking-wider">Preview do Chatbot (PWA)</span>
+            <span class="text-body-m font-bold text-neutral-secondary mb-16 self-start uppercase tracking-wider">{{ __('Preview do Chatbot (PWA)') }}</span>
             
             <!-- Mobile body frame -->
             <div class="w-full max-w-[305px] h-[550px] border-[8px] border-[#FFFFFF] rounded-[36px] overflow-hidden shadow-2xl flex flex-col bg-gray-50 relative select-none">
