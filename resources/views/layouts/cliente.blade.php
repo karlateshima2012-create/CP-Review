@@ -19,12 +19,12 @@
                 </div>
 
                 <!-- Premium Language Toggle -->
-                <div class="bg-neutral-bg p-[4px] rounded-xl flex items-center border border-neutral-border/60">
-                    <a href="{{ route('set-locale', 'pt') }}" class="flex-1 flex items-center justify-center gap-6 py-6 text-body-m font-bold transition-all duration-200 {{ app()->getLocale() === 'pt' ? 'bg-white text-brand-600 shadow-sm rounded-lg border border-neutral-border/40' : 'text-neutral-secondary hover:text-neutral-primary' }}">
+                <div class="bg-neutral-bg p-[2px] rounded-lg flex items-center border border-neutral-border/60 w-fit">
+                    <a href="{{ route('set-locale', 'pt') }}" class="flex items-center gap-4 px-8 py-4 text-legend font-bold transition-all duration-200 {{ app()->getLocale() === 'pt' ? 'bg-white text-brand-600 shadow-sm rounded-md border border-neutral-border/40' : 'text-neutral-secondary hover:text-neutral-primary' }}">
                         <span>🇧🇷</span>
                         <span>PT</span>
                     </a>
-                    <a href="{{ route('set-locale', 'ja') }}" class="flex-1 flex items-center justify-center gap-6 py-6 text-body-m font-bold transition-all duration-200 {{ app()->getLocale() === 'ja' ? 'bg-white text-brand-600 shadow-sm rounded-lg border border-neutral-border/40' : 'text-neutral-secondary hover:text-neutral-primary' }}">
+                    <a href="{{ route('set-locale', 'ja') }}" class="flex items-center gap-4 px-8 py-4 text-legend font-bold transition-all duration-200 {{ app()->getLocale() === 'ja' ? 'bg-white text-brand-600 shadow-sm rounded-md border border-neutral-border/40' : 'text-neutral-secondary hover:text-neutral-primary' }}">
                         <span>🇯🇵</span>
                         <span>JA</span>
                     </a>
